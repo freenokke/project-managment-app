@@ -1,8 +1,19 @@
+import { Route, Routes } from 'react-router-dom';
+import MainPage from './pages/MainPage';
+import WelcomePage from './pages/WelcomePage';
+import Header from './components/Header';
+
 function App() {
   return (
-    <div className="App text-blue-500 text-5xl flex justify-center items-center h-screen">
-      Hello World
-    </div>
+    <>
+      <Header />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/main" element={<MainPage />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
