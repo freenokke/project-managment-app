@@ -7,9 +7,9 @@
 ## **Инструменты которые мы используем**
 - Основной фреймворк [React](https://reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
-- Стили пишем с помощью [Tailwind](https://tailwindcss.com/) или [Styled Components](https://styled-components.com/)
+- Стили пишем с помощью [Tailwind](https://tailwindcss.com/)
 - Утилита для условных стилей [classnames](https://www.npmjs.com/package/classnames)
-- Библиотека для смены языка [Пока не решили](https://translate.google.com/?hl=ru)
+- Библиотека для смены языка [i18nex](https://www.i18next.com/)
 
 ## Work
 
