@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -29,5 +32,27 @@ module.exports = {
     //   ],
     // },
   },
-  plugins: [],
+
+  plugins: [
+    plugin(function ({ addComponents }) {
+      addComponents({
+        '.signInLabel': {
+          padding: '10px',
+          border: '2px solid #CBD5E1 ',
+          color: '#CBD5E1',
+          borderRadius: '8px',
+          '&:focus-within': {
+            borderColor: '#2563EB',
+            color: '#2563EB',
+          },
+        },
+        '.signInLabelError': {
+          padding: '10px',
+          border: '2px solid rgb(220, 38, 38)',
+          color: 'rgb(220, 38, 38)',
+          borderRadius: '8px',
+        },
+      });
+    }),
+  ],
 };
