@@ -3,3 +3,5 @@ export interface IFormInputs {
   login: string;
   password: string;
 }
+
+export type InputsArray = 'name' | 'password' | 'login';

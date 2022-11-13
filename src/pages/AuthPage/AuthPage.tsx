@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { IFormInputs } from './AuthPage.types';
+import { IFormInputs, InputsArray } from './AuthPage.types';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../i18next/i18next';
 
@@ -14,22 +14,10 @@ const schema = yup
   })
   .required();
 
+const inputsArray: InputsArray[] = ['name', 'login', 'password'];
+
 const AuthPage = () => {
   const { t } = useTranslation();
-  const inputsArray = [
-    {
-      name: 'name' as const,
-      labelText: t('name'),
-    },
-    {
-      name: 'login' as const,
-      labelText: t('login'),
-    },
-    {
-      name: 'password' as const,
-      labelText: t('password'),
-    },
-  ];
 
   const {
     register,
@@ -55,24 +43,24 @@ const AuthPage = () => {
         Сменить язык
       </button>
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
-        <h1 className="text-2xl mb-10 capitalize">{t('registration')}</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+        <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11">
           {inputsArray.map((item) => {
             return (
-              <div className="mb-10 relative" key={item.name}>
-                <label htmlFor="name" className={classNames[item.name]}>
+              <div className="relative" key={item}>
+                <label htmlFor="name" className={classNames[item]}>
                   <input
                     className="outline-none p-1 rounded-lg text-black"
-                    {...register(item.name)}
+                    {...register(item)}
                     type="text"
-                    name={item.name}
+                    name={item}
                     autoComplete="off"
                   />
                   <div className=" absolute left-2 top-[-19px] p-1 bg-white uppercase text-xs ">
-                    {item.labelText}
+                    {t(item)}
                   </div>
                 </label>
-                {errors[item.name] && <p className="text-red-600">{errors[item.name]?.message}</p>}
+                {errors[item] && <p className="text-red-600">{errors[item]?.message}</p>}
               </div>
             );
           })}

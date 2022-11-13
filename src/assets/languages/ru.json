@@ -1,6 +1,6 @@
 {
   "title": "привет",
-  "registration": "регистрация",
+  "signUp.title": "регистрация",
   "name": "имя",
   "login": "логин",
   "password": "пароль",
