@@ -41,7 +41,7 @@ const SignInput = ({ name, error, register, password }: ISignInputProps) => {
           visibility
         </div>
       )}
-      {error && <p className="text-red-600">{error.message}</p>}
+      {error && <p className="text-red-600 w-52 leading-none mt-1">{t(error.message as string)}</p>}
     </div>
   );
 };

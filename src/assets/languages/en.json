@@ -5,5 +5,12 @@
   "login": "login",
   "password": "password",
   "signUp": "sign up",
-  "signIn": "sign in"
+  "signIn": "sign in",
+  "validation.noName": "Need to type name",
+  "validation.noLogin": "Need to type login",
+  "validation.noPassword": "Need to type password",
+  "validation.minNameLength": "2 sybmols or more",
+  "validation.minLoginLength": "4 sybmols or more",
+  "validation.minPasswordLength": "8 sybmols or more",
+  "validation.wrongPassword": "At least one upper case letter and one digit"
 }

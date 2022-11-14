@@ -11,16 +11,20 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
 
-const schema = yup
-  .object({
-    name: yup.string().required('Введите имя').min(2, 'Минимум 2 символа'),
-    login: yup.string().required('Введите логин').min(3, 'Минимум 3 символа'),
-    password: yup.string().required('Введите пароль').min(3, 'Минимум 3 символа'),
-  })
-  .required();
+const schema = yup.object({
+  name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
+  login: yup.string().required('validation.noLogin').min(4, 'validation.minLoginLength'),
+  password: yup
+    .string()
+    .required('validation.noPassword')
+    .min(7, 'validation.minPasswordLength')
+    .matches('^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$' as unknown as RegExp, 'validation.wrongPassword')
+    .required(),
+});
 
 const SignUpPage = () => {
   const { t } = useTranslation();
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
