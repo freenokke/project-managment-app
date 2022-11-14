@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
-
+const plugin = require('tailwindcss/plugin');
 const withMT = require('@material-tailwind/react/utils/withMT');
 
 const config = {
@@ -9,9 +9,6 @@ const config = {
     fontFamily: {
       sans: ['Graphik', 'sans-serif'], // для примера
       serif: ['Merriweather', 'serif'],
-    },
-    colors: {
-      primary: '#FF7235',
     },
     screens: {
       mobile: '576px',
@@ -30,17 +27,30 @@ const config = {
         18: '4.5rem',
       },
     },
-
-    // fontSize: {
-    //   s1: [
-    //     '30px',
-    //     {
-    //       fontWeight: 800,
-    //     },
-    //   ],
-    // },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addComponents }) {
+      addComponents({
+        '.signInLabel': {
+          padding: '10px',
+          border: '2px solid #c1d3f4',
+          color: '#CBD5E1',
+          borderRadius: '8px',
+          transition: 'all 0.3s',
+          '&:focus-within': {
+            borderColor: '#2563EB',
+            color: '#2563EB',
+          },
+        },
+        '.signInLabelError': {
+          padding: '10px',
+          border: '2px solid rgb(220, 38, 38)',
+          color: 'rgb(220, 38, 38)',
+          borderRadius: '8px',
+        },
+      });
+    }),
+  ],
 };
 
 module.exports = config;
