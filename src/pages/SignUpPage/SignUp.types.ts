@@ -4,7 +4,7 @@ export interface ISignInData {
 }
 
 export interface ISignUpData extends ISignInData {
-  name: string;
+  name?: string;
 }
 
 export type InputsArray = 'name' | 'password' | 'login';

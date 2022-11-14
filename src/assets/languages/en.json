@@ -4,5 +4,6 @@
   "name": "name",
   "login": "login",
   "password": "password",
-  "signUp": "sign up"
+  "signUp": "sign up",
+  "signIn": "sign in"
 }

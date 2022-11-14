@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { SignUpPage, MainPage, WelcomePage } from './pages';
+import { SignUpPage, MainPage, WelcomePage, SignInPage } from './pages';
 import { Header } from './components';
 
 function App() {
@@ -8,9 +8,10 @@ function App() {
       <Header />
       <div className="container">
         <Routes>
-          <Route path="/" element={<SignUpPage />} />
+          <Route path="/" element={<SignInPage />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/signup" element={<MainPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signin" element={<SignInPage />} />
         </Routes>
       </div>
     </>
