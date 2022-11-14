@@ -8,7 +8,7 @@ function App() {
       <Header />
       <div className="container">
         <Routes>
-          <Route path="/" element={<SignInPage />} />
+          <Route path="/" element={<WelcomePage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />

@@ -4,13 +4,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ISignUpData } from './SignUp.types';
 import { useTranslation } from 'react-i18next';
-import { i18n } from 'i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
 import { Button } from '@material-tailwind/react';
+import i18n from '../../i18next/i18next';
 
 const schema = yup.object({
   name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
