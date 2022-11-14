@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+const withMT = require('@material-tailwind/react/utils/withMT');
+
+const config = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
       sans: ['Graphik', 'sans-serif'], // для примера
       serif: ['Merriweather', 'serif'],
     },
-
+    colors: {
+      primary: '#FF7235',
+    },
     screens: {
       mobile: '576px',
       'small-tablet': '600px',
@@ -18,6 +24,11 @@ module.exports = {
     container: {
       padding: '1rem',
       center: true,
+    },
+    extend: {
+      spacing: {
+        18: '4.5rem',
+      },
     },
 
     // fontSize: {
@@ -31,3 +42,7 @@ module.exports = {
   },
   plugins: [],
 };
+
+module.exports = config;
+
+module.exports = withMT(config);
