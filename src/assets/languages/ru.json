@@ -12,5 +12,6 @@
   "validation.minNameLength": "Минимум 2 символа",
   "validation.minLoginLength": "Минимум 4 символа",
   "validation.minPasswordLength": "Минимум 8 символов",
-  "validation.wrongPassword": "Пароль должен состоять как минимум из 1 цифры и 1 большой буквы"
+  "validation.wrongPassword": "Пароль должен состоять как минимум из 1 цифры и 1 большой буквы",
+  "signUp.loading": "Загрузка..."
 }

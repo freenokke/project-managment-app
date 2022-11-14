@@ -4,19 +4,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ISignInData } from '../SignUpPage/SignUp.types';
 import { useTranslation } from 'react-i18next';
-import i18n from '../../i18next/i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
 
-const schema = yup
-  .object({
-    login: yup.string().required('Введите логин').min(3, 'Минимум 3 символа'),
-    password: yup.string().required('Введите пароль').min(3, 'Минимум 3 символа'),
-  })
-  .required();
+const schema = yup.object({
+  login: yup.string().required('validation.noLogin').min(4, 'validation.minLoginLength'),
+  password: yup
+    .string()
+    .required('validation.noPassword')
+    .min(7, 'validation.minPasswordLength')
+    .matches('^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$' as unknown as RegExp, 'validation.wrongPassword')
+    .required(),
+});
 
 const SignInPage = () => {
   const { t } = useTranslation();
@@ -38,15 +40,8 @@ const SignInPage = () => {
 
   const onSubmit = (data: ISignInData) => dispatch(signIn(data));
 
-  const changeLang = () => {
-    i18n.changeLanguage('ru');
-  };
-
   return (
     <div className="container flex items-center justify-center mt-[10%]">
-      <button className="button1" onClick={changeLang}>
-        Сменить язык
-      </button>
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
         <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11">
@@ -54,7 +49,7 @@ const SignInPage = () => {
           <SignInput name="password" error={errors?.password} register={register} password />
 
           <button type="submit" disabled={isLoading} className="button1 capitalize">
-            {isLoading ? 'Loading.....' : t('signIn')}
+            {isLoading ? t('signUp.loading') : t('signIn')}
           </button>
         </form>
       </div>

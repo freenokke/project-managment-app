@@ -22,15 +22,6 @@ module.exports = {
       padding: '1rem',
       center: true,
     },
-
-    // fontSize: {
-    //   s1: [
-    //     '30px',
-    //     {
-    //       fontWeight: 800,
-    //     },
-    //   ],
-    // },
   },
 
   plugins: [

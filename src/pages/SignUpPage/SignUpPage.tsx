@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ISignUpData } from './SignUp.types';
 import { useTranslation } from 'react-i18next';
-import i18n from '../../i18next/i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
@@ -43,15 +42,8 @@ const SignUpPage = () => {
 
   const onSubmit = (data: ISignUpData) => dispatch(signUp(data));
 
-  const changeLang = () => {
-    i18n.changeLanguage('ru');
-  };
-
   return (
     <div className="container flex items-center justify-center mt-[10%]">
-      <button className="button1" onClick={changeLang}>
-        Сменить язык
-      </button>
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
         <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11">
@@ -60,7 +52,7 @@ const SignUpPage = () => {
           <SignInput name="password" error={errors?.password} register={register} password />
 
           <button type="submit" disabled={isLoading} className="button1 capitalize mb-3">
-            {isLoading ? 'Loading.....' : t('signUp')}
+            {isLoading ? t('signUp.loading') : t('signUp')}
           </button>
         </form>
         <div className="h-8">
