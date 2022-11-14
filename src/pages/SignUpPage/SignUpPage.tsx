@@ -4,11 +4,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ISignUpData } from './SignUp.types';
 import { useTranslation } from 'react-i18next';
+import { i18n } from 'i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
+import { Button } from '@material-tailwind/react';
 
 const schema = yup.object({
   name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
@@ -23,7 +25,6 @@ const schema = yup.object({
 
 const SignUpPage = () => {
   const { t } = useTranslation();
-
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
@@ -51,9 +52,9 @@ const SignUpPage = () => {
           <SignInput name="login" error={errors?.login} register={register} />
           <SignInput name="password" error={errors?.password} register={register} password />
 
-          <button type="submit" disabled={isLoading} className="button1 capitalize mb-3">
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? t('signUp.loading') : t('signUp')}
-          </button>
+          </Button>
         </form>
         <div className="h-8">
           {error && <div className="text-red-600 h-8">{error?.message}</div>}

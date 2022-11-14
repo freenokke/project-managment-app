@@ -9,6 +9,7 @@ import { signIn } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
+import { Button } from '@material-tailwind/react';
 
 const schema = yup.object({
   login: yup.string().required('validation.noLogin').min(4, 'validation.minLoginLength'),
@@ -43,14 +44,14 @@ const SignInPage = () => {
   return (
     <div className="container flex items-center justify-center mt-[10%]">
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
-        <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
+        <h1 className="text-2xl mb-10 capitalize">{t('signIn')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11">
           <SignInput name="login" error={errors?.login} register={register} />
           <SignInput name="password" error={errors?.password} register={register} password />
 
-          <button type="submit" disabled={isLoading} className="button1 capitalize">
-            {isLoading ? t('signUp.loading') : t('signIn')}
-          </button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? t('signUp.loading') : t('signUp')}
+          </Button>
         </form>
       </div>
     </div>

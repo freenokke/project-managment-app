@@ -1,15 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const plugin = require('tailwindcss/plugin');
-
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const plugin = require('tailwindcss/plugin');
+const withMT = require('@material-tailwind/react/utils/withMT');
+
+const config = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
       sans: ['Graphik', 'sans-serif'], // для примера
       serif: ['Merriweather', 'serif'],
     },
-
     screens: {
       mobile: '576px',
       'small-tablet': '600px',
@@ -22,8 +22,12 @@ module.exports = {
       padding: '1rem',
       center: true,
     },
+    extend: {
+      spacing: {
+        18: '4.5rem',
+      },
+    },
   },
-
   plugins: [
     plugin(function ({ addComponents }) {
       addComponents({
@@ -44,40 +48,11 @@ module.exports = {
           color: 'rgb(220, 38, 38)',
           borderRadius: '8px',
         },
-        '.button1': {
-          display: 'inline-block',
-          boxSizing: 'border-box',
-          padding: '0 20px',
-          margin: '0',
-          outline: 'none',
-          border: 'none',
-          borderRadius: '8px',
-          height: '40px',
-          lineHeight: '40px',
-          fontSize: '17px',
-          fontWeight: '600',
-          textDecoration: 'none',
-          color: '#385898',
-          backgroundColor: '#e7f3ff',
-          cursor: 'pointer',
-          userSelect: 'none',
-          appearance: ' none',
-          touchAction: 'manipulation',
-          '&:focus-visible': {
-            boxShadow: '0 0 0 2px #666',
-          },
-          '&:hover': {
-            backgroundColor: '#DBE7F2',
-          },
-          '&:active': {
-            transform: 'scale(0.96)',
-          },
-          '&:disabled': {
-            pointerEvents: 'none',
-            opacity: '0.65',
-          },
-        },
       });
     }),
   ],
 };
+
+module.exports = config;
+
+module.exports = withMT(config);
