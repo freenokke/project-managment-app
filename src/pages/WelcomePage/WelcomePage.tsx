@@ -1,14 +1,8 @@
-import { BsFillAlarmFill } from 'react-icons/bs';
-import Switch from '@mui/material/Switch';
+import { useTranslation } from 'react-i18next';
 
 const WelcomePage = () => {
-  return (
-    <>
-      <Switch />
-      <BsFillAlarmFill color="red" size={3} />
-      <div className="text-blue-500 text-5xl flex justify-center items-center ">Welcome Page</div>
-    </>
-  );
+  const { t } = useTranslation();
+  return <div className="h-screen flex justify-center items-center">{t('title')}</div>;
 };
 
 export default WelcomePage;
