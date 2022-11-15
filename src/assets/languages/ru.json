@@ -13,5 +13,7 @@
   "validation.minLoginLength": "Минимум 4 символа",
   "validation.minPasswordLength": "Минимум 8 символов",
   "validation.wrongPassword": "Пароль должен состоять как минимум из 1 цифры и 1 большой буквы",
-  "signUp.loading": "Загрузка..."
+  "signUp.loading": "Загрузка...",
+  "signUp.redirectToSignIn": "Уже есть аккаунт? Войти",
+  "signIn.redirectToSignUp": "Не зарегистрированы? Регистрация"
 }
