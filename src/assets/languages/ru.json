@@ -1,5 +1,17 @@
 {
   "title": "привет",
-  "button.signIn": "Войти",
-  "button.signUp": "Зарегистрироваться"
+  "signUp.title": "регистрация",
+  "name": "имя",
+  "login": "логин",
+  "password": "пароль",
+  "signUp": "зарегистрироваться",
+  "signIn": "войти",
+  "validation.noName": "Введите имя",
+  "validation.noLogin": "Введите логин",
+  "validation.noPassword": "Введите пароль",
+  "validation.minNameLength": "Минимум 2 символа",
+  "validation.minLoginLength": "Минимум 4 символа",
+  "validation.minPasswordLength": "Минимум 8 символов",
+  "validation.wrongPassword": "Пароль должен состоять как минимум из 1 цифры и 1 большой буквы",
+  "signUp.loading": "Загрузка..."
 }
