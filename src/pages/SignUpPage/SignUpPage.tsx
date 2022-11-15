@@ -7,10 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SignInput from '../../components/SignInput/SignInput';
 import { Button } from '@material-tailwind/react';
-import i18n from '../../i18next/i18next';
 
 const schema = yup.object({
   name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
@@ -47,7 +46,7 @@ const SignUpPage = () => {
     <div className="container flex items-center justify-center mt-[10%]">
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
         <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11 mb-3">
           <SignInput name="name" error={errors?.name} register={register} />
           <SignInput name="login" error={errors?.login} register={register} />
           <SignInput name="password" error={errors?.password} register={register} password />
@@ -56,9 +55,15 @@ const SignUpPage = () => {
             {isLoading ? t('signUp.loading') : t('signUp')}
           </Button>
         </form>
-        <div className="h-8">
-          {error && <div className="text-red-600 h-8">{error?.message}</div>}
-        </div>
+
+        {error && <div className="text-red-600 h-8">{error?.message}</div>}
+
+        <Link
+          to="/signup"
+          className="mt-3 text-gray-400 transition-colors cursor-pointer hover:text-blue-600 "
+        >
+          {t('signUp.redirectToSignIn')}
+        </Link>
       </div>
     </div>
   );

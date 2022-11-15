@@ -13,5 +13,7 @@
   "validation.minLoginLength": "4 sybmols or more",
   "validation.minPasswordLength": "8 sybmols or more",
   "validation.wrongPassword": "At least one upper case letter and one digit",
-  "signUp.loading": "Loading..."
+  "signUp.loading": "Loading...",
+  "signUp.redirectToSignIn": "Already have an account? Sign in",
+  "signIn.redirectToSignUp": "Don't have account yet? Register"
 }
