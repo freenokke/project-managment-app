@@ -6,6 +6,7 @@
   "password": "пароль",
   "signUp": "зарегистрироваться",
   "signIn": "войти",
+  "logout": "выйти",
   "validation.noName": "Введите имя",
   "validation.noLogin": "Введите логин",
   "validation.noPassword": "Введите пароль",
@@ -15,5 +16,9 @@
   "validation.wrongPassword": "Пароль должен состоять как минимум из 1 цифры и 1 большой буквы",
   "signUp.loading": "Загрузка...",
   "signUp.redirectToSignIn": "Уже есть аккаунт? Войти",
-  "signIn.redirectToSignUp": "Не зарегистрированы? Регистрация"
+  "signIn.redirectToSignUp": "Не зарегистрированы? Регистрация",
+  "button.create": "создать",
+  "tooltip.createBoard": "создать новую доску",
+  "tooltip.account": "аккаунт",
+  "profile.edit": "редактировать профиль"
 }

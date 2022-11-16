@@ -38,7 +38,9 @@ export const signUp = createAsyncThunk('auth/signUp', async (data: ISignUpData) 
 interface IState {
   isLoading: boolean;
   error: SerializedError | null;
-  token?: string;
+  token?: {
+    token: string;
+  } | null;
 }
 
 const initialState: IState = {
@@ -49,7 +51,11 @@ const initialState: IState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logOut: (state) => {
+      state.token = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.pending, (state) => {
@@ -64,7 +70,7 @@ const authSlice = createSlice({
       .addCase(signUp.rejected, (state, action) => {
         state.error = action.error;
         state.isLoading = false;
-        state.token = '';
+        state.token = null;
       })
       .addCase(signIn.pending, (state) => {
         state.isLoading = true;
@@ -77,10 +83,11 @@ const authSlice = createSlice({
       .addCase(signIn.rejected, (state, action) => {
         state.error = action.error;
         state.isLoading = false;
-        state.token = '';
+        state.token = null;
       });
   },
 });
 
 const { reducer } = authSlice;
+export const { logOut } = authSlice.actions;
 export default reducer;

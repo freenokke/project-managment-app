@@ -6,6 +6,7 @@
   "password": "password",
   "signUp": "sign up",
   "signIn": "sign in",
+  "logout": "log out",
   "validation.noName": "Need to type name",
   "validation.noLogin": "Need to type login",
   "validation.noPassword": "Need to type password",
@@ -15,5 +16,9 @@
   "validation.wrongPassword": "At least one upper case letter and one digit",
   "signUp.loading": "Loading...",
   "signUp.redirectToSignIn": "Already have an account? Sign in",
-  "signIn.redirectToSignUp": "Don't have account yet? Register"
+  "signIn.redirectToSignUp": "Don't have account yet? Register",
+  "button.create": "create",
+  "tooltip.createBoard": "create new board",
+  "tooltip.account": "account",
+  "profile.edit": "edit profile"
 }

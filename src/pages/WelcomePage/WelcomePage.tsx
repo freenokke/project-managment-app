@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 const WelcomePage = () => {
   const { t } = useTranslation();
-  return <div className="h-screen flex justify-center items-center">{t('title')}</div>;
+  return <div className="flex h-[2000px] items-center justify-center">{t('title')}</div>;
 };
 
 export default WelcomePage;
