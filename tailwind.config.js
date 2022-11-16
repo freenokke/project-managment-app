@@ -22,11 +22,11 @@ const config = {
       padding: '1rem',
       center: true,
     },
-    // extend: {
-    //   spacing: {
-    //     18: '4.5rem',
-    //   },
-    // },
+    extend: {
+      spacing: {
+        18: '4.5rem',
+      },
+    },
   },
   plugins: [
     plugin(function ({ addComponents }) {
