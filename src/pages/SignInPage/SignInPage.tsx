@@ -42,7 +42,7 @@ const SignInPage = () => {
   const onSubmit = (data: ISignInData) => dispatch(signIn(data));
 
   return (
-    <div className="container flex items-center justify-center height100">
+    <div className="flex items-center justify-center height100">
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
         <h1 className="text-2xl mb-10 capitalize">{t('signIn')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11 mb-3">
