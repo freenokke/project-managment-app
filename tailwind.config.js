@@ -40,6 +40,9 @@ const config = {
           color: 'rgb(220, 38, 38)',
           borderRadius: '8px',
         },
+        '.height100': {
+          height: 'calc(100vh - 65px - 70px)',
+        },
       });
     }),
   ],

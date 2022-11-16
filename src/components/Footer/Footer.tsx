@@ -3,7 +3,7 @@ import { authorsArray } from '../../utils/constants/common';
 
 const Footer = () => {
   return (
-    <div className="flex wrap justify-between items-center bg-gray-400  p-1 w-screen font-sans">
+    <div className="flex wrap justify-between items-center bg-gray-400  p-1 w-[100%] font-sans">
       <a className="" href="https://rs.school/react/" target="_blank" rel="noreferrer">
         <img className="w-24" src={logo} alt="" />
       </a>

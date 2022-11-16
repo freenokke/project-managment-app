@@ -43,7 +43,7 @@ const SignUpPage = () => {
   const onSubmit = (data: ISignUpData) => dispatch(signUp(data));
 
   return (
-    <div className="container flex items-center justify-center mt-[10%]">
+    <div className="container flex items-center justify-center height100">
       <div className=" shadow-md p-5 w-[500px] mx-auto flex flex-col items-center">
         <h1 className="text-2xl mb-10 capitalize">{t('signUp.title')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-11 mb-3">
@@ -59,7 +59,7 @@ const SignUpPage = () => {
         {error && <div className="text-red-600 h-8">{error?.message}</div>}
 
         <Link
-          to="/signup"
+          to="/signin"
           className="mt-3 text-gray-400 transition-colors cursor-pointer hover:text-blue-600 "
         >
           {t('signUp.redirectToSignIn')}
