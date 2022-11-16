@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { Link, useNavigate } from 'react-router-dom';
-import SignInput from '../../components/SignInput/SignInput';
+import { SignInput } from '../../components';
 import { Button } from '@material-tailwind/react';
 
 const schema = yup.object({
