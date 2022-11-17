@@ -10,14 +10,6 @@ const config = {
       sans: ['Graphik', 'sans-serif'], // для примера
       serif: ['Merriweather', 'serif'],
     },
-    screens: {
-      mobile: '576px',
-      'small-tablet': '600px',
-      tablet: '768px',
-      'small-laptop': '992px',
-      laptop: '1024px',
-    },
-
     container: {
       padding: '1rem',
       center: true,
@@ -47,6 +39,39 @@ const config = {
           border: '2px solid rgb(220, 38, 38)',
           color: 'rgb(220, 38, 38)',
           borderRadius: '8px',
+        },
+        '.boardCard': {
+          position: 'relative',
+          width: '95%',
+          height: '120px',
+          padding: '10px 20px',
+          boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.25)',
+          transition: 'all 0.3s',
+          cursor: 'pointer',
+          '&:hover': {
+            boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.35)',
+          },
+        },
+        '.modalOverlay': {
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          bottom: '0',
+          right: '0',
+          zIndex: '10',
+        },
+        '.modalInner': {
+          position: 'fixed',
+          top: '45%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          transform: 'translateY(-50%)',
+          width: '290px',
+          padding: '40px 0',
+          zIndex: '20',
+          borderRadius: '6px',
+          backgroundColor: 'white',
+          boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.25)',
         },
       });
     }),
