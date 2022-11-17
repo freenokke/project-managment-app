@@ -1,75 +1,50 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { AccountMenu, LangSwitch } from '../../components';
-import { Navbar, MobileNav, Button, IconButton, Tooltip } from '@material-tailwind/react';
+import { LangSwitch, NavList } from '../../components';
+import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../hooks/hook';
 
 const Header = () => {
   const { token } = useAppSelector((state) => state.auth);
   const [openNav, setOpenNav] = useState(false);
   const [pageYOffset, setPageYOffset] = useState(window.scrollY);
-  const { t } = useTranslation();
   const { pathname } = useLocation();
+  const isSignPage = /sign/.test(pathname);
+  const isWelcomePage = pathname === '/';
 
-  const toFixHeader = useMemo(() => {
-    const isSignPage = /sign/.test(pathname);
-    const isWelcomePage = pathname === '/';
+  const stickHeader = useMemo(() => {
     return !isSignPage && !isWelcomePage && pageYOffset > 0;
-  }, [pageYOffset, pathname]);
+  }, [isSignPage, isWelcomePage, pageYOffset]);
 
   const closeNav = useCallback(() => {
     setOpenNav(false);
   }, []);
 
-  const openNavHandle = useCallback(() => {
+  const openNavToggle = useCallback(() => {
     setOpenNav(!openNav);
   }, [openNav]);
 
   useEffect(() => {
-    const handleResize = () => window.innerWidth >= 720 && setOpenNav(false);
+    const handleResize = () => {
+      if (window.innerWidth >= 720) setOpenNav(false);
+    };
     const handleScroll = () => setPageYOffset(window.scrollY);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll);
+    if (!isSignPage && !isWelcomePage) {
+      window.addEventListener('scroll', handleScroll);
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [toFixHeader]);
-
-  const navList = (
-    <ul className="mt-7 mb-4 flex flex-col items-center gap-2 md:mb-0 md:mt-0 md:flex-row md:items-center md:gap-6">
-      <Link to="/signin">
-        <Button onClick={closeNav} variant="outlined" size="sm" className="inline-block max-w-max">
-          {t('signIn')}
-        </Button>
-      </Link>
-      <Link to="/signup">
-        <Button onClick={closeNav} variant="gradient" size="sm" className="inline-bloc max-w-max">
-          {t('signUp')}
-        </Button>
-      </Link>
-    </ul>
-  );
-
-  const navListAuth = (
-    <ul className="mt-7 mb-4 flex basis-full items-center gap-5 md:mb-0 md:mt-0 md:items-center md:gap-6">
-      <Tooltip
-        content={t('tooltip.createBoard')}
-        className="bg-blue-gray-900 text-xs first-letter:capitalize"
-      >
-        <i className="material-icons cursor-pointer text-4xl md:text-2xl">note_add</i>
-      </Tooltip>
-      <AccountMenu closeNav={closeNav} />
-    </ul>
-  );
+  }, [stickHeader, isSignPage, isWelcomePage]);
 
   return (
     <Navbar
       shadow={true}
       className={`${
-        toFixHeader && 'py-1 px-2 fixed top-0 shadow-teal-200 md:px-4 md:py-2'
+        stickHeader && 'py-1 px-2 fixed top-0 shadow-teal-200 md:px-4 md:py-2'
       } mx-auto max-w-full font-sans text-[#7f7e8a] transition-all`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -78,13 +53,13 @@ const Header = () => {
         </Link>
         <LangSwitch />
         <div className="hidden items-center gap-2 md:order-3 md:flex">
-          {token ? navListAuth : navList}
+          <NavList closeNav={closeNav} token={token} />
         </div>
         <IconButton
           variant="text"
           className="order-3 h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent md:order-3 md:hidden"
           ripple={false}
-          onClick={openNavHandle}
+          onClick={openNavToggle}
         >
           {openNav ? (
             <i className="material-icons">close</i>
@@ -93,7 +68,9 @@ const Header = () => {
           )}
         </IconButton>
       </div>
-      <MobileNav open={openNav}>{token ? navListAuth : navList}</MobileNav>
+      <MobileNav open={openNav}>
+        <NavList closeNav={closeNav} token={token} />
+      </MobileNav>
     </Navbar>
   );
 };

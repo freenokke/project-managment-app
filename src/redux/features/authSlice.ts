@@ -38,9 +38,7 @@ export const signUp = createAsyncThunk('auth/signUp', async (data: ISignUpData) 
 interface IState {
   isLoading: boolean;
   error: SerializedError | null;
-  token?: {
-    token: string;
-  } | null;
+  token?: string | null;
 }
 
 const initialState: IState = {

@@ -1,14 +1,14 @@
 import { Menu, MenuHandler, MenuItem, MenuList, Tooltip } from '@material-tailwind/react';
 import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/hook';
 import { logOut } from '../../redux/features/authSlice';
 import { Props } from './AccountMenu.type';
 
 const AccountMenu: FC<Props> = ({ closeNav }) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onLogout = useCallback(() => {
     closeNav();
@@ -21,7 +21,9 @@ const AccountMenu: FC<Props> = ({ closeNav }) => {
         <MenuHandler>
           <div className="flex">
             <Tooltip content={t('tooltip.account')} className="bg-blue-gray-900 text-xs capitalize">
-              <span className="material-icons cursor-pointer">manage_accounts</span>
+              <span className="text-3xl material-icons cursor-pointer md:text-2xl">
+                manage_accounts
+              </span>
             </Tooltip>
           </div>
         </MenuHandler>
