@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { logOut } from '../../redux/features/authSlice';
 import { Props } from './AccountMenu.type';
 
-const AccountMenu: FC<Props> = ({ classes, closeNav }) => {
+const AccountMenu: FC<Props> = ({ closeNav }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const AccountMenu: FC<Props> = ({ classes, closeNav }) => {
   }, [dispatch, closeNav]);
 
   return (
-    <div className={classes}>
+    <div className="ml-auto">
       <Menu>
         <MenuHandler>
           <div className="flex">

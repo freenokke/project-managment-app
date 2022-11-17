@@ -61,7 +61,7 @@ const Header = () => {
       >
         <i className="material-icons cursor-pointer text-4xl md:text-2xl">note_add</i>
       </Tooltip>
-      <AccountMenu classes="ml-auto" closeNav={closeNav} />
+      <AccountMenu closeNav={closeNav} />
     </ul>
   );
 
