@@ -9,5 +9,4 @@ export interface IBoardProps {
   id: string;
   title: string;
   description?: string;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
 }

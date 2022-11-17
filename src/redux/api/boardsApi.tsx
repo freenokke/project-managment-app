@@ -3,13 +3,16 @@ import { IBoard } from '../../components/BoardCard/Board.types';
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNzJjMGNkMjU1YjVlNmJlZGEzM2FkOCIsImxvZ2luIjoiYW1pbmtrYSIsImlhdCI6MTY2ODY5NjIzMCwiZXhwIjoxNjY4NzM5NDMwfQ.kkK4aPf-zw_1uSLDQC0pVMS0HPJCZzQDAp-f2kChdxU';
+
 export const boardsApi = createApi({
   reducerPath: 'boardsApi',
   tagTypes: ['Boards'],
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token?.token;
+      // const token = (getState() as RootState).auth.token?.token;
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
       }

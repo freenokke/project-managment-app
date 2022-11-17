@@ -15,5 +15,9 @@
   "validation.wrongPassword": "At least one upper case letter and one digit",
   "signUp.loading": "Loading...",
   "signUp.redirectToSignIn": "Already have an account? Sign in",
-  "signIn.redirectToSignUp": "Don't have account yet? Register"
+  "signIn.redirectToSignUp": "Don't have account yet? Register",
+  "deleteModal.boardTitle": "board",
+  "deleteModal.boardText": "All columns and cards will be deleted. You won't be able to open the board anymore. Cancellation is not possible",
+  "deleteModal.columnTitle": "column",
+  "deleteModal.columnText": "All columns and cards will be deleted. You won't be able to open the board anymore. Cancellation is not possible"
 }

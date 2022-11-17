@@ -1,57 +1,54 @@
-import { useAppDispatch, useAppSelector } from './redux.hooks';
-import { ModalBoardForm, ModalConfirm } from '../components';
-import { toggleModal } from '../redux/features/modalSlice';
 import {
   useCreateBoardMutation,
   useUpdateBoardMutation,
   useDeleteBoardMutation,
 } from '../redux/api/boardsApi';
-import { modalText } from '../utils/constants/constants';
 import { IBoard } from '../components/BoardCard/Board.types';
+import { useEffect } from 'react';
 
-const useBoardModal = (boardId: string, typeModal: string | null) => {
-  const { title, confirmation } = modalText.board;
-  const dispatch = useAppDispatch();
-  const { isModalShown } = useAppSelector((state) => state.modal);
+export interface Updates {
+  title: string;
+  owner?: string;
+  users?: string[];
+}
 
-  const handleToggleModal = () => {
-    dispatch(toggleModal());
+// ! slice 'Loaders' = { isCreating: boolean, updating: string | null }
+
+const useBoardModal = () => {
+  const [createBoardCall, { isLoading: isCreating }] = useCreateBoardMutation();
+  const [updateBoardCall, { isLoading: isUpdating }] = useUpdateBoardMutation();
+  const [deleteBoardCall, { isLoading: isDeleting }] = useDeleteBoardMutation();
+
+  useEffect(() => {
+    // * dispatch(setIsCreating(isCreating))
+  }, [isCreating]);
+
+  useEffect(() => {
+    // * dispatch(setIsUpdating({ isUpdating: isUpdating, id }))
+  }, [isUpdating]);
+
+  const createBoard = async (data: IBoard) => {
+    await createBoardCall(data).unwrap();
   };
 
-  const [createBoard, {}] = useCreateBoardMutation();
-  const [updateBoard, {}] = useUpdateBoardMutation();
-  const [deleteBoard, {}] = useDeleteBoardMutation();
-
-  const handleCreateBoard = async (data: IBoard) => {
-    await createBoard(data).unwrap();
+  const updateBoard = async (updates: Updates, boardId: string) => {
+    const body: IBoard = {
+      owner: 'Harry Potter',
+      users: [],
+      ...updates,
+    };
+    await updateBoardCall({ boardId, body }).unwrap();
   };
 
-  const handleUpdateBoard = async (body: IBoard) => {
-    await updateBoard({ boardId, body }).unwrap();
+  const deleteBoard = async (boardId: string) => {
+    await deleteBoardCall(boardId).unwrap();
   };
 
-  const handleDeleteBoard = async () => {
-    await deleteBoard(boardId).unwrap();
+  return {
+    createBoard,
+    updateBoard,
+    deleteBoard,
   };
-
-  return (
-    <>
-      {isModalShown && typeModal === 'create' ? (
-        <ModalBoardForm onCloseModal={handleToggleModal} onHandleEvent={handleCreateBoard} />
-      ) : null}
-      {isModalShown && typeModal === 'update' ? (
-        <ModalBoardForm onCloseModal={handleToggleModal} onHandleEvent={handleUpdateBoard} />
-      ) : null}
-      {isModalShown && typeModal === 'confirm' ? (
-        <ModalConfirm
-          onCloseModal={handleToggleModal}
-          onHandleEvent={handleDeleteBoard}
-          title={title}
-          confirmation={confirmation}
-        />
-      ) : null}
-    </>
-  );
 };
 
 export default useBoardModal;

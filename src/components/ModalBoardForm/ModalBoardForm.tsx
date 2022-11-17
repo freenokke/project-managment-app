@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect } from 'react';
 import { IModalBoardForm, IFormFields } from './ModalBoardForm.types';
 import { useAppDispatch } from '../../hooks/redux.hooks';
-import { toggleModal } from '../../redux/features/modalSlice';
+// import { toggleModal } from '../../redux/features/modalSlice';
 import ModalInput from '../ModalInput/ModalInput';
 // import ModalTextarea from '../ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
@@ -27,7 +27,7 @@ const ModalBoardForm = (props: IModalBoardForm) => {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      dispatch(toggleModal());
+      // dispatch(toggleModal());
     }
   });
 

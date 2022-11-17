@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux.hooks';
+import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IBoardProps } from './Board.types';
 
 const BoardCard = (props: IBoardProps) => {
-  const { id, title, description, onClick } = props;
+  const { id, title, description } = props;
+  const dispatch = useAppDispatch();
+
+  const deleteModal = useCallback(() => {
+    dispatch(showModal({ type: ModalTypes.deleteBoard, data: id }));
+  }, [id, dispatch]);
+
+  const editModal = useCallback(() => {
+    dispatch(showModal({ type: ModalTypes.edit, data: id }));
+  }, [id, dispatch]);
+
   return (
     <div id={id} className="boardCard md:w-[45%] lg:w-[30%] h-[120px]">
       <Link to={`/board/${id}`} className="block w-full h-full">
@@ -13,14 +25,13 @@ const BoardCard = (props: IBoardProps) => {
       <span
         className="material-icons absolute bottom-[7px] right-[40px] text-blue-700 cursor-pointer hover:text-blue-400"
         data-modal="update"
-        onClick={onClick}
+        onClick={editModal}
       >
         edit
       </span>
       <span
         className="material-icons absolute bottom-[7px] right-[7px] text-blue-700 cursor-pointer hover:text-blue-400"
-        data-modal="confirm"
-        onClick={onClick}
+        onClick={deleteModal}
       >
         delete_outline
       </span>

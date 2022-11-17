@@ -7,6 +7,7 @@ import LangSwitch from './LangSwitch/LangSwitch';
 import ModalWrapper from './ModalWrapper/ModalWrapper';
 import ModalConfirm from './ModalConfirm/ModalConfirm';
 import ModalBoardForm from './ModalBoardForm/ModalBoardForm';
+import Modal from './Modal/Modal';
 
 export {
   Header,
@@ -18,4 +19,5 @@ export {
   LangSwitch,
   BoardCard,
   CreateCard,
+  Modal,
 };
