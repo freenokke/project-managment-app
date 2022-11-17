@@ -1,10 +1,9 @@
 import { useState, useCallback, FC } from 'react';
 import i18n from '../../i18next/i18next';
-import { Props } from './LangSwitch.type';
 import enFlag from '../../assets/images/us_uk_default.png';
 import ruFlag from '../../assets/images/ru_default.png';
 
-const LangSwitch: FC<Props> = ({ classes }) => {
+const LangSwitch: FC = () => {
   const currentLanguage = i18n.language;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,7 +22,7 @@ const LangSwitch: FC<Props> = ({ classes }) => {
   }, [menuOpen]);
 
   return (
-    <div className={classes}>
+    <div className="relative order-1 md:order-2 md:ml-auto">
       <div
         className={`${
           !menuOpen ? 'scale-0' : ''

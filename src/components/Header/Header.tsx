@@ -22,6 +22,10 @@ const Header = () => {
     setOpenNav(false);
   }, []);
 
+  const openNavHandle = useCallback(() => {
+    setOpenNav(!openNav);
+  }, [openNav]);
+
   useEffect(() => {
     const handleResize = () => window.innerWidth >= 720 && setOpenNav(false);
     const handleScroll = () => setPageYOffset(window.scrollY);
@@ -72,7 +76,7 @@ const Header = () => {
         <Link to="/" className="order-2 cursor-pointer py-1.5 font-normal md:order-1">
           <span>Logo</span>
         </Link>
-        <LangSwitch classes="relative order-1 md:order-2 md:ml-auto" />
+        <LangSwitch />
         <div className="hidden items-center gap-2 md:order-3 md:flex">
           {token ? navListAuth : navList}
         </div>
@@ -80,29 +84,12 @@ const Header = () => {
           variant="text"
           className="order-3 h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent md:order-3 md:hidden"
           ripple={false}
-          onClick={() => setOpenNav(!openNav)}
+          onClick={openNavHandle}
         >
           {openNav ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <i className="material-icons">close</i>
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <i className="material-icons">menu</i>
           )}
         </IconButton>
       </div>
