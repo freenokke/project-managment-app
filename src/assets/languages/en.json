@@ -20,5 +20,10 @@
   "button.create": "create",
   "tooltip.createBoard": "create new board",
   "tooltip.account": "account",
-  "profile.edit": "edit profile"
+  "profile.edit": "edit profile",
+  "hero.title": "Track your Progress & Save Time",
+  "hero.subTitle": "Helps you to organize your work",
+  "hero.buttonText": "Learn more",
+  "hero.notice": "for Web (Desktop & Mobile)"
+
 }
