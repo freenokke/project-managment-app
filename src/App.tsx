@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { SignUpPage, MainPage, WelcomePage, BoardPage, SignInPage } from './pages';
-import { Header } from './components';
+import { Footer, Header } from './components';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
         </Routes>
       </div>
+      <Footer />
     </>
   );
 }
