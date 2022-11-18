@@ -6,14 +6,14 @@ function App() {
   return (
     <>
       <Header />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-        </Routes>
-      </div>
+
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+      </Routes>
+
       <Footer />
     </>
   );
