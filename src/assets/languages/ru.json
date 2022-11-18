@@ -6,6 +6,7 @@
   "password": "пароль",
   "signUp": "зарегистрироваться",
   "signIn": "войти",
+  "logout": "выйти",
   "validation.noName": "Введите имя",
   "validation.noLogin": "Введите логин",
   "validation.noPassword": "Введите пароль",

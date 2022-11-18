@@ -6,6 +6,7 @@
   "password": "password",
   "signUp": "sign up",
   "signIn": "sign in",
+  "logout": "log out",
   "validation.noName": "Need to type name",
   "validation.noLogin": "Need to type login",
   "validation.noPassword": "Need to type password",

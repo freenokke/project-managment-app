@@ -1,70 +1,76 @@
-import { useState, useEffect } from 'react';
-import { LangSwitch } from '../../components';
-import { Navbar, MobileNav, Button, IconButton } from '@material-tailwind/react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { LangSwitch, NavList } from '../../components';
+import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/hook';
 
 const Header = () => {
+  const { token } = useAppSelector((state) => state.auth);
   const [openNav, setOpenNav] = useState(false);
-  const { t } = useTranslation();
+  const [pageYOffset, setPageYOffset] = useState(window.scrollY);
+  const { pathname } = useLocation();
+  const isSignPage = /sign/.test(pathname);
+  const isWelcomePage = pathname === '/';
 
-  useEffect(() => {
-    window.addEventListener('resize', () => window.innerWidth >= 576 && setOpenNav(false));
+  const stickHeader = useMemo(() => {
+    return !isSignPage && !isWelcomePage && pageYOffset > 0;
+  }, [isSignPage, isWelcomePage, pageYOffset]);
+
+  const closeNav = useCallback(() => {
+    setOpenNav(false);
   }, []);
 
-  const navList = (
-    <ul className="mb-4 mt-2 flex flex-col items-center gap-2 mobile:mb-0 mobile:mt-0 mobile:flex-row mobile:items-center mobile:gap-6">
-      <Button variant="outlined" size="sm" className="inline-block max-w-max">
-        {t('button.signIn')}
-      </Button>
-      <Button variant="gradient" size="sm" className="inline-bloc max-w-max">
-        {t('button.signUp')}
-      </Button>
-    </ul>
-  );
+  const openNavToggle = useCallback(() => {
+    setOpenNav(!openNav);
+  }, [openNav]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 720) setOpenNav(false);
+    };
+    const handleScroll = () => setPageYOffset(window.scrollY);
+    window.addEventListener('resize', handleResize);
+    if (!isSignPage && !isWelcomePage) {
+      window.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [stickHeader, isSignPage, isWelcomePage]);
 
   return (
     <Navbar
       shadow={true}
-      className="max-w-full mx-auto py-2 px-4 mobile:px-8 mobile:py-4 font-sans text-[#7f7e8a]"
+      className={`${
+        stickHeader && 'py-1 px-2 fixed top-0 shadow-teal-200 md:px-4 md:py-2'
+      } mx-auto max-w-full font-sans text-[#7f7e8a] transition-all`}
     >
-      <div className="container mx-auto flex items-center justify-between">
-        <Link to="/" className="mr-4 cursor-pointer py-1.5 font-normal">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <Link to="/" className="order-2 cursor-pointer py-1.5 font-normal md:order-1">
           <span>Logo</span>
         </Link>
         <LangSwitch />
-        <div className="hidden mobile:flex gap-2 items-center">{navList}</div>
+        <div className="hidden items-center gap-2 md:order-3 md:flex">
+          <NavList closeNav={closeNav} token={token} />
+        </div>
         <IconButton
           variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent mobile:hidden"
+          className="order-3 h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent md:order-3 md:hidden"
           ripple={false}
-          onClick={() => setOpenNav(!openNav)}
+          onClick={openNavToggle}
         >
           {openNav ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <i className="material-icons">close</i>
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <i className="material-icons">menu</i>
           )}
         </IconButton>
       </div>
-      <MobileNav open={openNav}>{navList}</MobileNav>
+      <MobileNav open={openNav}>
+        <NavList closeNav={closeNav} token={token} />
+      </MobileNav>
     </Navbar>
   );
 };
