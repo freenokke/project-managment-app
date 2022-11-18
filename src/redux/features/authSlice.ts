@@ -91,6 +91,7 @@ const authSlice = createSlice({
       .addCase(signIn.fulfilled, (state, action) => {
         const { token } = action.payload;
         const userId = parseJwt(token).id;
+        console.log(parseJwt(token));
         state.isLoading = false;
         state.token = token;
         state.userId = userId;
