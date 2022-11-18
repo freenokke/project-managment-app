@@ -4,18 +4,6 @@ import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import SignInput from './SignInput/SignInput';
 import LangSwitch from './LangSwitch/LangSwitch';
-import ModalWrapper from './ModalWrapper/ModalWrapper';
-import ModalConfirm from './ModalConfirm/ModalConfirm';
-import ModalBoardForm from './ModalBoardForm/ModalBoardForm';
+import ModalWrapper from './Modal/ModalWrapper/ModalWrapper';
 
-export {
-  Header,
-  SignInput,
-  Footer,
-  ModalWrapper,
-  ModalConfirm,
-  ModalBoardForm,
-  LangSwitch,
-  BoardCard,
-  CreateCard,
-};
+export { Header, SignInput, Footer, ModalWrapper, LangSwitch, BoardCard, CreateCard };

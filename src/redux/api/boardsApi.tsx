@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IBoard } from '../../components/BoardCard/Board.types';
+import { IBoardResponse, IBoardData } from '../../components/BoardCard/Board.types';
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
@@ -18,7 +18,7 @@ export const boardsApi = createApi({
   }),
 
   endpoints: (build) => ({
-    getBoards: build.query<IBoard[], void>({
+    getBoards: build.query<IBoardResponse[], void>({
       query: () => ({
         url: 'boards',
       }),
@@ -31,7 +31,7 @@ export const boardsApi = createApi({
           : [{ type: 'Boards', id: 'LIST' }],
     }),
 
-    createBoard: build.mutation<IBoard, IBoard>({
+    createBoard: build.mutation<IBoardResponse, IBoardData>({
       query: (body) => ({
         url: 'boards',
         method: 'POST',
@@ -40,7 +40,7 @@ export const boardsApi = createApi({
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
     }),
 
-    updateBoard: build.mutation<IBoard, { boardId: string; body: IBoard }>({
+    editBoard: build.mutation<IBoardResponse, { boardId: string; body: IBoardData }>({
       query: ({ boardId, body }) => ({
         url: `boards/${boardId}`,
         method: 'PUT',
@@ -49,7 +49,7 @@ export const boardsApi = createApi({
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
     }),
 
-    deleteBoard: build.mutation<IBoard, string>({
+    deleteBoard: build.mutation<IBoardResponse, string>({
       query: (boardId) => ({
         url: `boards/${boardId}`,
         method: 'DELETE',
@@ -62,6 +62,6 @@ export const boardsApi = createApi({
 export const {
   useGetBoardsQuery,
   useCreateBoardMutation,
-  useUpdateBoardMutation,
+  useEditBoardMutation,
   useDeleteBoardMutation,
 } = boardsApi;

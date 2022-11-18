@@ -1,4 +1,4 @@
-import { IBoard } from '../BoardCard/Board.types';
+import { IBoardData } from '../../BoardCard/Board.types';
 
 export interface IFormFields {
   Title: string;
@@ -7,5 +7,5 @@ export interface IFormFields {
 
 export interface IModalBoardForm {
   onCloseModal: () => void;
-  onHandleEvent: (data: IBoard) => void;
+  onHandleEvent: (data: IBoardData) => void;
 }

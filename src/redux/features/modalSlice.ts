@@ -1,27 +1,45 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum ModalTypes {
+  createBoard,
+  createColumn,
+  createTask,
+  deleteBoard,
+  deleteColumn,
+  deleteTask,
+  editBoard,
+  editColumn,
+  editTask,
+}
+
 interface IModalState {
-  modalToShow: string | null;
-  isModalShown: boolean;
+  visible: boolean;
+  type: ModalTypes;
+  data: string | null;
 }
 
 const initialState: IModalState = {
-  modalToShow: null,
-  isModalShown: false,
+  visible: false,
+  type: ModalTypes.createBoard,
+  data: null,
 };
 
 const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    setModalToShow(state, action: PayloadAction<string | null>) {
-      state.modalToShow = action.payload;
+    showModal(state, action: PayloadAction<{ type: ModalTypes; data?: string }>) {
+      const { type, data } = action.payload;
+      state.visible = true;
+      state.type = type;
+      state.data = data || null;
     },
-    toggleModal(state) {
-      state.isModalShown = !state.isModalShown;
+    closeModal(state) {
+      state.visible = false;
+      state.data = null;
     },
   },
 });
 
-export const { toggleModal, setModalToShow } = modalSlice.actions;
+export const { showModal, closeModal } = modalSlice.actions;
 export default modalSlice;
