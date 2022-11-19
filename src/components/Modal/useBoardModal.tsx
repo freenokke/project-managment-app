@@ -18,7 +18,7 @@ const useBoardModal = () => {
   const [deleteBoardCall, {}] = useDeleteBoardMutation();
 
   const createBoard = async (data: IBoardData) => {
-    await createBoardCall(data);
+    await createBoardCall(data).unwrap();
   };
 
   const editBoard = async (updates: Updates, boardId: string) => {

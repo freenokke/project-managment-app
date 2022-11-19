@@ -1,12 +1,13 @@
 import { Path, UseFormRegister, FieldErrors } from 'react-hook-form';
 
 export interface IFormFields {
-  Title: string;
-  Description: string;
+  title: string;
+  description: string;
 }
 
 export interface IModalInput {
-  label: Path<IFormFields>;
+  label: string;
+  name: Path<IFormFields>;
   register: UseFormRegister<IFormFields>;
   errors: FieldErrors<IFormFields>;
 }

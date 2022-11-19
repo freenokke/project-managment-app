@@ -9,8 +9,8 @@ import { ModalTypes } from '../../redux/features/modalSlice';
 import { IBoardData } from '../BoardCard/Board.types';
 
 export interface IFormFields {
-  Title: string;
-  Description: string;
+  title: string;
+  description: string;
 }
 
 export interface IModalForm {
@@ -25,8 +25,8 @@ export interface ModalChild {
   getFieldState: UseFormGetFieldState<IFormFields>;
   errors: Partial<
     FieldErrorsImpl<{
-      Title: string;
-      Description: string;
+      title: string;
+      description: string;
     }>
   >;
   isDirty: boolean;
@@ -34,4 +34,5 @@ export interface ModalChild {
   isSubmitted: boolean;
   data: string | null;
   type: ModalTypes;
+  userId: string | null;
 }

@@ -45,7 +45,9 @@ const DeleteModal = ({ data, type }: ModalChild) => {
         <Button variant="outlined" onClick={onCloseModal}>
           {t('deleteModal.modalCancelButton')}
         </Button>
-        <Button onClick={onDelete}>{t('deleteModal.modalDeleteButton')}</Button>
+        <Button onClick={onDelete} color="red">
+          {t('deleteModal.modalDeleteButton')}
+        </Button>
       </div>
     </div>
   );

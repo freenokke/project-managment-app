@@ -1,8 +1,8 @@
 import { IBoardData } from '../../BoardCard/Board.types';
 
 export interface IFormFields {
-  Title: string;
-  Description: string;
+  title: string;
+  description: string;
 }
 
 export interface IModalBoardForm {

@@ -17,6 +17,7 @@ const CreateModal = ({
   isDirty,
   isValid,
   isSubmitted,
+  userId,
 }: ModalChild) => {
   const dispatch = useAppDispatch();
 
@@ -30,12 +31,14 @@ const CreateModal = ({
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (data) => {
-      const boardData = { title: data['Title'], owner: 'userId', users: [] };
-      createBoard(boardData);
-      reset();
-      onCloseModal();
+      if (userId) {
+        const boardData = { title: data.title, owner: userId, users: ['Ron', 'Hermione'] };
+        createBoard(boardData);
+        reset();
+        onCloseModal();
+      }
     },
-    [createBoard, onCloseModal, reset]
+    [createBoard, onCloseModal, reset, userId]
   );
 
   return (
@@ -46,7 +49,12 @@ const CreateModal = ({
         className="flex flex-col items-center gap-9 w-full mb-[40px]"
         autoComplete="off"
       >
-        <ModalInput label={t('modal.labelInput')} register={register} errors={errors} />
+        <ModalInput
+          name="title"
+          label={t('modal.labelInput')}
+          register={register}
+          errors={errors}
+        />
         <Button type="submit" className="w-full" disabled={!isDirty || (isSubmitted && !isValid)}>
           {t('createModal.modalButton')}
         </Button>

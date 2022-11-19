@@ -22,6 +22,7 @@ const ModalTypeMapper = {
 
 const Modal = () => {
   const { visible, type, data } = useAppSelector((state) => state.modal);
+  const { userId } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const {
@@ -53,6 +54,7 @@ const Modal = () => {
         isSubmitted={isSubmitted}
         data={data}
         type={type}
+        userId={userId}
       />
     </ModalWrapper>
   );

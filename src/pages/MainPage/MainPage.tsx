@@ -10,7 +10,6 @@ import { modalText } from '../../utils/constants/constants';
 const MainPage = () => {
   const { t } = useTranslation();
   const { title } = modalText.board;
-
   const { isLoading, isError, data: boardsSet } = useGetBoardsQuery();
 
   const dispatch = useAppDispatch();
@@ -20,7 +19,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="flex flex-col align-top text-gray-700">
+    <div className="container flex flex-col align-top text-gray-700 flex-grow">
       <h1 className="text-[32px] m-[40px]">{t('main.title')}</h1>
       <Modal />
       <div className="flex flex-wrap items-center w-[100%] gap-[20px] justify-center md:justify-start">

@@ -8,6 +8,7 @@ import { IFormFields } from './EditModal.type';
 import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import { ModalChild } from '../Modal.types';
+// import { useGetBoardsQuery } from '../../../redux/api/boardsApi';
 
 const EditModal = ({
   register,
@@ -28,9 +29,12 @@ const EditModal = ({
   const { t } = useTranslation();
   const { editBoard } = useBoardModal();
 
+  // const { data: boardsSet } = useGetBoardsQuery();
+  // boardsSet?.find((board) => board._id === data);
+
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
-      editBoard({ title: formData['Title'] }, data ?? '');
+      editBoard({ title: formData.title }, data ?? '');
       onCloseModal();
     },
     [editBoard, onCloseModal, data]
@@ -44,7 +48,12 @@ const EditModal = ({
         className="flex flex-col items-center gap-9 w-full mb-[40px]"
         autoComplete="off"
       >
-        <ModalInput label={t('modal.labelInput')} register={register} errors={errors} />
+        <ModalInput
+          name="title"
+          label={t('modal.labelInput')}
+          register={register}
+          errors={errors}
+        />
         {/* <ModalTextarea label="Description" register={register} errors={errors} /> */}
         <Button type="submit" className="w-full" disabled={!isDirty || (isSubmitted && !isValid)}>
           {t('editModal.modalButton')}
