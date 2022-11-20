@@ -1,22 +1,24 @@
 import { useTranslation } from 'react-i18next';
 import { CreateCard } from '../../components';
-import { useAppDispatch } from '../../hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { BoardCard } from '../../components';
 import { useGetBoardsQuery } from '../../redux/api/boardsApi';
 import Modal from '../../components/Modal/Modal';
 import { modalText } from '../../utils/constants/constants';
+import { useCallback } from 'react';
 
 const MainPage = () => {
   const { t } = useTranslation();
   const { title } = modalText.board;
-  const { isLoading, isError, data: boardsSet } = useGetBoardsQuery();
+  const { userId } = useAppSelector((state) => state.auth);
+  const { isLoading, isError, data: boardsSet } = useGetBoardsQuery(userId ?? '');
 
   const dispatch = useAppDispatch();
 
-  const openCreateModal = () => {
+  const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createBoard }));
-  };
+  }, [dispatch]);
 
   return (
     <div className="container flex flex-col align-top text-gray-700 flex-grow">

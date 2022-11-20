@@ -20,6 +20,7 @@ const EditModal = ({
   isSubmitted,
   data,
   type,
+  userId,
 }: ModalChild) => {
   const dispatch = useAppDispatch();
   const onCloseModal = useCallback(() => {
@@ -33,7 +34,7 @@ const EditModal = ({
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
       if (type === ModalTypes.editBoard) {
-        editBoard({ title: formData.title }, data ?? '');
+        editBoard(data ?? '', { title: formData.title, owner: userId ?? '', users: [] });
       }
       if (type === ModalTypes.editColumn) {
         console.log(formData);
@@ -43,7 +44,7 @@ const EditModal = ({
       }
       onCloseModal();
     },
-    [type, onCloseModal, editBoard, data]
+    [type, onCloseModal, editBoard, data, userId]
   );
 
   return (

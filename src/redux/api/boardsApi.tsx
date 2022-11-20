@@ -18,9 +18,9 @@ export const boardsApi = createApi({
   }),
 
   endpoints: (build) => ({
-    getBoards: build.query<IBoardResponse[], void>({
-      query: () => ({
-        url: 'boards',
+    getBoards: build.query<IBoardResponse[], string>({
+      query: (userId) => ({
+        url: `boardsSet/${userId}`,
       }),
       providesTags: (result) =>
         result

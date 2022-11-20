@@ -19,6 +19,7 @@ const CreateModal = ({
   isValid,
   isSubmitted,
   type,
+  userId,
 }: ModalChild) => {
   const { t } = useTranslation();
 
@@ -33,21 +34,21 @@ const CreateModal = ({
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (data) => {
       if (type === ModalTypes.createBoard) {
-        const boardData = { title: data.title, owner: 'userId', users: [] };
+        const boardData = { title: data.title, owner: userId ?? '', users: [] };
         createBoard(boardData);
       }
       if (type === ModalTypes.createColumn) {
-        const columnData = { title: data.title, owner: 'userId', users: [] };
+        const columnData = { title: data.title, owner: userId ?? '', users: [] };
         console.log(columnData);
       }
       if (type === ModalTypes.createTask) {
-        const taskData = { title: data.title, owner: 'userId', users: [] };
+        const taskData = { title: data.title, owner: userId ?? '', users: [] };
         console.log(taskData);
       }
       reset();
       onCloseModal();
     },
-    [createBoard, onCloseModal, reset, type]
+    [createBoard, onCloseModal, reset, type, userId]
   );
 
   return (

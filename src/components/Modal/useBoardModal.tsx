@@ -8,8 +8,8 @@ import { IBoardData } from '../BoardCard/Board.types';
 
 export interface Updates {
   title: string;
-  owner?: string;
-  users?: string[];
+  owner: string;
+  users: string[];
 }
 
 const useBoardModal = () => {
@@ -21,10 +21,8 @@ const useBoardModal = () => {
     await createBoardCall(data).unwrap();
   };
 
-  const editBoard = async (updates: Updates, boardId: string) => {
+  const editBoard = async (boardId: string, updates: Updates) => {
     const body: IBoardData = {
-      owner: 'userId',
-      users: [],
       ...updates,
     };
     await editBoardCall({ boardId, body }).unwrap();
