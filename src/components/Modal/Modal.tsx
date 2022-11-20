@@ -29,7 +29,6 @@ const Modal = () => {
     register,
     handleSubmit,
     reset,
-    getFieldState,
     formState: { errors, isDirty, isValid, isSubmitted },
   } = useForm<IFormFields>();
 
@@ -39,6 +38,7 @@ const Modal = () => {
   }, [dispatch, reset]);
 
   if (!visible) return null;
+
   const Component = ModalTypeMapper[type];
 
   return (
@@ -47,7 +47,6 @@ const Modal = () => {
         register={register}
         handleSubmit={handleSubmit}
         reset={reset}
-        getFieldState={getFieldState}
         errors={errors}
         isDirty={isDirty}
         isValid={isValid}

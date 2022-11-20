@@ -17,9 +17,17 @@ const DeleteModal = ({ data, type }: ModalChild) => {
   const { deleteBoard } = useBoardModal();
 
   const onDelete = useCallback(() => {
-    deleteBoard(data ?? '');
+    if (type === ModalTypes.deleteBoard) {
+      deleteBoard(data ?? '');
+    }
+    if (type === ModalTypes.deleteColumn) {
+      console.log('DELETE COLUMN');
+    }
+    if (type === ModalTypes.deleteTask) {
+      console.log('DELETE TASK');
+    }
     onCloseModal();
-  }, [deleteBoard, onCloseModal, data]);
+  }, [type, onCloseModal, deleteBoard, data]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
@@ -27,10 +35,15 @@ const DeleteModal = ({ data, type }: ModalChild) => {
         title: 'boardTitle',
         text: 'deleteModal.boardText',
       };
+    } else if (type === ModalTypes.deleteColumn) {
+      return {
+        title: 'columnTitle',
+        text: 'deleteModal.columnText',
+      };
     } else {
       return {
-        title: 'deleteModal.columnTitle',
-        text: 'deleteModal.columnText',
+        title: 'taskTitle',
+        text: 'deleteModal.taskText',
       };
     }
   }, [type]);

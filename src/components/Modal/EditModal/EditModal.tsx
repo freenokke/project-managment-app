@@ -8,7 +8,7 @@ import { IFormFields } from './EditModal.type';
 import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import { ModalChild } from '../Modal.types';
-// import { useGetBoardsQuery } from '../../../redux/api/boardsApi';
+import { ModalTypes } from '../../../redux/features/modalSlice';
 
 const EditModal = ({
   register,
@@ -19,6 +19,7 @@ const EditModal = ({
   isValid,
   isSubmitted,
   data,
+  type,
 }: ModalChild) => {
   const dispatch = useAppDispatch();
   const onCloseModal = useCallback(() => {
@@ -29,15 +30,20 @@ const EditModal = ({
   const { t } = useTranslation();
   const { editBoard } = useBoardModal();
 
-  // const { data: boardsSet } = useGetBoardsQuery();
-  // boardsSet?.find((board) => board._id === data);
-
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
-      editBoard({ title: formData.title }, data ?? '');
+      if (type === ModalTypes.editBoard) {
+        editBoard({ title: formData.title }, data ?? '');
+      }
+      if (type === ModalTypes.editColumn) {
+        console.log(formData);
+      }
+      if (type === ModalTypes.editTask) {
+        console.log(formData);
+      }
       onCloseModal();
     },
-    [editBoard, onCloseModal, data]
+    [type, onCloseModal, editBoard, data]
   );
 
   return (

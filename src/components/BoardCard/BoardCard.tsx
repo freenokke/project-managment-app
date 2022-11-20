@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAppDispatch } from '../../hooks/redux.hooks';
 import { Link } from 'react-router-dom';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IBoardProps } from './Board.types';
 
-const BoardCard = (props: IBoardProps) => {
-  const { id, title, description } = props;
+const BoardCard = ({ id, title, description }: IBoardProps) => {
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {

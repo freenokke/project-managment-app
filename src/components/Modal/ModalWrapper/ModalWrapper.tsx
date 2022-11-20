@@ -1,7 +1,6 @@
 import IModalWrapper from './ModalWrapper.types';
 
-function ModalWrapper(props: IModalWrapper) {
-  const { onCloseModal, children } = props;
+function ModalWrapper({ onCloseModal, children }: IModalWrapper) {
   return (
     <>
       <div onClick={onCloseModal} className="modalOverlay bg-blue-gray-300/[0.4]" />

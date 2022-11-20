@@ -24,7 +24,9 @@ const MainPage = () => {
       <Modal />
       <div className="flex flex-wrap items-center w-[100%] gap-[20px] justify-center md:justify-start">
         <CreateCard title={t(title)} onClick={openCreateModal} />
-        {boardsSet?.map(({ _id: id, title }) => id && <BoardCard key={id} id={id} title={title} />)}
+        {boardsSet?.map(({ _id: id, title }) => (
+          <BoardCard key={id} id={id} title={title} />
+        ))}
       </div>
       <div className="flex justify-center items-center w-full h-[150px] text-2xl">
         {isLoading && <p>{t('main.loading')}</p>}

@@ -6,7 +6,11 @@ export const modalText = {
     text: 'deleteModal.boardText',
   },
   column: {
-    title: 'column',
-    text: `All columns and cards will be deleted. You won't be able to open the board anymore. Cancellation is not possible`,
+    title: 'columnTitle',
+    text: 'deleteModal.columnText',
+  },
+  task: {
+    title: 'taskTitle',
+    text: 'deleteModal.taskText',
   },
 };

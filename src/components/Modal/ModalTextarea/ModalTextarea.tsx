@@ -1,19 +1,22 @@
+import { useTranslation } from 'react-i18next';
 import { IModalTextarea } from './ModalTextarea.types';
 
-const ModalTextarea = (props: IModalTextarea) => {
-  const { label, register, errors } = props;
+const ModalTextarea = ({ name, register, errors }: IModalTextarea) => {
+  const { t } = useTranslation();
 
   return (
     <div className="relative">
-      <label htmlFor={label} className={errors[label] ? 'signInLabelError' : 'signInLabel'}>
+      <label htmlFor={name} className={errors[name] ? 'signInLabelError' : 'signInLabel'}>
         <textarea
           className="p-1 pl-2 rounded-lg outline-none"
-          id={label}
-          {...register(label, { required: true })}
+          id={name}
+          {...register(name, { required: true })}
         />
-        <div className="absolute left-2 top-[-19px] p-1 bg-white uppercase text-xs">{label}</div>
+        <div className="absolute left-2 top-[-19px] p-1 bg-white uppercase text-xs">
+          {t('modal.labelTextarea')}
+        </div>
       </label>
-      <div>{errors[label]?.message}</div>
+      <div>{errors[name]?.message}</div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import { ModalChild } from '../Modal.types';
+import { ModalTypes } from '../../../redux/features/modalSlice';
 
 const CreateModal = ({
   register,
@@ -17,11 +18,11 @@ const CreateModal = ({
   isDirty,
   isValid,
   isSubmitted,
-  userId,
+  type,
 }: ModalChild) => {
-  const dispatch = useAppDispatch();
-
   const { t } = useTranslation();
+
+  const dispatch = useAppDispatch();
 
   const onCloseModal = useCallback(() => {
     dispatch(closeModal());
@@ -31,14 +32,22 @@ const CreateModal = ({
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (data) => {
-      if (userId) {
-        const boardData = { title: data.title, owner: userId, users: ['Ron', 'Hermione'] };
+      if (type === ModalTypes.createBoard) {
+        const boardData = { title: data.title, owner: 'userId', users: [] };
         createBoard(boardData);
-        reset();
-        onCloseModal();
       }
+      if (type === ModalTypes.createColumn) {
+        const columnData = { title: data.title, owner: 'userId', users: [] };
+        console.log(columnData);
+      }
+      if (type === ModalTypes.createTask) {
+        const taskData = { title: data.title, owner: 'userId', users: [] };
+        console.log(taskData);
+      }
+      reset();
+      onCloseModal();
     },
-    [createBoard, onCloseModal, reset, userId]
+    [createBoard, onCloseModal, reset, type]
   );
 
   return (

@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { IModalInput } from './ModalInput.types';
 
-const ModalInput = (props: IModalInput) => {
+const ModalInput = ({ name, label, register, errors }: IModalInput) => {
   const { t } = useTranslation();
-  const { name, label, register, errors } = props;
 
   return (
     <div className="relative w-full">

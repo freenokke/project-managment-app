@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { ICreateCardProps } from './CreateCard.types';
 
-const CreateCard = (props: ICreateCardProps) => {
+const CreateCard = ({ title, onClick }: ICreateCardProps) => {
   const { t } = useTranslation();
-  const { title, onClick } = props;
 
   return (
     <div
@@ -11,7 +10,7 @@ const CreateCard = (props: ICreateCardProps) => {
       onClick={onClick}
     >
       <span>
-        {t('main.create')} {title}
+        {t('create.button')} {title}
       </span>
     </div>
   );
