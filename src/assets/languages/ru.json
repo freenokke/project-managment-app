@@ -40,5 +40,9 @@
   "createModal.modalTitle": "Создать Доску",
   "createModal.modalButton": "Создать",
   "editModal.modalTitle": "Редактировать доску",
-  "editModal.modalButton": "Редактировать"
+  "editModal.modalButton": "Редактировать",
+  "hero.title": "Отслеживай свой прогресс и экономь время",
+  "hero.subTitle": "Приложение поможет тебе организовать твою работу",
+  "hero.buttonText": "Узнать больше",
+  "hero.notice": "для Web (Десктопная и мобильная версии)"
 }

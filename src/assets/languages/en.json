@@ -40,5 +40,10 @@
   "createModal.modalTitle": "Create",
   "createModal.modalButton": "Create",
   "editModal.modalTitle": "Edit",
-  "editModal.modalButton": "Edit"
+  "editModal.modalButton": "Edit",
+  "hero.title": "Track your Progress & Save Time",
+  "hero.subTitle": "Helps you to organize your work",
+  "hero.buttonText": "Learn more",
+  "hero.notice": "for Web (Desktop & Mobile)"
+
 }
