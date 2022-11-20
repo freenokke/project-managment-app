@@ -1,12 +1,19 @@
 import { Button, Tooltip } from '@material-tailwind/react';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AccountMenu from '../AccountMenu/AccountMenu';
 import { Props } from './NavList.type';
 import { useTranslation } from 'react-i18next';
+import { ModalTypes, showModal } from '../../redux/features/modalSlice';
+import { useAppDispatch } from '../../hooks/hook';
 
 const NavList: FC<Props> = ({ token, closeNav }) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const openCreateModal = useCallback(() => {
+    dispatch(showModal({ type: ModalTypes.createBoard }));
+  }, [dispatch]);
 
   if (token) {
     return (
@@ -15,7 +22,12 @@ const NavList: FC<Props> = ({ token, closeNav }) => {
           content={t('tooltip.createBoard')}
           className="bg-blue-gray-900 text-xs first-letter:capitalize"
         >
-          <i className="material-icons cursor-pointer text-3xl md:text-2xl">note_add</i>
+          <i
+            className="material-icons cursor-pointer text-3xl md:text-2xl"
+            onClick={openCreateModal}
+          >
+            note_add
+          </i>
         </Tooltip>
         <AccountMenu closeNav={closeNav} />
       </ul>
