@@ -48,7 +48,10 @@ const Header = () => {
       } mx-auto max-w-full font-sans bg-opacity-60 backdrop-blur text-[#7f7e8a] transition-all z-[100]`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <Link to="/" className="order-2 cursor-pointer py-1.5 font-normal md:order-1">
+        <Link
+          to={token ? '/main' : '/'}
+          className="order-2 cursor-pointer py-1.5 font-normal md:order-1"
+        >
           <span>Logo</span>
         </Link>
         <LangSwitch />
