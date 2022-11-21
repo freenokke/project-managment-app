@@ -2,10 +2,11 @@ import { useState, useCallback, FC } from 'react';
 import i18n from '../../i18next/i18next';
 import enFlag from '../../assets/images/us_uk_default.png';
 import ruFlag from '../../assets/images/ru_default.png';
+import { useTranslation } from 'react-i18next';
 
 const LangSwitch: FC = () => {
-  const currentLanguage = i18n.language;
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language } = useTranslation().i18n;
 
   const showOptions = useCallback(() => {
     setMenuOpen(!menuOpen);
@@ -30,18 +31,14 @@ const LangSwitch: FC = () => {
       >
         <span
           onClick={changeLangRU}
-          className={`${
-            currentLanguage === 'ru' && 'scale-105 text-blue-700'
-          } cursor-pointer text-xs`}
+          className={`${language === 'ru' && 'scale-105 text-blue-700'} cursor-pointer text-xs`}
         >
           RU
         </span>
         |
         <span
           onClick={changeLangEN}
-          className={`${
-            currentLanguage === 'en' && 'scale-105 text-blue-700'
-          } cursor-pointer text-xs`}
+          className={`${language === 'en' && 'scale-105 text-blue-700'} cursor-pointer text-xs`}
         >
           EN
         </span>
@@ -51,7 +48,7 @@ const LangSwitch: FC = () => {
           language
         </span>
         <img
-          src={`${currentLanguage === 'en' ? enFlag : ruFlag}`}
+          src={`${language === 'en' ? enFlag : ruFlag}`}
           alt="flag"
           className="w-[18px] h-[18px] object-contain absolute -bottom-[6px] -right-[10px] md:right-[22px]"
         />
