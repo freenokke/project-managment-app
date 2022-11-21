@@ -2,7 +2,7 @@ import { Menu, MenuHandler, MenuItem, MenuList, Tooltip } from '@material-tailwi
 import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/hook';
+import { useAppDispatch } from '../../hooks/redux.hooks';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import { logOut } from '../../redux/features/authSlice';
 import { parseJwt } from '../../utils/utils';

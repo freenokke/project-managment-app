@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { LangSwitch, NavList } from '../../components';
 import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAppSelector } from '../../hooks/hook';
+import { useAppSelector } from '../../hooks/redux.hooks';
 
 const Header = () => {
   const { token } = useAppSelector((state) => state.auth);
