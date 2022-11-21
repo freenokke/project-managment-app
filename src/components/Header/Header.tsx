@@ -44,8 +44,8 @@ const Header = () => {
     <Navbar
       shadow={true}
       className={`${
-        stickHeader && 'py-1 px-2 fixed top-0 shadow-teal-200 md:px-4 md:py-2'
-      } mx-auto max-w-full font-sans text-[#7f7e8a] transition-all`}
+        stickHeader && 'py-1 px-2 sticky top-0 shadow-teal-200 md:px-4 md:py-2'
+      } mx-auto max-w-full font-sans bg-opacity-60 backdrop-blur text-[#7f7e8a] transition-all z-[100]`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link to="/" className="order-2 cursor-pointer py-1.5 font-normal md:order-1">
