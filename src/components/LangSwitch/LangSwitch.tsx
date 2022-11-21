@@ -4,6 +4,10 @@ import enFlag from '../../assets/images/us_uk_default.png';
 import ruFlag from '../../assets/images/ru_default.png';
 import { useTranslation } from 'react-i18next';
 
+if (!localStorage.getItem('i18nextLng')) {
+  localStorage.setItem('i18nextLng', navigator.language);
+}
+
 const LangSwitch: FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { language } = useTranslation().i18n;
@@ -12,15 +16,13 @@ const LangSwitch: FC = () => {
     setMenuOpen(!menuOpen);
   }, [menuOpen]);
 
-  const changeLangRU = useCallback(() => {
-    i18n.changeLanguage('ru');
-    setMenuOpen(!menuOpen);
-  }, [menuOpen]);
-
-  const changeLangEN = useCallback(() => {
-    i18n.changeLanguage('en');
-    setMenuOpen(!menuOpen);
-  }, [menuOpen]);
+  const changeLang = useCallback(
+    (lng: string) => () => {
+      i18n.changeLanguage(lng);
+      setMenuOpen(!menuOpen);
+    },
+    [menuOpen]
+  );
 
   return (
     <div className="relative order-1 md:order-2 md:ml-auto">
@@ -30,15 +32,19 @@ const LangSwitch: FC = () => {
         } text-md absolute left-8 flex w-16 items-center justify-center gap-1 rounded border shadow-md transition-transform md:-left-18`}
       >
         <span
-          onClick={changeLangRU}
-          className={`${language === 'ru' && 'scale-105 text-blue-700'} cursor-pointer text-xs`}
+          onClick={changeLang('ru')}
+          className={`${
+            language.includes('ru') && 'scale-105 text-blue-700'
+          } cursor-pointer text-xs`}
         >
           RU
         </span>
         |
         <span
-          onClick={changeLangEN}
-          className={`${language === 'en' && 'scale-105 text-blue-700'} cursor-pointer text-xs`}
+          onClick={changeLang('en')}
+          className={`${
+            language.includes('en') && 'scale-105 text-blue-700'
+          } cursor-pointer text-xs`}
         >
           EN
         </span>
