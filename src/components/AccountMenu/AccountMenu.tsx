@@ -3,12 +3,16 @@ import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/hook';
+import { useAppSelector } from '../../hooks/redux.hooks';
 import { logOut } from '../../redux/features/authSlice';
+import { parseJwt } from '../../utils/utils';
 import { Props } from './AccountMenu.type';
 
 const AccountMenu: FC<Props> = ({ closeNav }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const { token } = useAppSelector((state) => state.auth);
+  const { login } = parseJwt(token ?? '');
 
   const onLogout = useCallback(() => {
     closeNav();
@@ -16,7 +20,7 @@ const AccountMenu: FC<Props> = ({ closeNav }) => {
   }, [dispatch, closeNav]);
 
   return (
-    <div className="ml-auto">
+    <div className="ml-auto flex items-center gap-1">
       <Menu>
         <MenuHandler>
           <div className="flex">
@@ -36,6 +40,7 @@ const AccountMenu: FC<Props> = ({ closeNav }) => {
           </MenuItem>
         </MenuList>
       </Menu>
+      {login}
     </div>
   );
 };
