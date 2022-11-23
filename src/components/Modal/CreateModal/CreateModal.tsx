@@ -10,6 +10,8 @@ import useBoardModal from '../useBoardModal';
 import useColumnModal from '../useColumnModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 const CreateModal = ({
   register,
@@ -23,7 +25,7 @@ const CreateModal = ({
   userId,
 }: ModalChild) => {
   const { t } = useTranslation();
-
+  const boardId = useSelector((state: RootState) => state.board.boardId);
   const dispatch = useAppDispatch();
 
   const onCloseModal = useCallback(() => {
@@ -41,7 +43,7 @@ const CreateModal = ({
       }
       if (type === ModalTypes.createColumn) {
         const columnData = { title: data.title, order: 2 };
-        createColumn('637a788b255b5e6beda34155', columnData);
+        createColumn(boardId, columnData);
       }
       if (type === ModalTypes.createTask) {
         const taskData = { title: data.title, owner: userId ?? '', users: [] };
@@ -50,7 +52,7 @@ const CreateModal = ({
       reset();
       onCloseModal();
     },
-    [createBoard, onCloseModal, reset, type, userId, createColumn]
+    [createBoard, onCloseModal, reset, type, userId, createColumn, boardId]
   );
 
   return (

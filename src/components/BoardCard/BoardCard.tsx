@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '../../hooks/redux.hooks';
 import { Link } from 'react-router-dom';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
-import { openBoard } from '../../redux/features/boardSlice';
+import { setOpenedBoard } from '../../redux/features/boardSlice';
 import { IBoardProps } from './Board.types';
 
 const BoardCard = ({ id, title, description }: IBoardProps) => {
@@ -17,7 +17,7 @@ const BoardCard = ({ id, title, description }: IBoardProps) => {
   }, [id, dispatch]);
 
   const openBoardPage = useCallback(() => {
-    dispatch(openBoard(id));
+    dispatch(setOpenedBoard(id));
   }, [dispatch, id]);
 
   return (

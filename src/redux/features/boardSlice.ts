@@ -16,11 +16,11 @@ const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
-    openBoard(state, action: PayloadAction<string>) {
+    setOpenedBoard(state, action: PayloadAction<string>) {
       state.boardId = action.payload;
     },
   },
 });
 
-export const { openBoard } = boardSlice.actions;
+export const { setOpenedBoard } = boardSlice.actions;
 export default boardSlice;

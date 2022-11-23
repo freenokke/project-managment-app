@@ -1,14 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
-import { AppDispatch } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
 import { Loader } from '../../components';
 
 const BoardPage = () => {
-  const { data, isLoading, isFetching } = useGetColumnsQuery('637a788b255b5e6beda34155');
+  const boardId = useSelector((state: RootState) => state.board.boardId);
+  const { data, isLoading, isFetching } = useGetColumnsQuery(boardId);
   const dispatch = useDispatch<AppDispatch>();
 
   const { t } = useTranslation();
