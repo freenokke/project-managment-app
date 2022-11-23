@@ -5,6 +5,7 @@ import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
+import { Loader } from '../../components';
 
 const BoardPage = () => {
   const { data, isLoading, isFetching } = useGetColumnsQuery('637a788b255b5e6beda34155');
@@ -23,7 +24,7 @@ const BoardPage = () => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   };
 
-  if (isLoading || isFetching) return <div className=""> Loading....</div>;
+  const loading = isLoading || isFetching;
 
   return (
     <div className="p-6 flex-grow flex flex-col justify-start items-center">
@@ -37,6 +38,7 @@ const BoardPage = () => {
       </div>
       <h1 className="">Board Name</h1>
       <button onClick={openCreateModal}>Create New Column</button>
+      {loading && <Loader />}
       {data?.map(({ _id: id, title }) => {
         return (
           <div className="" key={id}>

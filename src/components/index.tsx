@@ -7,6 +7,7 @@ import Footer from './Footer/Footer';
 import SignInput from './SignInput/SignInput';
 import NavList from './NavList/NavList';
 import ModalWrapper from './Modal/ModalWrapper/ModalWrapper';
+import Loader from './Loader/Loader';
 
 export {
   Header,
@@ -18,4 +19,5 @@ export {
   BoardCard,
   CreateCard,
   ModalWrapper,
+  Loader,
 };
