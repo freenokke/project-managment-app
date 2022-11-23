@@ -7,6 +7,7 @@ import { IFormFields } from './CreateModal.types';
 import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
+import useColumnModal from '../useColumnModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
 
@@ -30,6 +31,7 @@ const CreateModal = ({
   }, [dispatch]);
 
   const { createBoard } = useBoardModal();
+  const { createColumn } = useColumnModal();
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (data) => {
@@ -38,8 +40,8 @@ const CreateModal = ({
         createBoard(boardData);
       }
       if (type === ModalTypes.createColumn) {
-        const columnData = { title: data.title, owner: userId ?? '', users: [] };
-        console.log(columnData);
+        const columnData = { title: data.title, order: 2 };
+        createColumn('637a788b255b5e6beda34155', columnData);
       }
       if (type === ModalTypes.createTask) {
         const taskData = { title: data.title, owner: userId ?? '', users: [] };
@@ -48,7 +50,7 @@ const CreateModal = ({
       reset();
       onCloseModal();
     },
-    [createBoard, onCloseModal, reset, type, userId]
+    [createBoard, onCloseModal, reset, type, userId, createColumn]
   );
 
   return (
