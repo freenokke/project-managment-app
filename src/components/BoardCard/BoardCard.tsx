@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '../../hooks/redux.hooks';
 import { Link } from 'react-router-dom';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
-import { setOpenedBoard } from '../../redux/features/boardSlice';
+import { setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { IBoardProps } from './Board.types';
 
 const BoardCard = ({ id, title, description }: IBoardProps) => {

@@ -1,29 +1,37 @@
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
-import { AppDispatch, RootState } from '../../redux/store';
+import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
 import { Loader } from '../../components';
+import { useCallback, useEffect } from 'react';
+import { setColumnsOrder } from '../../redux/features/boardInfoSlice';
+import { useAppSelector } from '../../hooks/redux.hooks';
 
 const BoardPage = () => {
-  const boardId = useSelector((state: RootState) => state.board.boardId);
+  const { boardId } = useAppSelector((state) => state.boardInfo);
   const { data, isLoading, isFetching } = useGetColumnsQuery(boardId);
   const dispatch = useDispatch<AppDispatch>();
-
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  console.log('Колонки из запроса', data);
+  useEffect(() => {
+    if (data) {
+      dispatch(setColumnsOrder(data.length));
+    } else {
+      dispatch(setColumnsOrder(0));
+    }
+  }, [data, dispatch]);
 
-  const returnToMainPage = () => {
+  const returnToMainPage = useCallback(() => {
     navigate('/main');
-  };
+  }, [navigate]);
 
-  const openCreateModal = () => {
+  const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
-  };
+  }, [dispatch]);
 
   const loading = isLoading || isFetching;
 

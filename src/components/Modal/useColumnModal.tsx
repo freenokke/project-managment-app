@@ -5,7 +5,9 @@ const useColumnModal = () => {
   const [createColumnCall, {}] = useCreateColumnMutation();
 
   const createColumn = async (boardId: string, body: IColumnData) => {
-    await createColumnCall({ boardId, body }).unwrap();
+    await createColumnCall({ boardId, body })
+      .unwrap()
+      .then((data) => console.log(data));
   };
 
   return {
