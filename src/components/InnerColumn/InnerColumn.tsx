@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { useDraggable } from '../../hooks/useDraggable';
 
-const InnerColumn: FC<IProps> = ({ boardId, columnId }) => {
+const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { title } = modalText.task;
@@ -44,7 +44,7 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId }) => {
     <div className="bg-blue-gray-50 rounded flex flex-col w-full max-h-full relative whitespace-normal text-sm">
       <div className="flex min-h-[20px] py-[10px] px-[8px] relative pr-[36px]">
         <div className="absolute bottom-0 left-0 right-0 top-0 cursor-pointer shadow-blue"></div>
-        <h3 className="font-semibold text-xl">Title</h3>
+        <h3 className="font-semibold text-xl">{columnTitle}</h3>
         <textarea
           className="hidden h-[28px] w-full overflow-hidden break-words"
           maxLength={30}

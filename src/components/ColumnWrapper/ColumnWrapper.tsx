@@ -49,7 +49,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDrop={dropHandler}
     >
       <div className="text-lg ">{title}</div>
-      {<InnerColumn boardId={boardId} columnId={id} />}
+      {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
     </div>
   );
 };
