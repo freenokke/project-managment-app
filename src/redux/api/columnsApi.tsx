@@ -3,6 +3,14 @@ import { IColumnsResponse, IColumnData } from '../../pages/BoardPage/BoardPage.t
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
+const sortByOrder = (a: IColumnsResponse, b: IColumnsResponse) => {
+  if (a.order > b.order) {
+    return 1;
+  } else {
+    return -1;
+  }
+};
+
 export const columnsApi = createApi({
   reducerPath: 'columnsApi',
   tagTypes: ['Columns'],
@@ -22,6 +30,7 @@ export const columnsApi = createApi({
       query: (userId) => ({
         url: `boards/${userId}/columns`,
       }),
+      transformResponse: (result: IColumnsResponse[]) => result.sort(sortByOrder),
       providesTags: (result) =>
         result
           ? [
@@ -38,7 +47,16 @@ export const columnsApi = createApi({
       }),
       invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
     }),
+    patchColumnsSet: build.mutation({
+      query: (body) => ({
+        url: '/columnsSet',
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetColumnsQuery, useCreateColumnMutation } = columnsApi;
+export const { useGetColumnsQuery, useCreateColumnMutation, usePatchColumnsSetMutation } =
+  columnsApi;

@@ -9,6 +9,8 @@ import { ColumnWrapper, Loader } from '../../components';
 import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
+import { useState } from 'react';
+import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +19,7 @@ const BoardPage = () => {
   const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
+  const [currentColumn, setCurrentColumn] = useState<ICurrentColumn | null>(null);
 
   useEffect(() => {
     if (data) {
@@ -54,7 +57,17 @@ const BoardPage = () => {
       {loading && <Loader />}
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
         {data?.map(({ _id, title, order, boardId }) => {
-          return <ColumnWrapper key={_id} id={_id} title={title} order={order} boardId={boardId} />;
+          return (
+            <ColumnWrapper
+              key={_id}
+              id={_id}
+              title={title}
+              order={order}
+              boardId={boardId}
+              setCurrentColumn={setCurrentColumn}
+              currentColumn={currentColumn}
+            />
+          );
         })}
         <button
           className="w-10 h-10 min-w-10 bg-white transition-colors text-[#57606A] text-xl material-icons border border-[#D8DEE4] rounded-md hover:bg-[#f6f8fa]"

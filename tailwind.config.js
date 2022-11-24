@@ -110,6 +110,8 @@ const config = {
           borderRadius: '6px',
           minWidth: '300px',
           padding: '5px',
+          overflowY: 'hidden',
+          cursor: 'grab',
         },
       });
     }),
