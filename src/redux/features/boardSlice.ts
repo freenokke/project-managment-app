@@ -12,15 +12,15 @@ const initialState: IBoardState = {
   taskId: '',
 };
 
-const boardSlice = createSlice({
-  name: 'board',
+const boardInfoSlice = createSlice({
+  name: 'boardInfo',
   initialState,
   reducers: {
-    openBoard(state, action: PayloadAction<string>) {
+    setOpenedBoard(state, action: PayloadAction<string>) {
       state.boardId = action.payload;
     },
   },
 });
 
-export const { openBoard } = boardSlice.actions;
-export default boardSlice;
+export const { setOpenedBoard } = boardInfoSlice.actions;
+export default boardInfoSlice.reducer;

@@ -3,7 +3,7 @@ import { IBoardResponse, IBoardData } from '../../components/BoardCard/Board.typ
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
-export const boardsApi = createApi({
+const boardsApi = createApi({
   reducerPath: 'boardsApi',
   tagTypes: ['Boards'],
   baseQuery: fetchBaseQuery({
@@ -65,3 +65,7 @@ export const {
   useEditBoardMutation,
   useDeleteBoardMutation,
 } = boardsApi;
+
+const { reducer } = boardsApi;
+export const boardsMiddleware = boardsApi.middleware;
+export default reducer;

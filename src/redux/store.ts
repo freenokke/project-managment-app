@@ -1,17 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import modalSlice from './features/modalSlice';
-import boardSlice from './features/boardSlice';
-import { boardsApi } from './api/boardsApi';
+import modal from './features/modalSlice';
+import boardInfo from './features/boardSlice';
 import auth from './features/authSlice';
+import boardsApi, { boardsMiddleware } from './api/boardsApi';
 
 export const store = configureStore({
   reducer: {
-    [modalSlice.name]: modalSlice.reducer,
-    [boardSlice.name]: boardSlice.reducer,
-    [boardsApi.reducerPath]: boardsApi.reducer,
+    modal,
+    boardsApi,
+    boardInfo,
     auth,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(boardsApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(boardsMiddleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
