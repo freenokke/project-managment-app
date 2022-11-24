@@ -5,7 +5,7 @@ import AccountMenu from '../AccountMenu/AccountMenu';
 import { Props } from './NavList.type';
 import { useTranslation } from 'react-i18next';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
-import { useAppDispatch } from '../../hooks/hook';
+import { useAppDispatch } from '../../hooks/redux.hooks';
 
 const NavList: FC<Props> = ({ token, closeNav }) => {
   const { t } = useTranslation();
