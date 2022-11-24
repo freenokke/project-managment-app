@@ -99,6 +99,15 @@ const config = {
           backgroundColor: 'white',
           boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.25)',
         },
+        '.column': {
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        },
+        '.row': {
+          display: 'flex',
+          flexDirection: 'row',
+        },
         '.height100': {
           height: 'calc(100vh - 65px - 70px)',
         },
