@@ -9,11 +9,11 @@ const BoardCard = ({ id, title, description }: IBoardProps) => {
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {
-    dispatch(showModal({ type: ModalTypes.deleteBoard, data: id }));
+    dispatch(showModal({ type: ModalTypes.deleteBoard, data: { boardId: id } }));
   }, [id, dispatch]);
 
   const editModal = useCallback(() => {
-    dispatch(showModal({ type: ModalTypes.editBoard, data: id }));
+    dispatch(showModal({ type: ModalTypes.editBoard, data: { boardId: id } }));
   }, [id, dispatch]);
 
   const openBoardPage = useCallback(() => {

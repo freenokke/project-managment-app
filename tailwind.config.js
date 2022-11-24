@@ -111,6 +111,18 @@ const config = {
         '.height100': {
           height: 'calc(100vh - 65px - 70px)',
         },
+        '.createTaskBtn': {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 'max-content',
+          opacity: 0.8,
+          cursor: 'pointer',
+          borderRadius: '12px',
+          '&:hover': {
+            opacity: 1,
+          },
+        },
       });
     }),
   ],
