@@ -45,5 +45,6 @@
   "hero.subTitle": "Приложение поможет тебе организовать твою работу",
   "hero.buttonText": "Узнать больше",
   "hero.notice": "для Web (Десктопная и мобильная версии)",
-  "boardPage.backToBoardsList": "Вернуться к списку досок"
+  "boardPage.backToBoardsList": "Вернуться к списку досок",
+  "boardPage.noColumns": "В этой доске пока нету колонок"
 }

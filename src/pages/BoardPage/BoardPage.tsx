@@ -8,12 +8,14 @@ import Modal from '../../components/Modal/Modal';
 import { ColumnWrapper, Loader } from '../../components';
 import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
+import { useGetBoardQuery } from '../../redux/api/boardsApi';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
+  const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -45,8 +47,10 @@ const BoardPage = () => {
         <span className="material-icons">keyboard_backspace</span>
         {t('boardPage.backToBoardsList')}
       </div>
-      <h1 className="">Board Name</h1>
-
+      <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
+      {data?.length === 0 ? (
+        <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
+      ) : null}
       {loading && <Loader />}
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
         {data?.map(({ _id, title, order, boardId }) => {
