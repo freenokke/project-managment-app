@@ -113,6 +113,18 @@ const config = {
           overflowY: 'hidden',
           cursor: 'grab',
         },
+        '.createTaskBtn': {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 'max-content',
+          opacity: 0.8,
+          cursor: 'pointer',
+          borderRadius: '12px',
+          '&:hover': {
+            opacity: 1,
+          },
+        },
       });
     }),
   ],

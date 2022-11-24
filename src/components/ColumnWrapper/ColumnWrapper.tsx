@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
+import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
@@ -48,6 +49,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDrop={dropHandler}
     >
       <div className="text-lg ">{title}</div>
+      {<InnerColumn boardId={boardId} columnId={id} />}
     </div>
   );
 };

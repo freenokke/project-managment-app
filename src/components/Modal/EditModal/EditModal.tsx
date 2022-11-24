@@ -9,6 +9,7 @@ import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
+import useTaskModal from '../useTaskModal';
 
 const EditModal = ({
   register,
@@ -30,11 +31,12 @@ const EditModal = ({
 
   const { t } = useTranslation();
   const { editBoard } = useBoardModal();
+  // const { createTask } = useTaskModal();
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
       if (type === ModalTypes.editBoard) {
-        editBoard(data ?? '', { title: formData.title, owner: userId ?? '', users: [] });
+        editBoard(data ?? {}, { title: formData.title, owner: userId ?? '', users: [] });
       }
       if (type === ModalTypes.editColumn) {
         console.log(formData);

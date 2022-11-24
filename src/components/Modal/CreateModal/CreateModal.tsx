@@ -8,8 +8,10 @@ import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import useColumnModal from '../useColumnModal';
+import useTaskModal from '../useTaskModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
+import { INewTask, ITaskCreate } from '../../../redux/api/tasksApi';
 
 const CreateModal = ({
   register,
@@ -21,6 +23,7 @@ const CreateModal = ({
   isSubmitted,
   type,
   userId,
+  data,
 }: ModalChild) => {
   const { t } = useTranslation();
   const { boardId, maxOrder } = useAppSelector((state) => state.boardInfo);
@@ -32,21 +35,33 @@ const CreateModal = ({
 
   const { createBoard } = useBoardModal();
   const { createColumn } = useColumnModal();
+  const { createTask } = useTaskModal();
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
-    (data) => {
+    (formData) => {
       if (type === ModalTypes.createBoard) {
-        const boardData = { title: data.title, owner: userId ?? '', users: [] };
+        const boardData = { title: formData.title, owner: userId ?? '', users: [] };
         createBoard(boardData);
       }
       if (type === ModalTypes.createColumn) {
         const order = maxOrder + 1;
-        const columnData = { title: data.title, order };
+        const columnData = { title: formData?.title, order };
         createColumn(boardId, columnData);
       }
       if (type === ModalTypes.createTask) {
-        const taskData = { title: data.title, owner: userId ?? '', users: [] };
-        console.log(taskData);
+        const body: INewTask = {
+          title: formData.title,
+          description: formData.description,
+          userId: userId ?? '',
+          order: 0,
+          users: [],
+        };
+        const taskData: ITaskCreate = {
+          boardId: data?.boardId ?? '',
+          columnId: data?.columnId ?? '',
+          body,
+        };
+        createTask(taskData);
       }
       reset();
       onCloseModal();
@@ -68,6 +83,14 @@ const CreateModal = ({
           register={register}
           errors={errors}
         />
+        {type === ModalTypes.createTask && (
+          <ModalInput
+            name="description"
+            label={t('modal.labelTextarea')}
+            register={register}
+            errors={errors}
+          />
+        )}
         <Button type="submit" className="w-full" disabled={!isDirty || (isSubmitted && !isValid)}>
           {t('createModal.modalButton')}
         </Button>

@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IBoardResponse, IBoardData } from '../../components/BoardCard/Board.types';
+import { ModalChild, ModalData } from '../../components/Modal/Modal.types';
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
 export const boardsApi = createApi({
   reducerPath: 'boardsApi',
-  tagTypes: ['Boards'],
+  tagTypes: ['Boards', 'Tasks'],
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
@@ -40,18 +41,18 @@ export const boardsApi = createApi({
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
     }),
 
-    editBoard: build.mutation<IBoardResponse, { boardId: string; body: IBoardData }>({
-      query: ({ boardId, body }) => ({
-        url: `boards/${boardId}`,
+    editBoard: build.mutation<IBoardResponse, { data: ModalData; body: IBoardData }>({
+      query: ({ data, body }) => ({
+        url: `boards/${data.boardId}`,
         method: 'PUT',
         body,
       }),
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
     }),
 
-    deleteBoard: build.mutation<IBoardResponse, string>({
-      query: (boardId) => ({
-        url: `boards/${boardId}`,
+    deleteBoard: build.mutation<IBoardResponse, ModalData>({
+      query: (data) => ({
+        url: `boards/${data.boardId}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
