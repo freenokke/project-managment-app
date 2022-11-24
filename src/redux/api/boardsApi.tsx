@@ -57,6 +57,12 @@ const boardsApi = createApi({
       }),
       invalidatesTags: [{ type: 'Boards', id: 'LIST' }],
     }),
+
+    getBoard: build.query<IBoardResponse, string>({
+      query: (boardId) => ({
+        url: `boards/${boardId}`,
+      }),
+    }),
   }),
 });
 
@@ -65,6 +71,7 @@ export const {
   useCreateBoardMutation,
   useEditBoardMutation,
   useDeleteBoardMutation,
+  useGetBoardQuery,
 } = boardsApi;
 
 const { reducer } = boardsApi;

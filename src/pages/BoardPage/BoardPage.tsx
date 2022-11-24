@@ -1,103 +1,82 @@
-import { useState, useCallback } from 'react';
-import TaskModal from '../../components/TaskModal/TaskModal';
-
-const columns = [
-  {
-    columnId: '1',
-    order: 1,
-    items: [
-      { id: '1', order: 1 },
-      { id: '2', order: 2 },
-      { id: '3', order: 3 },
-      { id: '4', order: 4 },
-    ],
-  },
-  {
-    columnId: '2',
-    order: 2,
-    items: [
-      { id: '5', order: 1 },
-      { id: '6', order: 2 },
-      { id: '7', order: 3 },
-      { id: '8', order: 4 },
-    ],
-  },
-];
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetColumnsQuery } from '../../redux/api/columnsApi';
+import { AppDispatch } from '../../redux/store';
+import { ModalTypes, showModal } from '../../redux/features/modalSlice';
+import Modal from '../../components/Modal/Modal';
+import { ColumnWrapper, Loader } from '../../components';
+import { useCallback, useEffect } from 'react';
+import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
+import { useGetBoardQuery } from '../../redux/api/boardsApi';
+import { useState } from 'react';
+import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
 
 const BoardPage = () => {
-  const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
+  const { data: boardData } = useGetBoardQuery(id ? id : '');
+  const { t } = useTranslation();
+  const [currentColumn, setCurrentColumn] = useState<ICurrentColumn | null>(null);
 
-  const showTaskModal = useCallback(() => {
-    setVisible(true);
-  }, []);
+  useEffect(() => {
+    if (data) {
+      dispatch(setColumnsOrder(data.length));
+    } else {
+      dispatch(setColumnsOrder(0));
+    }
+    dispatch(setOpenedBoard(id ? id : ''));
+  }, [data, dispatch, id]);
 
-  const closeTaskModal = useCallback(() => {
-    setVisible(false);
-  }, []);
+  const returnToMainPage = useCallback(() => {
+    navigate('/main');
+  }, [navigate]);
 
-  const [currentColumns, setCurrentColumns] = useState<string | null>(null);
-  const [currentTask, setCurrentTask] = useState<{ id: string; order: number } | null>(null);
+  const openCreateModal = useCallback(() => {
+    dispatch(showModal({ type: ModalTypes.createColumn }));
+  }, [dispatch]);
 
-  const dragStartTaskHandler = (
-    event: React.DragEvent<HTMLDivElement>,
-    columnId: string,
-    task: { id: string; order: number }
-  ) => {
-    setCurrentColumns(columnId);
-    setCurrentTask(task);
-  };
-
-  const dragLeaveTaskHandler: React.DragEventHandler<HTMLDivElement> = (event) => {
-    console.log('drop');
-  };
-
-  const dragEndTaskHandler: React.DragEventHandler<HTMLElement> = (event) => {
-    console.log('drop');
-  };
-
-  const dragOverTaskHandler: React.DragEventHandler<HTMLElement> = (event) => {
-    event.preventDefault();
-  };
-
-  const dropTaskHandler = (
-    event: React.DragEvent<HTMLDivElement>,
-    columnId: string,
-    task: { id: string; order: number }
-  ) => {
-    event.preventDefault();
-    console.log('drop', columnId, task);
-  };
+  const loading = isLoading || isFetching;
 
   return (
-    <>
-      <div className="relative flex flex-grow justify-center items-center gap-[40px]">
-        {visible && <TaskModal onCloseModal={closeTaskModal} />}
-        {columns.map((column) => (
-          <div
-            key={column.columnId}
-            id={column.columnId}
-            className="border-4 w-[300px] h-[500px] border-cyan-800 flex flex-col gap-[10px] justify-center items-center"
-          >
-            <h2 className="text-4xl">{column.columnId}</h2>
-            {column.items.map((task) => (
-              <div
-                draggable
-                onDragStart={(event) => dragStartTaskHandler(event, column.columnId, task)}
-                onDragLeave={dragLeaveTaskHandler}
-                onDragEnd={dragEndTaskHandler}
-                onDragOver={dragOverTaskHandler}
-                onDrop={(event) => dropTaskHandler(event, column.columnId, task)}
-                key={task.id}
-                onClick={showTaskModal}
-                className="w-[90%] h-[40px] border-2 border-deep-orange-500 cursor-grab flex justify-center items-center"
-              >
-                {task.id}
-              </div>
-            ))}
-          </div>
-        ))}
+    <div className="p-2 flex-grow flex flex-col justify-start items-center">
+      <Modal />
+      <div
+        className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
+        onClick={returnToMainPage}
+      >
+        <span className="material-icons">keyboard_backspace</span>
+        {t('boardPage.backToBoardsList')}
       </div>
-    </>
+      <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
+      {data?.length === 0 ? (
+        <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
+      ) : null}
+      {loading && <Loader />}
+      <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
+        {data?.map(({ _id, title, order, boardId }) => {
+          return (
+            <ColumnWrapper
+              key={_id}
+              id={_id}
+              title={title}
+              order={order}
+              boardId={boardId}
+              setCurrentColumn={setCurrentColumn}
+              currentColumn={currentColumn}
+            />
+          );
+        })}
+        <button
+          className="w-10 h-10 min-w-10 bg-white transition-colors text-[#57606A] text-xl material-icons border border-[#D8DEE4] rounded-md hover:bg-[#f6f8fa]"
+          onClick={openCreateModal}
+        >
+          add
+        </button>
+      </div>
+    </div>
   );
 };
 
