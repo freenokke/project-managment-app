@@ -8,6 +8,7 @@ import SignInput from './SignInput/SignInput';
 import NavList from './NavList/NavList';
 import ModalWrapper from './Modal/ModalWrapper/ModalWrapper';
 import Loader from './Loader/Loader';
+import ColumnWrapper from './ColumnWrapper/ColumnWrapper';
 
 export {
   Header,
@@ -20,4 +21,5 @@ export {
   CreateCard,
   ModalWrapper,
   Loader,
+  ColumnWrapper,
 };

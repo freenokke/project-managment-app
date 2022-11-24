@@ -102,6 +102,15 @@ const config = {
         '.height100': {
           height: 'calc(100vh - 65px - 70px)',
         },
+        '.boardColumn': {
+          backgroundColor: '#f6f8fa',
+          border: '1px solid #D8DEE4',
+          display: 'flex',
+          flexDirection: 'column',
+          borderRadius: '6px',
+          minWidth: '300px',
+          padding: '5px',
+        },
       });
     }),
   ],

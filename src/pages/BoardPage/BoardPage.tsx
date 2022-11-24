@@ -1,21 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
-import { Loader } from '../../components';
+import { ColumnWrapper, Loader } from '../../components';
 import { useCallback, useEffect } from 'react';
-import { setColumnsOrder } from '../../redux/features/boardInfoSlice';
-import { useAppSelector } from '../../hooks/redux.hooks';
+import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 
 const BoardPage = () => {
-  const { boardId } = useAppSelector((state) => state.boardInfo);
-  const { data, isLoading, isFetching } = useGetColumnsQuery(boardId);
   const dispatch = useDispatch<AppDispatch>();
-  const { t } = useTranslation();
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data) {
@@ -23,7 +22,8 @@ const BoardPage = () => {
     } else {
       dispatch(setColumnsOrder(0));
     }
-  }, [data, dispatch]);
+    dispatch(setOpenedBoard(id ? id : ''));
+  }, [data, dispatch, id]);
 
   const returnToMainPage = useCallback(() => {
     navigate('/main');
@@ -36,7 +36,7 @@ const BoardPage = () => {
   const loading = isLoading || isFetching;
 
   return (
-    <div className="p-6 flex-grow flex flex-col justify-start items-center">
+    <div className="p-2 flex-grow flex flex-col justify-start items-center">
       <Modal />
       <div
         className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
@@ -46,15 +46,19 @@ const BoardPage = () => {
         {t('boardPage.backToBoardsList')}
       </div>
       <h1 className="">Board Name</h1>
-      <button onClick={openCreateModal}>Create New Column</button>
+
       {loading && <Loader />}
-      {data?.map(({ _id: id, title }) => {
-        return (
-          <div className="" key={id}>
-            {title}
-          </div>
-        );
-      })}
+      <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
+        {data?.map(({ _id, title, order, boardId }) => {
+          return <ColumnWrapper key={_id} id={_id} title={title} order={order} boardId={boardId} />;
+        })}
+        <button
+          className="w-10 h-10 min-w-10 bg-white transition-colors text-[#57606A] text-xl material-icons border border-[#D8DEE4] rounded-md hover:bg-[#f6f8fa]"
+          onClick={openCreateModal}
+        >
+          add
+        </button>
+      </div>
     </div>
   );
 };
