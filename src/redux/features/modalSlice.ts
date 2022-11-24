@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ModalData } from '../../components/Modal/Modal.types';
 
 export enum ModalTypes {
   createBoard,
@@ -15,7 +16,7 @@ export enum ModalTypes {
 interface IModalState {
   visible: boolean;
   type: ModalTypes;
-  data: string | null;
+  data: ModalData | null;
 }
 
 const initialState: IModalState = {
@@ -28,7 +29,7 @@ const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    showModal(state, action: PayloadAction<{ type: ModalTypes; data?: string }>) {
+    showModal(state, action: PayloadAction<{ type: ModalTypes; data?: ModalData }>) {
       const { type, data } = action.payload;
       state.visible = true;
       state.type = type;

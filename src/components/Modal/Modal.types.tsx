@@ -24,7 +24,13 @@ export interface ModalChild {
   isDirty: boolean;
   isValid: boolean;
   isSubmitted: boolean;
-  data: string | null;
+  data: ModalData | null;
   type: ModalTypes;
   userId: string | null;
+}
+
+export interface ModalData {
+  boardId?: string;
+  columnId?: string;
+  taskId?: string;
 }
