@@ -5,6 +5,7 @@ import { closeModal, ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import { ModalChild } from '../Modal.types';
+import useTaskModal from '../useTaskModal';
 
 const DeleteModal = ({ data, type }: ModalChild) => {
   const { t } = useTranslation();
@@ -15,19 +16,20 @@ const DeleteModal = ({ data, type }: ModalChild) => {
   }, [dispatch]);
 
   const { deleteBoard } = useBoardModal();
+  const { deleteTask } = useTaskModal();
 
   const onDelete = useCallback(() => {
     if (type === ModalTypes.deleteBoard) {
-      deleteBoard(data ?? '');
+      deleteBoard(data ?? {});
     }
     if (type === ModalTypes.deleteColumn) {
       console.log('DELETE COLUMN');
     }
     if (type === ModalTypes.deleteTask) {
-      console.log('DELETE TASK');
+      deleteTask(data ?? {});
     }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data]);
+  }, [type, onCloseModal, deleteBoard, data, deleteTask]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
