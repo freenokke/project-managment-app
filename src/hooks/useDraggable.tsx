@@ -6,20 +6,12 @@ export const useDraggable = (
   tasks: ITaskData[],
   updateTasks: Dispatch<SetStateAction<ITaskData[]>>
 ) => {
-  const [currentDraggableCard, setDraggableCard] = useState<ITaskData | null>(null);
+  const [DraggableCard, setDraggableCard] = useState<ITaskData | null>(null);
   const [updateTasksSetCall, {}] = useUpdateSetOfTasksMutation();
 
   const updateTasksSet = useCallback(
-    async (data: ITaskData[]) => {
-      const body = data.map((task) => {
-        return {
-          _id: task._id,
-          order: task.order,
-          columnId: task.columnId,
-        };
-      });
-      console.log(body);
-      await updateTasksSetCall(body).unwrap();
+    async (data: { _id: string; order: number; columnId: string }[]) => {
+      await updateTasksSetCall(data).unwrap();
     },
     [updateTasksSetCall]
   );
@@ -28,25 +20,32 @@ export const useDraggable = (
     (e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
       e.stopPropagation();
       e.preventDefault();
-      if (
-        typeof currentDraggableCard?.order === 'number' &&
-        data.order !== currentDraggableCard?.order
-      ) {
-        const rebuiltTasksList = tasks.map((task) => {
-          if (task.order === data.order) {
-            return { ...task, order: currentDraggableCard?.order };
-          }
-          if (task.order === currentDraggableCard?.order) {
-            return { ...task, order: data.order };
-          }
-          return task;
-        });
+      if (typeof DraggableCard?.order === 'number' && data.order !== DraggableCard?.order) {
+        const {
+          _id: draggedElemId,
+          order: draggedElemOrder,
+          columnId: draggedElemCol,
+        } = DraggableCard;
+        const { _id: droppedElemId, order: droppedElemOrder, columnId: droppedElemCol } = data;
+
+        const body = [
+          {
+            _id: draggedElemId,
+            order: droppedElemOrder,
+            columnId: droppedElemCol,
+          },
+          {
+            _id: droppedElemId,
+            order: draggedElemOrder,
+            columnId: draggedElemCol,
+          },
+        ];
         // updateTasks(rebuiltTasksList);
-        updateTasksSet(rebuiltTasksList);
+        updateTasksSet(body);
       }
       (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
     },
-    [tasks, currentDraggableCard?.order, updateTasksSet]
+    [updateTasksSet, DraggableCard]
   );
 
   const dragStartHandler = useCallback((e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
