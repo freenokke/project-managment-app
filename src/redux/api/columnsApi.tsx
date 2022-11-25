@@ -60,6 +60,7 @@ export const columnsApi = createApi({
         url: `/boards/${boardId}/columns/${columnId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
     }),
   }),
 });
