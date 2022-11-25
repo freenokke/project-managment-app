@@ -12,6 +12,7 @@ import useTaskModal from '../useTaskModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
 import { INewTask, ITaskCreate } from '../../../redux/api/tasksApi';
+import { tasksApi } from '../../../redux/api/tasksApi';
 
 const CreateModal = ({
   register,
@@ -37,6 +38,11 @@ const CreateModal = ({
   const { createColumn } = useColumnModal();
   const { createTask } = useTaskModal();
 
+  const useQueryStateResult = tasksApi.endpoints.getTasks.useQueryState({
+    boardId: data?.boardId ?? '',
+    columnId: data?.columnId ?? '',
+  });
+
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
       if (type === ModalTypes.createBoard) {
@@ -49,24 +55,40 @@ const CreateModal = ({
         createColumn(boardId, columnData);
       }
       if (type === ModalTypes.createTask) {
-        const body: INewTask = {
-          title: formData.title,
-          description: formData.description,
-          userId: userId ?? '',
-          order: 0,
-          users: [],
-        };
-        const taskData: ITaskCreate = {
-          boardId: data?.boardId ?? '',
-          columnId: data?.columnId ?? '',
-          body,
-        };
-        createTask(taskData);
+        const { data: queryData } = useQueryStateResult;
+        if (queryData) {
+          const body: INewTask = {
+            title: formData.title,
+            description: formData.description,
+            userId: userId ?? '',
+            order: queryData.length + 1,
+            users: [],
+          };
+          const taskData: ITaskCreate = {
+            boardId: data?.boardId ?? '',
+            columnId: data?.columnId ?? '',
+            body,
+          };
+          createTask(taskData);
+        }
       }
       reset();
       onCloseModal();
     },
-    [createBoard, onCloseModal, reset, type, userId, createColumn, boardId, maxOrder]
+    [
+      createBoard,
+      onCloseModal,
+      reset,
+      type,
+      userId,
+      createColumn,
+      boardId,
+      maxOrder,
+      createTask,
+      data?.boardId,
+      data?.columnId,
+      useQueryStateResult,
+    ]
   );
 
   return (

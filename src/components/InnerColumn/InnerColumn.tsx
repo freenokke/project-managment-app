@@ -7,7 +7,7 @@ import { TaskWrapper, CreateCard } from '../../components';
 import { modalText } from '../../utils/constants/constants';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
-import { useDraggable } from '../../hooks/useDraggable';
+import { useTasksDraggable } from '../../hooks/useTasksDraggable';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const dispatch = useAppDispatch();
@@ -20,12 +20,11 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const [displayedTasks, setDisplayedTasks] = useState<ITaskData[]>([]);
 
   const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
-    useDraggable(displayedTasks, setDisplayedTasks);
+    useTasksDraggable(displayedTasks);
 
   useEffect(() => {
     if (tasks) {
       const copy = [...Array.from(tasks)];
-      copy.sort(sortCards);
       setDisplayedTasks(copy);
     }
   }, [tasks]);
@@ -34,14 +33,8 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
     dispatch(showModal({ type: ModalTypes.createTask, data: { boardId, columnId } }));
   }, [dispatch, boardId, columnId]);
 
-  function sortCards(a: ITaskData, b: ITaskData) {
-    return a.order - b.order;
-  }
-
-  console.log(displayedTasks);
-
   return (
-    <div className="bg-blue-gray-50 rounded flex flex-col w-full max-h-full relative whitespace-normal text-sm">
+    <div className="rounded flex flex-col w-full max-h-full relative whitespace-normal text-sm">
       <div className="flex min-h-[20px] py-[10px] px-[8px] relative pr-[36px]">
         <div className="absolute bottom-0 left-0 right-0 top-0 cursor-pointer shadow-blue"></div>
         <h3 className="font-semibold text-xl">{columnTitle}</h3>
