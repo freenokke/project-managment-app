@@ -26,6 +26,7 @@ export const useDraggable = (
 
   const dragDropHandler = useCallback(
     (e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
+      e.stopPropagation();
       e.preventDefault();
       if (
         typeof currentDraggableCard?.order === 'number' &&
@@ -49,19 +50,23 @@ export const useDraggable = (
   );
 
   const dragStartHandler = useCallback((e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
+    e.stopPropagation();
     setDraggableCard(data);
   }, []);
 
   const dragOverHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     e.preventDefault();
     (e.target as HTMLDivElement).classList.add('shadow', 'shadow-blue-400');
   }, []);
 
   const dragLeaveHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
   }, []);
 
   const dragEndHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
   }, []);
 
