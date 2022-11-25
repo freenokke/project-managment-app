@@ -33,7 +33,7 @@ const TaskWrapper: FC<IProps> = ({
       onDragEnd={onDragEndFn}
       className="relative w-full rounded shadow"
     >
-      <div className="w-full flex-shrink-0 px-1 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100">
+      <div className="w-full flex-shrink-0 pl-1 pr-8 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100">
         {title}
       </div>
       <div className="absolute top-0 right-0 text-gray-700 cursor-pointer">
@@ -45,12 +45,12 @@ const TaskWrapper: FC<IProps> = ({
           </MenuHandler>
           <MenuList className="flex min-w-min p-0">
             <MenuItem className="p-1 text-red-700 first-letter:capitalize">
-              <span onClick={deleteModal} className="material-icons text-base">
+              <span onClick={deleteModal} className="material-icons text-xl">
                 delete
               </span>
             </MenuItem>
             <MenuItem className="p-1 text-blue-700 first-letter:capitalize">
-              <span onClick={editModal} className="material-icons text-base">
+              <span onClick={editModal} className="material-icons text-xl">
                 edit
               </span>
             </MenuItem>

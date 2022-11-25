@@ -27,10 +27,15 @@ export interface ITaskUpdate extends Pick<ITaskData, 'boardId' | 'columnId' | '_
   body: INewTask;
 }
 
+const sortCards = (a: ITaskData, b: ITaskData) => {
+  return a.order - b.order;
+};
+
 export const tasksApi = boardsApi.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<ITaskData[], Pick<ITaskData, 'boardId' | 'columnId'>>({
       query: ({ boardId, columnId }) => `/boards/${boardId}/columns/${columnId}/tasks`,
+      transformResponse: (response: ITaskData[]) => response.sort(sortCards),
       providesTags: (result) =>
         result
           ? [

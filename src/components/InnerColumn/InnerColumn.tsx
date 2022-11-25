@@ -3,8 +3,7 @@ import { useAppDispatch } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './InnerColumn.type';
 import { ITaskData, useGetTasksQuery } from '../../redux/api/tasksApi';
-import { TaskWrapper, CreateCard } from '../../components';
-import { modalText } from '../../utils/constants/constants';
+import { TaskWrapper } from '../../components';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { useDraggable } from '../../hooks/useDraggable';
@@ -13,7 +12,6 @@ import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { title } = modalText.task;
   const { data: tasks } = useGetTasksQuery({
     boardId,
     columnId,
@@ -21,12 +19,11 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const [displayedTasks, setDisplayedTasks] = useState<ITaskData[]>([]);
 
   const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
-    useDraggable(displayedTasks, setDisplayedTasks);
+    useDraggable();
 
   useEffect(() => {
     if (tasks) {
       const copy = [...Array.from(tasks)];
-      copy.sort(sortCards);
       setDisplayedTasks(copy);
     }
   }, [tasks]);
@@ -34,12 +31,6 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createTask, data: { boardId, columnId } }));
   }, [dispatch, boardId, columnId]);
-
-  function sortCards(a: ITaskData, b: ITaskData) {
-    return a.order - b.order;
-  }
-
-  console.log(displayedTasks);
 
   return (
     <div className="bg-blue-gray-50 rounded flex flex-col w-full max-h-full relative whitespace-normal text-sm font-sans">
@@ -57,7 +48,12 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
           />
         ))}
       </div>
-      <CreateCard title={t(title)} onClick={openCreateModal} />
+      <div className="text-gray-700 createTaskBtn px-2 py-3" onClick={openCreateModal}>
+        <span className="material-icons">add</span>
+        <span>
+          {t('create.button')} {t('taskTitle')}
+        </span>
+      </div>
     </div>
   );
 };

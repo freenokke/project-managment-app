@@ -1,11 +1,8 @@
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback } from 'react';
 import { ITaskData } from '../redux/api/tasksApi';
 import { useUpdateSetOfTasksMutation } from '../redux/api/tasksApi';
 
-export const useDraggable = (
-  tasks: ITaskData[],
-  updateTasks: Dispatch<SetStateAction<ITaskData[]>>
-) => {
+export const useDraggable = () => {
   const [DraggableCard, setDraggableCard] = useState<ITaskData | null>(null);
   const [updateTasksSetCall, {}] = useUpdateSetOfTasksMutation();
 
