@@ -13,7 +13,6 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 }) => {
   const [patchColumns, {}] = usePatchColumnsSetMutation();
   const dragStartHandler = () => {
-    console.log('drug start event ', order, title);
     setCurrentColumn({ id, order, title });
   };
 
@@ -23,7 +22,6 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   const dropHandler = async (e: React.DragEvent) => {
     e.preventDefault();
-    // та, что перетягивается в currentColumn, а дпугая в пропсах
     console.log('Меняем колонку', currentColumn?.title, 'с колонкой', title);
     const requestBody = [
       {
@@ -35,8 +33,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
         order: currentColumn?.order,
       },
     ];
-    const data = await patchColumns(requestBody);
-    console.log(data);
+    await patchColumns(requestBody);
   };
 
   return (
@@ -48,7 +45,6 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDragOver={dragOverHandler}
       onDrop={dropHandler}
     >
-      <div className="text-lg ">{title}</div>
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
     </div>
   );

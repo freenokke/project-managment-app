@@ -55,6 +55,12 @@ export const columnsApi = createApi({
       }),
       invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
     }),
+    deleteColumn: build.mutation<IColumnsResponse, { boardId: string; columnId: string }>({
+      query: ({ boardId, columnId }) => ({
+        url: `/boards/${boardId}/columns/${columnId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
