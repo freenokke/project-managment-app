@@ -2,6 +2,7 @@ import React from 'react';
 import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
 import { sortByOrder } from '../../utils/utils';
+import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
@@ -13,19 +14,24 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   updateColumnsList,
   columnsList,
 }) => {
-  const dragStartHandler = () => {
+  const {
+    dragStartEventHandler,
+    dragOverEventHandler,
+    dragLeaveEventHandler,
+    dragEndEventHandler,
+    dropEventHandler,
+  } = useColumnsDraggable();
+
+  const dragStartHandler = (e: React.DragEvent) => {
+    dragStartEventHandler(e);
     setSelectedColumn({ id, order, title });
   };
 
-  const dragOverHandler = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
   const dropHandler = async (e: React.DragEvent) => {
-    e.preventDefault();
-    console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
-    console.log('С колонкой', title, 'order', order);
-    if (columnsList) {
+    dropEventHandler(e);
+    // console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
+    // console.log('С колонкой', title, 'order', order);
+    if (columnsList && order !== selectedColumn?.order) {
       const newColumnsList = columnsList?.map((column) => {
         if (selectedColumn) {
           if (column.order === selectedColumn.order) {
@@ -37,20 +43,20 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
           return column;
         } else return column;
       });
-
       updateColumnsList(newColumnsList.sort(sortByOrder));
-      console.log(newColumnsList);
     }
   };
 
   return (
     <div
       className="boardColumn"
-      data-order={order}
       draggable
+      data-type="column"
       onDragStart={dragStartHandler}
-      onDragOver={dragOverHandler}
+      onDragOver={dragOverEventHandler}
       onDrop={dropHandler}
+      onDragLeave={dragLeaveEventHandler}
+      onDragEnd={dragEndEventHandler}
     >
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
     </div>

@@ -12,7 +12,7 @@ import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
 import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
 import { IColumnsResponse } from './BoardPage.types';
-import { columnsApi, usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
+import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
