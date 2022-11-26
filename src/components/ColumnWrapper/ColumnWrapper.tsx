@@ -1,19 +1,20 @@
 import React from 'react';
-import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
+import { sortByOrder } from '../../utils/utils';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
   title,
   order,
   boardId,
-  setCurrentColumn,
-  currentColumn,
+  setSelectedColumn,
+  selectedColumn,
+  updateColumnsList,
+  columnsList,
 }) => {
-  const [patchColumns, {}] = usePatchColumnsSetMutation();
   const dragStartHandler = () => {
-    setCurrentColumn({ id, order, title });
+    setSelectedColumn({ id, order, title });
   };
 
   const dragOverHandler = (e: React.DragEvent) => {
@@ -22,18 +23,24 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   const dropHandler = async (e: React.DragEvent) => {
     e.preventDefault();
-    console.log('Меняем колонку', currentColumn?.title, 'с колонкой', title);
-    const requestBody = [
-      {
-        _id: currentColumn?.id,
-        order,
-      },
-      {
-        _id: id,
-        order: currentColumn?.order,
-      },
-    ];
-    await patchColumns(requestBody);
+    console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
+    console.log('С колонкой', title, 'order', order);
+    if (columnsList) {
+      const newColumnsList = columnsList?.map((column) => {
+        if (selectedColumn) {
+          if (column.order === selectedColumn.order) {
+            return { ...column, order: order };
+          }
+          if (column.order === order) {
+            return { ...column, order: selectedColumn?.order };
+          }
+          return column;
+        } else return column;
+      });
+
+      updateColumnsList(newColumnsList.sort(sortByOrder));
+      console.log(newColumnsList);
+    }
   };
 
   return (

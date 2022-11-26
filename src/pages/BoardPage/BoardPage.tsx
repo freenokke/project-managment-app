@@ -11,6 +11,8 @@ import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoS
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
 import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
+import { IColumnsResponse } from './BoardPage.types';
+import { columnsApi, usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,16 +20,35 @@ const BoardPage = () => {
   const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
-  const [currentColumn, setCurrentColumn] = useState<ICurrentColumn | null>(null);
+  const [selectedColumn, setSelectedColumn] = useState<ICurrentColumn | null>(null);
+  const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
+  const [patchColumns, {}] = usePatchColumnsSetMutation();
 
   useEffect(() => {
     if (data) {
+      console.log('Данные с сервера:', data);
+      setColumnsList(data);
       dispatch(setColumnsOrder(data.length));
     } else {
       dispatch(setColumnsOrder(0));
+      setColumnsList(null);
     }
     dispatch(setOpenedBoard(id ? id : ''));
   }, [data, dispatch, id]);
+
+  const updateColumnsList = useCallback(
+    (newColumnsList: IColumnsResponse[]) => {
+      setColumnsList(newColumnsList);
+      patchColumns(
+        newColumnsList.map((column) => {
+          return { _id: column._id, order: column.order };
+        })
+      )
+        .unwrap()
+        .then((data) => console.log('Ответ сервера', data));
+    },
+    [patchColumns]
+  );
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
@@ -51,7 +72,7 @@ const BoardPage = () => {
       ) : null}
       {loading && <Loader />}
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
-        {data?.map(({ _id, title, order, boardId }) => {
+        {columnsList?.map(({ _id, title, order, boardId }) => {
           return (
             <ColumnWrapper
               key={_id}
@@ -59,8 +80,10 @@ const BoardPage = () => {
               title={title}
               order={order}
               boardId={boardId}
-              setCurrentColumn={setCurrentColumn}
-              currentColumn={currentColumn}
+              selectedColumn={selectedColumn}
+              setSelectedColumn={setSelectedColumn}
+              updateColumnsList={updateColumnsList}
+              columnsList={columnsList}
             />
           );
         })}
