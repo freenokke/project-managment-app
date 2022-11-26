@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
@@ -15,7 +15,6 @@ import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperType
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const navigate = useNavigate();
   const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
@@ -30,10 +29,6 @@ const BoardPage = () => {
     dispatch(setOpenedBoard(id ? id : ''));
   }, [data, dispatch, id]);
 
-  const returnToMainPage = useCallback(() => {
-    navigate('/main');
-  }, [navigate]);
-
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
@@ -43,13 +38,13 @@ const BoardPage = () => {
   return (
     <div className="p-2 flex-grow flex flex-col justify-start items-center">
       <Modal />
-      <div
+      <Link
         className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
-        onClick={returnToMainPage}
+        to="/main"
       >
         <span className="material-icons">keyboard_backspace</span>
         {t('boardPage.backToBoardsList')}
-      </div>
+      </Link>
       <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
       {data?.length === 0 ? (
         <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
