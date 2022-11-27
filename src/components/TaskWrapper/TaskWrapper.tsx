@@ -12,12 +12,12 @@ const TaskWrapper: FC<IProps> = ({
   onDragLeaveFn,
   onDragEndFn,
 }) => {
-  const { title } = taskData;
+  const { title, boardId, columnId, _id: taskId } = taskData;
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {
-    dispatch(showModal({ type: ModalTypes.deleteTask, data: { taskData } }));
-  }, [dispatch, taskData]);
+    dispatch(showModal({ type: ModalTypes.deleteTask, data: { boardId, columnId, taskId } }));
+  }, [dispatch, boardId, columnId, taskId]);
 
   const editModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.editTask, data: { taskData } }));

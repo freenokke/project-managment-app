@@ -4,7 +4,7 @@ import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './InnerColumn.type';
 import { useGetTasksQuery } from '../../redux/api/tasksApi';
 import { TaskWrapper } from '../../components';
-import { useDraggable } from '../../hooks/useDraggable';
+import { useDraggable } from '../../hooks/useTasksDraggable';
 import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
