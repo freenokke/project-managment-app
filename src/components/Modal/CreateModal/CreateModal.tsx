@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { SubmitHandler } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
 import { closeModal } from '../../../redux/features/modalSlice';
 import { IFormFields } from './CreateModal.types';
@@ -37,6 +37,16 @@ const CreateModal = ({
   const { createColumn } = useColumnModal();
   const { createTask } = useTaskModal();
 
+  const title = useMemo(() => {
+    if (type === ModalTypes.createBoard) {
+      return 'boardTitle';
+    } else if (type === ModalTypes.createColumn) {
+      return 'columnTitle';
+    } else {
+      return 'taskTitle';
+    }
+  }, [type]);
+
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
       if (type === ModalTypes.createBoard) {
@@ -66,12 +76,26 @@ const CreateModal = ({
       reset();
       onCloseModal();
     },
-    [createBoard, onCloseModal, reset, type, userId, createColumn, boardId, maxOrder]
+    [
+      type,
+      reset,
+      onCloseModal,
+      userId,
+      createBoard,
+      maxOrder,
+      createColumn,
+      boardId,
+      data?.boardId,
+      data?.columnId,
+      createTask,
+    ]
   );
 
   return (
     <div className="container flex flex-col items-center justify-center w-full">
-      <h1 className="text-2xl mb-10">{t('createModal.modalTitle')}</h1>
+      <h1 className="text-2xl mb-10">
+        {t('createModal.modalTitle')} {t(title)}
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-9 w-full mb-[40px]"

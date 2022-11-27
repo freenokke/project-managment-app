@@ -3,13 +3,12 @@ import { useAppDispatch } from '../../../hooks/redux.hooks';
 import { closeModal } from '../../../redux/features/modalSlice';
 import useBoardModal from '../useBoardModal';
 import { SubmitHandler } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IFormFields } from './EditModal.type';
 import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
-import useTaskModal from '../useTaskModal';
 
 const EditModal = ({
   register,
@@ -33,6 +32,16 @@ const EditModal = ({
   const { editBoard } = useBoardModal();
   // const { createTask } = useTaskModal();
 
+  const title = useMemo(() => {
+    if (type === ModalTypes.editBoard) {
+      return 'boardTitle';
+    } else if (type === ModalTypes.editColumn) {
+      return 'columnTitle';
+    } else {
+      return 'taskTitle';
+    }
+  }, [type]);
+
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
       if (type === ModalTypes.editBoard) {
@@ -51,7 +60,9 @@ const EditModal = ({
 
   return (
     <div className="container flex flex-col items-center justify-center w-full">
-      <h1 className="text-2xl mb-10">{t('editModal.modalTitle')}</h1>
+      <h1 className="text-2xl mb-10">
+        {t('editModal.modalTitle')} {t(title)}
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-9 w-full mb-[40px]"
