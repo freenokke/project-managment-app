@@ -1,9 +1,8 @@
-import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.hooks';
 import { parseJwt } from '../../utils/utils';
 import { showModal, ModalTypes } from '../../redux/features/modalSlice';
-import { showLoader } from '../../redux/features/taskModalSlice';
 import { Button } from '@material-tailwind/react';
 import { useGetBoardsQuery } from '../../redux/api/boardsApi';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
@@ -14,10 +13,8 @@ const TaskModalInfo = () => {
   const { token } = useAppSelector((state) => state.auth);
   const { login } = parseJwt(token ?? '');
   const { taskData } = useAppSelector((state) => state.taskModal);
-  const { isLoading: boardLoading, data: boardsSet } = useGetBoardsQuery(taskData?.userId ?? '');
-  const { isLoading: columnLoading, data: columnsSet } = useGetColumnsQuery(
-    taskData?.boardId ?? ''
-  );
+  const { data: boardsSet } = useGetBoardsQuery(taskData?.userId ?? '');
+  const { data: columnsSet } = useGetColumnsQuery(taskData?.boardId ?? '');
   const board = boardsSet?.find(({ _id }) => _id === taskData?.boardId);
   const column = columnsSet?.find(({ _id }) => _id === taskData?.columnId);
   console.log('board', board?.title);
@@ -25,10 +22,6 @@ const TaskModalInfo = () => {
   const deleteModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.deleteTask, data: { taskId: taskData?._id } }));
   }, [dispatch, taskData?._id]);
-
-  useEffect(() => {
-    (boardLoading || columnLoading) && dispatch(showLoader(true));
-  }, [boardLoading, columnLoading, dispatch]);
 
   return (
     <>
