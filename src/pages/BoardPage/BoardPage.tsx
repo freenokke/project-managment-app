@@ -10,7 +10,6 @@ import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
-import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 
@@ -20,7 +19,6 @@ const BoardPage = () => {
   const { data, isLoading } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
-  const [selectedColumn, setSelectedColumn] = useState<ICurrentColumn | null>(null);
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
 
@@ -88,8 +86,6 @@ const BoardPage = () => {
               title={title}
               order={order}
               boardId={boardId}
-              selectedColumn={selectedColumn}
-              setSelectedColumn={setSelectedColumn}
               updateColumnsList={updateColumnsList}
               columnsList={columnsList}
             />

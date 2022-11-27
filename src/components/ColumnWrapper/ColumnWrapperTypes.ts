@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { IColumnsResponse } from '../../pages/BoardPage/BoardPage.types';
 
 export interface IColumnProps {
@@ -6,8 +5,6 @@ export interface IColumnProps {
   title: string;
   order: number;
   boardId: string;
-  selectedColumn: ICurrentColumn | null;
-  setSelectedColumn: Dispatch<SetStateAction<ICurrentColumn | null>>;
   updateColumnsList: (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => void;
   columnsList: IColumnsResponse[] | null;
 }

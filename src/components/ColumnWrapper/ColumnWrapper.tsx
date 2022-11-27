@@ -5,8 +5,7 @@ import { sortByOrder } from '../../utils/utils';
 import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
 import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
 import Loader from '../Loader/Loader';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
-import { resetCurrentDraggable, setCurrentDraggable } from '../../redux/features/dragSlice';
+import { useAppSelector } from '../../hooks/redux.hooks';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
@@ -25,19 +24,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   } = useColumnsDraggable();
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
-  const dispatch = useAppDispatch();
   const { currentDraggable } = useAppSelector((state) => state.drag);
-
-  const dragStartHandler = (e: React.DragEvent) => {
-    dragStartEventHandler(e);
-    dispatch(setCurrentDraggable({ itemInfo: { _id: id, order, title, boardId }, type: 'column' }));
-  };
-
-  const dragEndHandler = (e: React.DragEvent) => {
-    console.log('end');
-    dragEndEventHandler(e);
-    dispatch(resetCurrentDraggable());
-  };
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);
@@ -78,11 +65,11 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       className="boardColumn relative"
       draggable
       data-type="column"
-      onDragStart={dragStartHandler}
+      onDragStart={(e) => dragStartEventHandler(e, { _id: id, boardId, title, order })}
       onDragOver={dragOverEventHandler}
       onDrop={dropHandler}
       onDragLeave={dragLeaveEventHandler}
-      onDragEnd={dragEndHandler}
+      onDragEnd={dragEndEventHandler}
     >
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
       {isLoading ? <Loader /> : null}
