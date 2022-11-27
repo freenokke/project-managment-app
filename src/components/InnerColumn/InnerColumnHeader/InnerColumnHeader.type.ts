@@ -1,4 +1,4 @@
 export interface IProps {
   columnTitle: string;
-  taskCount: number;
+  taskCount: number | undefined;
 }

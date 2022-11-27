@@ -1,8 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { request } from '../../utils/request';
-import { ISignInData, ISignUpData } from '../../pages/SignUpPage/SignUp.types';
-import { SerializedError } from '@reduxjs/toolkit';
-import { parseJwt } from '../../utils/utils';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ITaskData } from '../api/tasksApi';
 
 interface IState {
