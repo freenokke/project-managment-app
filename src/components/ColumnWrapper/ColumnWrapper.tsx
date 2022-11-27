@@ -53,9 +53,13 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   const deleteColumnHandler = async () => {
     await deleteColumn({ boardId, columnId: id });
-    const newColumnsList = columnsList?.filter((item) => {
-      return item._id !== id;
-    });
+    const newColumnsList = columnsList
+      ?.filter((item) => {
+        return item._id !== id;
+      })
+      .map((column, index) => {
+        return { ...column, order: index + 1 };
+      });
     if (newColumnsList) {
       updateColumnsList(newColumnsList, 'DELETE');
     }
@@ -71,6 +75,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDrop={dropHandler}
       onDragLeave={dragLeaveEventHandler}
       onDragEnd={dragEndEventHandler}
+      onDragOverCapture={dragOverEventHandler}
     >
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
       {isLoading ? <Loader /> : null}

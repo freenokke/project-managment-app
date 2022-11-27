@@ -41,8 +41,8 @@ const BoardPage = () => {
       if (type === 'UPDATE') {
         setColumnsList(newColumnsList);
         patchColumns(
-          newColumnsList.map((column) => {
-            return { _id: column._id, order: column.order };
+          newColumnsList.map((column, index) => {
+            return { _id: column._id, order: index + 1 };
           })
         )
           .unwrap()
@@ -50,6 +50,11 @@ const BoardPage = () => {
       }
       if (type === 'DELETE') {
         setColumnsList(newColumnsList);
+        patchColumns(
+          newColumnsList.map((column, index) => {
+            return { _id: column._id, order: index + 1 };
+          })
+        );
       }
     },
     [patchColumns]
