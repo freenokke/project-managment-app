@@ -2,14 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IColumnsResponse, IColumnData } from '../../pages/BoardPage/BoardPage.types';
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
-
-const sortByOrder = (a: IColumnsResponse, b: IColumnsResponse) => {
-  if (a.order > b.order) {
-    return 1;
-  } else {
-    return -1;
-  }
-};
+import { sortByOrder } from '../../utils/utils';
 
 export const columnsApi = createApi({
   reducerPath: 'columnsApi',
@@ -30,7 +23,12 @@ export const columnsApi = createApi({
       query: (userId) => ({
         url: `boards/${userId}/columns`,
       }),
-      transformResponse: (result: IColumnsResponse[]) => result.sort(sortByOrder),
+      transformResponse: (result: IColumnsResponse[]) =>
+        result.sort(sortByOrder).map((item, index) => {
+          const column = { ...item };
+          column.order = index + 1;
+          return column;
+        }),
       providesTags: (result) =>
         result
           ? [
@@ -55,8 +53,19 @@ export const columnsApi = createApi({
       }),
       invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
     }),
+    deleteColumn: build.mutation<IColumnsResponse, { boardId: string; columnId: string }>({
+      query: ({ boardId, columnId }) => ({
+        url: `/boards/${boardId}/columns/${columnId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
+    }),
   }),
 });
 
-export const { useGetColumnsQuery, useCreateColumnMutation, usePatchColumnsSetMutation } =
-  columnsApi;
+export const {
+  useGetColumnsQuery,
+  useCreateColumnMutation,
+  usePatchColumnsSetMutation,
+  useDeleteColumnMutation,
+} = columnsApi;

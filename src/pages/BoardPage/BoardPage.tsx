@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
@@ -11,53 +11,72 @@ import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoS
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
 import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
+import { IColumnsResponse } from './BoardPage.types';
+import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
+  const { data, isLoading } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
-  const [currentColumn, setCurrentColumn] = useState<ICurrentColumn | null>(null);
+  const [selectedColumn, setSelectedColumn] = useState<ICurrentColumn | null>(null);
+  const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
+  const [patchColumns, {}] = usePatchColumnsSetMutation();
 
   useEffect(() => {
     if (data) {
+      console.log('Данные с сервера:', data);
+      setColumnsList(data);
       dispatch(setColumnsOrder(data.length));
     } else {
       dispatch(setColumnsOrder(0));
+      setColumnsList(null);
     }
     dispatch(setOpenedBoard(id ? id : ''));
   }, [data, dispatch, id]);
 
-  const returnToMainPage = useCallback(() => {
-    navigate('/main');
-  }, [navigate]);
+  const updateColumnsList = useCallback(
+    (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
+      if (type === 'UPDATE') {
+        setColumnsList(newColumnsList);
+        patchColumns(
+          newColumnsList.map((column) => {
+            return { _id: column._id, order: column.order };
+          })
+        )
+          .unwrap()
+          .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+      }
+      if (type === 'DELETE') {
+        setColumnsList(newColumnsList);
+      }
+    },
+    [patchColumns]
+  );
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
 
-  const loading = isLoading || isFetching;
-
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
       <Modal />
       <TaskModal />
-      <div
+      <Link
         className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
-        onClick={returnToMainPage}
+        to="/main"
       >
         <span className="material-icons">keyboard_backspace</span>
         {t('boardPage.backToBoardsList')}
-      </div>
+      </Link>
       <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
       {data?.length === 0 ? (
         <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
       ) : null}
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
-        {data?.map(({ _id, title, order, boardId }) => {
+        {columnsList?.map(({ _id, title, order, boardId }) => {
           return (
             <ColumnWrapper
               key={_id}
@@ -65,8 +84,10 @@ const BoardPage = () => {
               title={title}
               order={order}
               boardId={boardId}
-              setCurrentColumn={setCurrentColumn}
-              currentColumn={currentColumn}
+              selectedColumn={selectedColumn}
+              setSelectedColumn={setSelectedColumn}
+              updateColumnsList={updateColumnsList}
+              columnsList={columnsList}
             />
           );
         })}

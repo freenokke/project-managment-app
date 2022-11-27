@@ -1,55 +1,80 @@
 import React from 'react';
-import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
+import { sortByOrder } from '../../utils/utils';
+import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
+import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
+import Loader from '../Loader/Loader';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
   title,
   order,
   boardId,
-  setCurrentColumn,
-  currentColumn,
+  setSelectedColumn,
+  selectedColumn,
+  updateColumnsList,
+  columnsList,
 }) => {
-  const [patchColumns, {}] = usePatchColumnsSetMutation();
-  const dragStartHandler = () => {
-    console.log('drug start event ', order, title);
-    setCurrentColumn({ id, order, title });
+  const {
+    dragStartEventHandler,
+    dragOverEventHandler,
+    dragLeaveEventHandler,
+    dragEndEventHandler,
+    dropEventHandler,
+  } = useColumnsDraggable();
+
+  const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
+
+  const dragStartHandler = (e: React.DragEvent) => {
+    dragStartEventHandler(e);
+    setSelectedColumn({ id, order, title });
   };
 
-  const dragOverHandler = (e: React.DragEvent) => {
-    e.preventDefault();
+  const dropHandler = (e: React.DragEvent) => {
+    dropEventHandler(e);
+    // console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
+    // console.log('С колонкой', title, 'order', order);
+    if (columnsList && order !== selectedColumn?.order) {
+      const newColumnsList = columnsList?.map((column) => {
+        if (selectedColumn) {
+          if (column.order === selectedColumn.order) {
+            return { ...column, order: order };
+          }
+          if (column.order === order) {
+            return { ...column, order: selectedColumn?.order };
+          }
+          return column;
+        } else return column;
+      });
+      updateColumnsList(newColumnsList.sort(sortByOrder), 'UPDATE');
+    }
   };
 
-  const dropHandler = async (e: React.DragEvent) => {
-    e.preventDefault();
-    // та, что перетягивается в currentColumn, а дпугая в пропсах
-    console.log('Меняем колонку', currentColumn?.title, 'с колонкой', title);
-    const requestBody = [
-      {
-        _id: currentColumn?.id,
-        order,
-      },
-      {
-        _id: id,
-        order: currentColumn?.order,
-      },
-    ];
-    const data = await patchColumns(requestBody);
-    console.log(data);
+  const deleteColumnHandler = async () => {
+    await deleteColumn({ boardId, columnId: id });
+    const newColumnsList = columnsList?.filter((item) => {
+      return item._id !== id;
+    });
+    if (newColumnsList) {
+      updateColumnsList(newColumnsList, 'DELETE');
+    }
   };
 
   return (
     <div
-      className="boardColumn"
-      data-order={order}
+      className="boardColumn relative"
       draggable
+      data-type="column"
       onDragStart={dragStartHandler}
-      onDragOver={dragOverHandler}
+      onDragOver={dragOverEventHandler}
       onDrop={dropHandler}
+      onDragLeave={dragLeaveEventHandler}
+      onDragEnd={dragEndEventHandler}
     >
-      <div className="text-lg ">{title}</div>
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
+      {isLoading ? <Loader /> : null}
+      <button onClick={deleteColumnHandler}>DELETE</button>
     </div>
   );
 };

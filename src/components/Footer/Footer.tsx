@@ -1,5 +1,5 @@
 import logo from '../../assets/images/rs_school_logo.svg';
-import { authorsArray } from '../../utils/constants/common';
+import { authorsArray } from '../../utils/constants/constants';
 
 const Footer = () => {
   return (
