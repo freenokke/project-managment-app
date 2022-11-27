@@ -1,11 +1,8 @@
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback } from 'react';
 import { ITaskData } from '../redux/api/tasksApi';
 import { useUpdateSetOfTasksMutation } from '../redux/api/tasksApi';
 
-export const useDraggable = (
-  tasks: ITaskData[],
-  updateTasks: Dispatch<SetStateAction<ITaskData[]>>
-) => {
+export const useTasksDraggable = (tasks: ITaskData[]) => {
   const [currentDraggableCard, setDraggableCard] = useState<ITaskData | null>(null);
   const [updateTasksSetCall, {}] = useUpdateSetOfTasksMutation();
 
@@ -18,7 +15,6 @@ export const useDraggable = (
           columnId: task.columnId,
         };
       });
-      console.log(body);
       await updateTasksSetCall(body).unwrap();
     },
     [updateTasksSetCall]
@@ -26,6 +22,7 @@ export const useDraggable = (
 
   const dragDropHandler = useCallback(
     (e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
+      e.stopPropagation();
       e.preventDefault();
       if (
         typeof currentDraggableCard?.order === 'number' &&
@@ -40,7 +37,6 @@ export const useDraggable = (
           }
           return task;
         });
-        // updateTasks(rebuiltTasksList);
         updateTasksSet(rebuiltTasksList);
       }
       (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
@@ -49,19 +45,23 @@ export const useDraggable = (
   );
 
   const dragStartHandler = useCallback((e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
+    e.stopPropagation();
     setDraggableCard(data);
   }, []);
 
   const dragOverHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     e.preventDefault();
     (e.target as HTMLDivElement).classList.add('shadow', 'shadow-blue-400');
   }, []);
 
   const dragLeaveHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
   }, []);
 
   const dragEndHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
   }, []);
 
