@@ -17,7 +17,7 @@ import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { data, isLoading, isFetching } = useGetColumnsQuery(id ? id : '');
+  const { data, isLoading } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
   const [selectedColumn, setSelectedColumn] = useState<ICurrentColumn | null>(null);
@@ -37,15 +37,20 @@ const BoardPage = () => {
   }, [data, dispatch, id]);
 
   const updateColumnsList = useCallback(
-    (newColumnsList: IColumnsResponse[]) => {
-      setColumnsList(newColumnsList);
-      patchColumns(
-        newColumnsList.map((column) => {
-          return { _id: column._id, order: column.order };
-        })
-      )
-        .unwrap()
-        .then((data) => console.log('Ответ сервера', data));
+    (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
+      if (type === 'UPDATE') {
+        setColumnsList(newColumnsList);
+        patchColumns(
+          newColumnsList.map((column) => {
+            return { _id: column._id, order: column.order };
+          })
+        )
+          .unwrap()
+          .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+      }
+      if (type === 'DELETE') {
+        setColumnsList(newColumnsList);
+      }
     },
     [patchColumns]
   );
@@ -53,8 +58,6 @@ const BoardPage = () => {
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
-
-  const loading = isLoading || isFetching;
 
   return (
     <div className="p-2 flex-grow flex flex-col justify-start items-center">
@@ -70,7 +73,7 @@ const BoardPage = () => {
       {data?.length === 0 ? (
         <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
       ) : null}
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
         {columnsList?.map(({ _id, title, order, boardId }) => {
           return (

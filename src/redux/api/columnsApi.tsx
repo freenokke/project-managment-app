@@ -63,5 +63,9 @@ export const columnsApi = createApi({
   }),
 });
 
-export const { useGetColumnsQuery, useCreateColumnMutation, usePatchColumnsSetMutation } =
-  columnsApi;
+export const {
+  useGetColumnsQuery,
+  useCreateColumnMutation,
+  usePatchColumnsSetMutation,
+  useDeleteColumnMutation,
+} = columnsApi;

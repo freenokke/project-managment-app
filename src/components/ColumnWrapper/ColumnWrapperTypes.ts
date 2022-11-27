@@ -8,7 +8,7 @@ export interface IColumnProps {
   boardId: string;
   selectedColumn: ICurrentColumn | null;
   setSelectedColumn: Dispatch<SetStateAction<ICurrentColumn | null>>;
-  updateColumnsList: (newColumnsList: IColumnsResponse[]) => void;
+  updateColumnsList: (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => void;
   columnsList: IColumnsResponse[] | null;
 }
 
