@@ -7,17 +7,20 @@ import { useAppSelector } from '../../hooks/redux.hooks';
 import { logOut } from '../../redux/features/authSlice';
 import { parseJwt } from '../../utils/utils';
 import { Props } from './AccountMenu.type';
+import { useNavigate } from 'react-router-dom';
 
 const AccountMenu: FC<Props> = ({ closeNav }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { token } = useAppSelector((state) => state.auth);
   const { login } = parseJwt(token ?? '');
 
   const onLogout = useCallback(() => {
     closeNav();
+    navigate('/');
     dispatch(logOut());
-  }, [dispatch, closeNav]);
+  }, [dispatch, closeNav, navigate]);
 
   return (
     <div className="ml-auto flex items-center gap-1">
