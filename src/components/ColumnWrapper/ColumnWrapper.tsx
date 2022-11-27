@@ -5,14 +5,14 @@ import { sortByOrder } from '../../utils/utils';
 import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
 import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
 import Loader from '../Loader/Loader';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
+import { resetCurrentDraggable, setCurrentDraggable } from '../../redux/features/dragSlice';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
   title,
   order,
   boardId,
-  setSelectedColumn,
-  selectedColumn,
   updateColumnsList,
   columnsList,
 }) => {
@@ -25,24 +25,32 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   } = useColumnsDraggable();
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
+  const dispatch = useAppDispatch();
+  const { currentDraggable } = useAppSelector((state) => state.drag);
 
   const dragStartHandler = (e: React.DragEvent) => {
     dragStartEventHandler(e);
-    setSelectedColumn({ id, order, title });
+    dispatch(setCurrentDraggable({ itemInfo: { _id: id, order, title, boardId }, type: 'column' }));
+  };
+
+  const dragEndHandler = (e: React.DragEvent) => {
+    console.log('end');
+    dragEndEventHandler(e);
+    dispatch(resetCurrentDraggable());
   };
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);
     // console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
     // console.log('С колонкой', title, 'order', order);
-    if (columnsList && order !== selectedColumn?.order) {
+    if (columnsList && order !== currentDraggable?.order) {
       const newColumnsList = columnsList?.map((column) => {
-        if (selectedColumn) {
-          if (column.order === selectedColumn.order) {
+        if (currentDraggable) {
+          if (column.order === currentDraggable.order) {
             return { ...column, order: order };
           }
           if (column.order === order) {
-            return { ...column, order: selectedColumn?.order };
+            return { ...column, order: currentDraggable?.order };
           }
           return column;
         } else return column;
@@ -74,8 +82,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDragOver={dragOverEventHandler}
       onDrop={dropHandler}
       onDragLeave={dragLeaveEventHandler}
-      onDragEnd={dragEndEventHandler}
-      onDragOverCapture={dragOverEventHandler}
+      onDragEnd={dragEndHandler}
     >
       {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
       {isLoading ? <Loader /> : null}

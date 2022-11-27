@@ -4,6 +4,7 @@ import boardInfo from './features/boardInfoSlice';
 import { boardsApi } from './api/boardsApi';
 import auth from './features/authSlice';
 import user from './features/userSlice';
+import drag from './features/dragSlice';
 import { columnsApi } from './api/columnsApi';
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
     boardInfo,
     auth,
     user,
+    drag,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(boardsApi.middleware).concat(columnsApi.middleware),
