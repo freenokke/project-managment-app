@@ -1,5 +1,6 @@
 import {
   ITaskCreate,
+  ITaskUpdate,
   useCreateTaskMutation,
   useDeleteTaskMutation,
   useEditTaskMutation,
@@ -25,9 +26,13 @@ const useTaskModal = () => {
     await deleteTaskCall(data).unwrap();
   };
 
+  const editTask = async (data: ITaskUpdate) => {
+    await editTaskCall(data).unwrap();
+  };
+
   return {
     createTask,
-    // editBoard,
+    editTask,
     deleteTask,
   };
 };

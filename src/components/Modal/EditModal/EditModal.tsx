@@ -31,7 +31,7 @@ const EditModal = ({
 
   const { t } = useTranslation();
   const { editBoard } = useBoardModal();
-  // const { createTask } = useTaskModal();
+  const { editTask } = useTaskModal();
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
@@ -42,11 +42,28 @@ const EditModal = ({
         console.log(formData);
       }
       if (type === ModalTypes.editTask) {
-        console.log(formData);
+        if (data?.taskData) {
+          const { _id, boardId, columnId, description, order, userId, users } = data.taskData;
+          const body = {
+            title: formData.title,
+            order,
+            description,
+            columnId,
+            userId,
+            users,
+          };
+          const requestTaskData = {
+            _id,
+            boardId,
+            columnId,
+            body,
+          };
+          editTask(requestTaskData);
+        }
       }
       onCloseModal();
     },
-    [type, onCloseModal, editBoard, data, userId]
+    [type, onCloseModal, editBoard, data, userId, editTask]
   );
 
   return (

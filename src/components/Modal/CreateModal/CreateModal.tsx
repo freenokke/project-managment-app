@@ -60,12 +60,12 @@ const CreateModal = ({
             order: queryData.length + 1,
             users: [],
           };
-          const taskData: ITaskCreate = {
+          const requestTaskData: ITaskCreate = {
             boardId: data?.boardId ?? '',
             columnId: data?.columnId ?? '',
             body,
           };
-          createTask(taskData);
+          createTask(requestTaskData);
         }
       }
       reset();
