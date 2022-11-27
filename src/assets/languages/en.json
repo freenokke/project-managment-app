@@ -46,5 +46,6 @@
   "hero.buttonText": "Learn more",
   "hero.notice": "for Web (Desktop & Mobile)",
   "boardPage.backToBoardsList": "Back to boards list",
-  "boardPage.noColumns": "This board has no columns yet"
+  "boardPage.noColumns": "This board has no columns yet",
+  "editProfile.title": "Edit profile"
 }
