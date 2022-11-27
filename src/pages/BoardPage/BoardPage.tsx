@@ -5,7 +5,7 @@ import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
-import { ColumnWrapper, Loader } from '../../components';
+import { ColumnWrapper, Loader, TaskModal } from '../../components';
 import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
@@ -41,8 +41,9 @@ const BoardPage = () => {
   const loading = isLoading || isFetching;
 
   return (
-    <div className="p-2 flex-grow flex flex-col justify-start items-center">
+    <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
       <Modal />
+      <TaskModal />
       <div
         className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
         onClick={returnToMainPage}

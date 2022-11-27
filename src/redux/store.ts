@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import modalSlice from './features/modalSlice';
+import modal from './features/modalSlice';
+import taskModal from './features/taskModalSlice';
 import boardInfo from './features/boardInfoSlice';
-import { boardsApi } from './api/boardsApi';
 import auth from './features/authSlice';
 import boardsApi, { boardsMiddleware } from './api/boardsApi';
 import { columnsApi } from './api/columnsApi';
@@ -9,13 +9,14 @@ import { columnsApi } from './api/columnsApi';
 export const store = configureStore({
   reducer: {
     modal,
+    taskModal,
     boardsApi,
     boardInfo,
     [columnsApi.reducerPath]: columnsApi.reducer,
-    boardInfo,
     auth,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(boardsApi.middleware).concat(columnsApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(boardsMiddleware).concat(columnsApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

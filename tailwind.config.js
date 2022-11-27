@@ -84,7 +84,7 @@ const config = {
           left: '0',
           bottom: '0',
           right: '0',
-          zIndex: '10',
+          zIndex: '30',
         },
         '.modalInner': {
           position: 'fixed',
@@ -94,7 +94,7 @@ const config = {
           transform: 'translateY(-50%)',
           width: '290px',
           padding: '40px 0',
-          zIndex: '20',
+          zIndex: '40',
           borderRadius: '6px',
           backgroundColor: 'white',
           boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.25)',

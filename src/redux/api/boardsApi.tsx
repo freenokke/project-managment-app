@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IBoardResponse, IBoardData } from '../../components/BoardCard/Board.types';
-import { ModalChild, ModalData } from '../../components/Modal/Modal.types';
+import { ModalData } from '../../components/Modal/Modal.types';
 import { baseUrl } from '../../utils/constants/constants';
 import { RootState } from '../store';
 
-const boardsApi = createApi({
+export const boardsApi = createApi({
   reducerPath: 'boardsApi',
   tagTypes: ['Boards', 'Tasks'],
   baseQuery: fetchBaseQuery({

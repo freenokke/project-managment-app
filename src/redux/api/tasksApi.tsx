@@ -20,11 +20,20 @@ export interface INewTask {
   users: string[];
 }
 
+export interface ITaskUpdates {
+  title: string;
+  order: number;
+  description: string;
+  columnId: string;
+  userId: string;
+  users: string[];
+}
+
 export interface ITaskCreate extends Pick<ITaskData, 'boardId' | 'columnId'> {
   body: INewTask;
 }
 export interface ITaskUpdate extends Pick<ITaskData, 'boardId' | 'columnId' | '_id'> {
-  body: INewTask;
+  body: ITaskUpdates;
 }
 
 export const tasksApi = boardsApi.injectEndpoints({

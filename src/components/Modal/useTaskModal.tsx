@@ -1,5 +1,6 @@
 import {
   ITaskCreate,
+  ITaskUpdate,
   useCreateTaskMutation,
   useDeleteTaskMutation,
   useEditTaskMutation,
@@ -8,7 +9,9 @@ import { ModalData } from './Modal.types';
 
 export interface Updates {
   title: string;
-  owner: string;
+  order: number;
+  description: string;
+  userId: string;
   users: string[];
 }
 
@@ -25,9 +28,13 @@ const useTaskModal = () => {
     await deleteTaskCall(data).unwrap();
   };
 
+  const editTask = async (data: ITaskUpdate) => {
+    await editTaskCall(data).unwrap();
+  };
+
   return {
     createTask,
-    // editBoard,
+    editTask,
     deleteTask,
   };
 };
