@@ -9,6 +9,7 @@ import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
+import useTaskModal from '../useTaskModal';
 
 const EditModal = ({
   register,
