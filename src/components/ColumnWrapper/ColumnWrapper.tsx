@@ -66,7 +66,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       draggable
       data-type="column"
       onDragStart={(e) => dragStartEventHandler(e, { _id: id, boardId, title, order })}
-      onDragOver={dragOverEventHandler}
+      onDragOver={(e) => dragOverEventHandler(e, id)}
       onDrop={dropHandler}
       onDragLeave={dragLeaveEventHandler}
       onDragEnd={dragEndEventHandler}
