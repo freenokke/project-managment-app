@@ -12,6 +12,7 @@ import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
+import { useAppSelector } from '../../hooks/redux.hooks';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +22,7 @@ const BoardPage = () => {
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
+  const { type: elementType } = useAppSelector((state) => state.drag);
 
   useEffect(() => {
     if (data) {
@@ -36,26 +38,29 @@ const BoardPage = () => {
 
   const updateColumnsList = useCallback(
     (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
-      if (type === 'UPDATE') {
-        setColumnsList(newColumnsList);
-        patchColumns(
-          newColumnsList.map((column, index) => {
-            return { _id: column._id, order: index + 1 };
-          })
-        )
-          .unwrap()
-          .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
-      }
-      if (type === 'DELETE') {
-        setColumnsList(newColumnsList);
-        patchColumns(
-          newColumnsList.map((column, index) => {
-            return { _id: column._id, order: index + 1 };
-          })
-        );
+      if (elementType && elementType === 'column') {
+        console.log('type column');
+        if (type === 'UPDATE') {
+          setColumnsList(newColumnsList);
+          patchColumns(
+            newColumnsList.map((column, index) => {
+              return { _id: column._id, order: index + 1 };
+            })
+          )
+            .unwrap()
+            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+        }
+        if (type === 'DELETE') {
+          setColumnsList(newColumnsList);
+          patchColumns(
+            newColumnsList.map((column, index) => {
+              return { _id: column._id, order: index + 1 };
+            })
+          );
+        }
       }
     },
-    [patchColumns]
+    [patchColumns, elementType]
   );
 
   const openCreateModal = useCallback(() => {
