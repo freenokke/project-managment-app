@@ -3,6 +3,8 @@ import modal from './features/modalSlice';
 import taskModal from './features/taskModalSlice';
 import boardInfo from './features/boardInfoSlice';
 import auth from './features/authSlice';
+import user from './features/userSlice';
+import drag from './features/dragSlice';
 import boardsApi, { boardsMiddleware } from './api/boardsApi';
 import { columnsApi } from './api/columnsApi';
 
@@ -14,6 +16,8 @@ export const store = configureStore({
     boardInfo,
     [columnsApi.reducerPath]: columnsApi.reducer,
     auth,
+    user,
+    drag,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(boardsMiddleware).concat(columnsApi.middleware),

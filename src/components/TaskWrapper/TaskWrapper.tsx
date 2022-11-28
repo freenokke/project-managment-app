@@ -3,7 +3,7 @@ import { useAppDispatch } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './TaskWrapper.type';
 import { Menu, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
-import { showTaskModal } from '../../redux/features/taskModalSlice';
+import TaskModal from '../TaskModal/TaskModal';
 
 const TaskWrapper: FC<IProps> = ({
   taskData,
@@ -13,7 +13,7 @@ const TaskWrapper: FC<IProps> = ({
   onDragLeaveFn,
   onDragEndFn,
 }) => {
-  const { _id: taskId, boardId, columnId, title, order } = taskData;
+  const { title, boardId, columnId, _id: taskId } = taskData;
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {
@@ -23,10 +23,6 @@ const TaskWrapper: FC<IProps> = ({
   const editModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.editTask, data: { boardId, columnId, taskId } }));
   }, [dispatch, boardId, columnId, taskId]);
-
-  const taskModal = useCallback(() => {
-    dispatch(showTaskModal(taskData));
-  }, [dispatch, taskData]);
 
   return (
     <div
@@ -39,8 +35,8 @@ const TaskWrapper: FC<IProps> = ({
       className="relative w-full rounded shadow-md"
     >
       <div
-        className="w-full flex-shrink-0 px-1 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100"
-        onClick={taskModal}
+        className="w-full flex-shrink-0 pl-1 pr-8 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100"
+        onClick={TaskModal}
       >
         {title}
       </div>
@@ -53,12 +49,12 @@ const TaskWrapper: FC<IProps> = ({
           </MenuHandler>
           <MenuList className="flex min-w-min p-0">
             <MenuItem className="p-1 text-red-700 first-letter:capitalize">
-              <span onClick={deleteModal} className="material-icons text-base">
+              <span onClick={deleteModal} className="material-icons text-xl">
                 delete
               </span>
             </MenuItem>
             <MenuItem className="p-1 text-blue-700 first-letter:capitalize">
-              <span onClick={editModal} className="material-icons text-base">
+              <span onClick={editModal} className="material-icons text-xl">
                 edit
               </span>
             </MenuItem>

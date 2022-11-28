@@ -8,9 +8,10 @@ interface ISignInputProps {
   error?: FieldError;
   register: UseFormRegister<ISignUpData>;
   password?: boolean;
+  placeholder?: string;
 }
 
-const SignInput = ({ name, error, register, password }: ISignInputProps) => {
+const SignInput = ({ name, error, register, password, placeholder }: ISignInputProps) => {
   const { t } = useTranslation();
   const [passwordType, setPasswordType] = useState(password);
 
@@ -31,6 +32,7 @@ const SignInput = ({ name, error, register, password }: ISignInputProps) => {
           type={passwordType ? 'password' : 'text'}
           name={name}
           autoComplete="off"
+          placeholder={placeholder}
         />
         <div className=" absolute left-2 top-[-19px] p-1 bg-white uppercase text-xs ">
           {t(name)}

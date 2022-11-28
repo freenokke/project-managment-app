@@ -4,6 +4,7 @@ import {
   UseFormRegister,
   UseFormReset,
 } from 'react-hook-form';
+import { ITaskData } from '../../redux/api/tasksApi';
 import { ModalTypes } from '../../redux/features/modalSlice';
 import { ITaskData } from '../../redux/api/tasksApi';
 

@@ -51,13 +51,13 @@ export const tasksApi = boardsApi.injectEndpoints({
           return task;
         });
       },
-      providesTags: (result) =>
+      providesTags: (result, error, arg) =>
         result
           ? [
               ...result.map(({ _id }) => ({ type: 'Tasks' as const, _id })),
-              { type: 'Tasks', id: 'LIST' },
+              { type: 'Tasks', id: arg.columnId },
             ]
-          : [{ type: 'Tasks', id: 'LIST' }],
+          : ['Tasks'],
     }),
     getTasksById: builder.query<ITaskData, Pick<ITaskData, 'boardId' | 'columnId' | '_id'>>({
       query: ({ boardId, columnId, _id }) => `/boards/${boardId}/columns/${columnId}/tasks/${_id}`,
@@ -71,14 +71,14 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
     }),
     deleteTask: builder.mutation<ITaskData, ModalData>({
       query: ({ boardId, columnId, taskId }) => ({
         url: `/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
     }),
     editTask: builder.mutation<ITaskData, ITaskUpdate>({
       query: ({ boardId, columnId, _id, body }) => ({
@@ -86,18 +86,18 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
     }),
     updateSetOfTasks: builder.mutation<
       ITaskData[],
-      { _id: string; order: number; columnId: string }[]
+      Pick<ITaskData, '_id' | 'order' | 'columnId'>[]
     >({
       query: (body) => ({
         url: `/tasksSet`,
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Tasks' }],
     }),
   }),
 });

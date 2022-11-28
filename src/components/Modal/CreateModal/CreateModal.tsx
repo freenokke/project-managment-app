@@ -74,12 +74,12 @@ const CreateModal = ({
             order: 0,
             users: [],
           };
-          const taskData: ITaskCreate = {
+          const requestTaskData: ITaskCreate = {
             boardId: data?.boardId ?? '',
             columnId: data?.columnId ?? '',
             body,
           };
-          createTask(taskData);
+          createTask(requestTaskData);
         }
         reset();
         onCloseModal();
@@ -90,13 +90,13 @@ const CreateModal = ({
       userId,
       createBoard,
       maxOrder,
+      data?.boardId,
+      data?.columnId,
       createColumn,
       boardId,
       useQueryStateResult,
       reset,
       onCloseModal,
-      data?.boardId,
-      data?.columnId,
       createTask,
     ]
   );

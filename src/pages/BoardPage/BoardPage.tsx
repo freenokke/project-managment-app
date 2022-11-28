@@ -10,9 +10,9 @@ import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
-import { ICurrentColumn } from '../../components/ColumnWrapper/ColumnWrapperTypes';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
+import { useAppSelector } from '../../hooks/redux.hooks';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,9 +20,9 @@ const BoardPage = () => {
   const { data, isLoading } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
-  const [selectedColumn, setSelectedColumn] = useState<ICurrentColumn | null>(null);
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
+  const { type: elementType } = useAppSelector((state) => state.drag);
 
   useEffect(() => {
     if (data) {
@@ -38,21 +38,29 @@ const BoardPage = () => {
 
   const updateColumnsList = useCallback(
     (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
-      if (type === 'UPDATE') {
-        setColumnsList(newColumnsList);
-        patchColumns(
-          newColumnsList.map((column) => {
-            return { _id: column._id, order: column.order };
-          })
-        )
-          .unwrap()
-          .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
-      }
-      if (type === 'DELETE') {
-        setColumnsList(newColumnsList);
+      if (elementType && elementType === 'column') {
+        console.log('type column');
+        if (type === 'UPDATE') {
+          setColumnsList(newColumnsList);
+          patchColumns(
+            newColumnsList.map((column, index) => {
+              return { _id: column._id, order: index + 1 };
+            })
+          )
+            .unwrap()
+            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+        }
+        if (type === 'DELETE') {
+          setColumnsList(newColumnsList);
+          patchColumns(
+            newColumnsList.map((column, index) => {
+              return { _id: column._id, order: index + 1 };
+            })
+          );
+        }
       }
     },
-    [patchColumns]
+    [patchColumns, elementType]
   );
 
   const openCreateModal = useCallback(() => {
@@ -84,8 +92,6 @@ const BoardPage = () => {
               title={title}
               order={order}
               boardId={boardId}
-              selectedColumn={selectedColumn}
-              setSelectedColumn={setSelectedColumn}
               updateColumnsList={updateColumnsList}
               columnsList={columnsList}
             />

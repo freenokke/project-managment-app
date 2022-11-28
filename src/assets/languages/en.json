@@ -52,6 +52,9 @@
   "hero.subTitle": "Helps you to organize your work",
   "hero.buttonText": "Learn more",
   "hero.notice": "for Web (Desktop & Mobile)",
+  "column.delete": "Delete column",
+  "column.hide": "Hide column",
   "boardPage.backToBoardsList": "Back to boards list",
-  "boardPage.noColumns": "This board has no columns yet"
+  "boardPage.noColumns": "This board has no columns yet",
+  "editProfile.title": "Edit profile"
 }

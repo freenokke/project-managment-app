@@ -1,55 +1,80 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { ITaskData } from '../redux/api/tasksApi';
 import { useUpdateSetOfTasksMutation } from '../redux/api/tasksApi';
+import { useAppDispatch, useAppSelector } from './redux.hooks';
+import { setCurrentDraggable, resetCurrentDraggable } from '../redux/features/dragSlice';
 
-export const useTasksDraggable = (tasks: ITaskData[]) => {
-  const [currentDraggableCard, setDraggableCard] = useState<ITaskData | null>(null);
-  const [updateTasksSetCall, {}] = useUpdateSetOfTasksMutation();
+export const useDraggable = () => {
+  const [updateTasksSetCall, { isLoading: isUpdate }] = useUpdateSetOfTasksMutation();
+  const dispatch = useAppDispatch();
+  const currentDraggable = useAppSelector(
+    (state) => state.drag.currentDraggable
+  ) as ITaskData | null;
 
   const updateTasksSet = useCallback(
-    async (data: ITaskData[]) => {
-      const body = data.map((task) => {
-        return {
-          _id: task._id,
-          order: task.order,
-          columnId: task.columnId,
-        };
-      });
-      await updateTasksSetCall(body).unwrap();
+    async (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => {
+      await updateTasksSetCall(data).unwrap();
     },
     [updateTasksSetCall]
   );
 
   const dragDropHandler = useCallback(
-    (e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
+    (e: React.DragEvent, data: ITaskData | Pick<ITaskData, 'columnId'>) => {
       e.stopPropagation();
       e.preventDefault();
-      if (
-        typeof currentDraggableCard?.order === 'number' &&
-        data.order !== currentDraggableCard?.order
-      ) {
-        const rebuiltTasksList = tasks.map((task) => {
-          if (task.order === data.order) {
-            return { ...task, order: currentDraggableCard?.order };
-          }
-          if (task.order === currentDraggableCard?.order) {
-            return { ...task, order: data.order };
-          }
-          return task;
-        });
-        updateTasksSet(rebuiltTasksList);
+      //если order присутствует в объекте, значит дроп происходит на таске, а не на колонке.
+      if ('order' in data) {
+        if (
+          currentDraggable &&
+          (data.order !== currentDraggable?.order || data.columnId !== currentDraggable?.columnId)
+        ) {
+          const {
+            _id: draggedElemId,
+            order: draggedElemOrder,
+            columnId: draggedElemCol,
+          } = currentDraggable as ITaskData;
+          const { _id: droppedElemId, order: droppedElemOrder, columnId: droppedElemCol } = data;
+
+          const requestBody = [
+            {
+              _id: draggedElemId,
+              order: droppedElemOrder,
+              columnId: droppedElemCol,
+            },
+            {
+              _id: droppedElemId,
+              order: draggedElemOrder,
+              columnId: draggedElemCol,
+            },
+          ];
+          updateTasksSet(requestBody);
+        }
+      } else {
+        if (currentDraggable && data.columnId !== currentDraggable.columnId) {
+          const requestBody = [
+            {
+              _id: currentDraggable._id,
+              order: currentDraggable.order,
+              columnId: data.columnId,
+            },
+          ];
+          updateTasksSet(requestBody);
+        }
       }
       (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
     },
-    [tasks, currentDraggableCard?.order, updateTasksSet]
+    [updateTasksSet, currentDraggable]
   );
 
-  const dragStartHandler = useCallback((e: React.DragEvent<HTMLDivElement>, data: ITaskData) => {
-    e.stopPropagation();
-    setDraggableCard(data);
-  }, []);
+  const dragStartHandler = useCallback(
+    (e: React.DragEvent, data: ITaskData) => {
+      e.stopPropagation();
+      dispatch(setCurrentDraggable({ itemInfo: data, type: 'task' }));
+    },
+    [dispatch]
+  );
 
-  const dragOverHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  const dragOverHandler = useCallback((e: React.DragEvent) => {
     e.stopPropagation();
     e.preventDefault();
     (e.target as HTMLDivElement).classList.add('shadow', 'shadow-blue-400');
@@ -60,10 +85,14 @@ export const useTasksDraggable = (tasks: ITaskData[]) => {
     (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
   }, []);
 
-  const dragEndHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
-  }, []);
+  const dragEndHandler = useCallback(
+    (e: React.DragEvent) => {
+      e.stopPropagation();
+      (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
+      dispatch(resetCurrentDraggable());
+    },
+    [dispatch]
+  );
 
   return {
     dragDropHandler,
@@ -72,5 +101,6 @@ export const useTasksDraggable = (tasks: ITaskData[]) => {
     dragOverHandler,
     dragStartHandler,
     updateTasksSet,
+    isUpdate,
   };
 };
