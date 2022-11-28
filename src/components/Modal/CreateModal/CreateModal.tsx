@@ -81,9 +81,9 @@ const CreateModal = ({
           };
           createTask(requestTaskData);
         }
-        reset();
-        onCloseModal();
       }
+      reset();
+      onCloseModal();
     },
     [
       type,
