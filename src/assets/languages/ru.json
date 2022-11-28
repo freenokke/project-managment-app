@@ -28,6 +28,7 @@
   "modal.labelTextarea": "Описание",
   "modalValidation.requiredError": "Введите название",
   "modalValidation.maxLength": "Не более 25 символов",
+  "modalValidation.maxLengthText": "Не более 100 символов",
   "deleteModal.title": "Удалить",
   "modal.modalDeleteButton": "Удалить",
   "modal.modalCancelButton": "Отмена",

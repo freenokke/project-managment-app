@@ -13,14 +13,29 @@ const TaskModalDescription = () => {
   const [editing, setEditing] = useState(false);
   const [description, setDescription] = useState(taskData?.description ?? '');
   const [value, setValue] = useState(description);
+  const [textError, setTextError] = useState('');
 
   const toggleEditMode = useCallback(() => {
     setEditing(!editing);
     setValue(description);
+    setTextError('');
   }, [description, editing]);
 
+  const error = {
+    requiredText: 'modalValidation.requiredError',
+    limitText: 'modalValidation.maxLengthText',
+  };
+
   const handleTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target?.value);
+    if (!event.target?.value.trim().length) {
+      setTextError(error.requiredText);
+      setValue('');
+    } else if (event.target?.value.trim().length > 100) {
+      setTextError(error.limitText);
+    } else {
+      setValue(event.target?.value);
+      setTextError('');
+    }
   };
 
   const editDescription = () => {
@@ -46,27 +61,32 @@ const TaskModalDescription = () => {
   };
 
   return !editing ? (
-    <div className="column">
+    <div className="column h-[100%]">
       <Button
         variant="text"
-        className="self-end h-[20px] md:h-[30px] flex items-center"
+        className="self-end h-[20px] flex items-center"
         onClick={toggleEditMode}
       >
         {t('editModal.modalButton')}
       </Button>
       <h3 className="p-[0_20px] text-[20px]">{t('modal.labelTextarea')}</h3>
-      <div className="p-[20px_0] lg:p-[20px]">{description}</div>
+      <div className="p-[20px_10px] h-[140px] lg:p-[20px] mb-[66px] lg:mb-[56px] overflow-x-scroll flex-grow">
+        {description}
+      </div>
     </div>
   ) : (
     <>
-      <h3 className="p-[30px_20px_10px] text-[20px]">{t('modal.labelTextarea')}</h3>
+      <h3 className="p-[24px_20px_10px] text-[20px]">{t('modal.labelTextarea')}</h3>
       <textarea
-        className="w-full h-full p-[10px_10px] lg:p-[20px]"
+        className="w-full h-[140px] p-[10px_10px] lg:p-[20px] lg:h-full resize-none"
         value={value}
         onChange={handleTextarea}
         autoFocus
       />
-      <div className="self-end row gap-[5px] mt-[30px]">
+      <div className="w-full h-[20px] p-[0px_10px] lg:p-[0px_30px] text-[14px] text-red-600">
+        {textError && t(textError)}
+      </div>
+      <div className="self-end row gap-[5px] mt-[10px] lg:mt-[30px]">
         <Button
           variant="outlined"
           className="h-[20px] md:h-[32px] flex items-center"
@@ -78,6 +98,7 @@ const TaskModalDescription = () => {
           color="green"
           className="h-[26px] md:h-[32px] flex items-center"
           onClick={editDescription}
+          disabled={!!textError}
         >
           {t('modal.modalSaveButton')}
         </Button>

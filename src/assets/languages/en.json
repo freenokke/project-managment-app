@@ -28,6 +28,7 @@
   "modal.labelTextarea": "Description",
   "modalValidation.requiredError": "Need to type title",
   "modalValidation.maxLength": "25 symbols maximum",
+  "modalValidation.maxLengthText": "100 symbols maximum",
   "deleteModal.title": "Delete",
   "modal.modalDeleteButton": "Delete",
   "modal.modalCancelButton": "Cancel",

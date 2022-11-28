@@ -5,14 +5,14 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
 import { closeModal } from '../../../redux/features/modalSlice';
 import { IFormFields } from './CreateModal.types';
 import ModalInput from '../ModalInput/ModalInput';
+import ModalTextarea from '../ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import useColumnModal from '../useColumnModal';
 import useTaskModal from '../useTaskModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
-import { INewTask, ITaskCreate } from '../../../redux/api/tasksApi';
-import { tasksApi } from '../../../redux/api/tasksApi';
+import { INewTask, ITaskCreate, tasksApi } from '../../../redux/api/tasksApi';
 
 const CreateModal = ({
   register,
@@ -37,6 +37,11 @@ const CreateModal = ({
   const { createBoard } = useBoardModal();
   const { createColumn } = useColumnModal();
   const { createTask } = useTaskModal();
+
+  const useQueryStateResult = tasksApi.endpoints.getTasks.useQueryState({
+    boardId: data?.boardId ?? '',
+    columnId: data?.columnId ?? '',
+  });
 
   const title = useMemo(() => {
     if (type === ModalTypes.createBoard) {
@@ -66,7 +71,7 @@ const CreateModal = ({
             title: formData.title,
             description: formData.description,
             userId: userId ?? '',
-            order: queryData.length + 1,
+            order: 0,
             users: [],
           };
           const taskData: ITaskCreate = {
@@ -76,19 +81,20 @@ const CreateModal = ({
           };
           createTask(taskData);
         }
+        reset();
+        onCloseModal();
       }
-      reset();
-      onCloseModal();
     },
     [
       type,
-      reset,
-      onCloseModal,
       userId,
       createBoard,
       maxOrder,
       createColumn,
       boardId,
+      useQueryStateResult,
+      reset,
+      onCloseModal,
       data?.boardId,
       data?.columnId,
       createTask,
@@ -102,7 +108,7 @@ const CreateModal = ({
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-9 w-full mb-[40px]"
+        className="flex flex-col items-center gap-[10px] w-full mb-[20px]"
         autoComplete="off"
       >
         <ModalInput
@@ -112,7 +118,7 @@ const CreateModal = ({
           errors={errors}
         />
         {type === ModalTypes.createTask && (
-          <ModalInput
+          <ModalTextarea
             name="description"
             label={t('modal.labelTextarea')}
             register={register}

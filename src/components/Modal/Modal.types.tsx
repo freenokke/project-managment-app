@@ -5,6 +5,7 @@ import {
   UseFormReset,
 } from 'react-hook-form';
 import { ModalTypes } from '../../redux/features/modalSlice';
+import { ITaskData } from '../../redux/api/tasksApi';
 
 export interface IFormFields {
   title: string;
@@ -33,4 +34,5 @@ export interface ModalData {
   boardId?: string;
   columnId?: string;
   taskId?: string;
+  taskData?: ITaskData;
 }

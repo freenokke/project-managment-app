@@ -17,7 +17,6 @@ const TaskModalInfo = () => {
   const { data: columnsSet } = useGetColumnsQuery(taskData?.boardId ?? '');
   const board = boardsSet?.find(({ _id }) => _id === taskData?.boardId);
   const column = columnsSet?.find(({ _id }) => _id === taskData?.columnId);
-  console.log('board', board?.title);
 
   const deleteModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.deleteTask, data: { taskId: taskData?._id } }));
