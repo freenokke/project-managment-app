@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { SignInput } from '../../components';
 import { Button } from '@material-tailwind/react';
 
@@ -25,13 +25,16 @@ const SignInPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+
+  const fromPage = location.state?.from?.pathname || '/main';
 
   useEffect(() => {
     if (!error && !isLoading && token) {
-      navigate('/main');
+      navigate(fromPage, { replace: true });
     }
-  }, [token, error, isLoading, navigate]);
+  }, [token, error, isLoading, navigate, fromPage]);
 
   const {
     register,

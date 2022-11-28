@@ -5,6 +5,7 @@ import {
 } from '../../redux/api/boardsApi';
 
 import { IBoardData } from '../BoardCard/Board.types';
+import { ModalData } from './Modal.types';
 
 export interface Updates {
   title: string;
@@ -21,15 +22,15 @@ const useBoardModal = () => {
     await createBoardCall(data).unwrap();
   };
 
-  const editBoard = async (boardId: string, updates: Updates) => {
+  const editBoard = async (data: ModalData, updates: Updates) => {
     const body: IBoardData = {
       ...updates,
     };
-    await editBoardCall({ boardId, body }).unwrap();
+    await editBoardCall({ data, body }).unwrap();
   };
 
-  const deleteBoard = async (boardId: string) => {
-    await deleteBoardCall(boardId).unwrap();
+  const deleteBoard = async (data: ModalData) => {
+    await deleteBoardCall(data).unwrap();
   };
 
   return {

@@ -7,6 +7,10 @@ import Footer from './Footer/Footer';
 import SignInput from './SignInput/SignInput';
 import NavList from './NavList/NavList';
 import ModalWrapper from './Modal/ModalWrapper/ModalWrapper';
+import Loader from './Loader/Loader';
+import ColumnWrapper from './ColumnWrapper/ColumnWrapper';
+import InnerColumn from './InnerColumn/InnerColumn';
+import TaskWrapper from './TaskWrapper/TaskWrapper';
 
 export {
   Header,
@@ -18,4 +22,8 @@ export {
   BoardCard,
   CreateCard,
   ModalWrapper,
+  Loader,
+  ColumnWrapper,
+  InnerColumn,
+  TaskWrapper,
 };
