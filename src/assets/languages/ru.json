@@ -46,5 +46,8 @@
   "hero.buttonText": "Узнать больше",
   "hero.notice": "для Web (Десктопная и мобильная версии)",
   "column.delete": "Удалить колонку",
-  "column.hide": "Скрыть колонку"
+  "column.hide": "Скрыть колонку",
+  "boardPage.backToBoardsList": "Вернуться к списку досок",
+  "boardPage.noColumns": "В этой доске пока нету колонок",
+  "editProfile.title": "Редактировать профиль"
 }

@@ -12,7 +12,7 @@ const TaskWrapper: FC<IProps> = ({
   onDragLeaveFn,
   onDragEndFn,
 }) => {
-  const { title, boardId, columnId, _id: taskId } = taskData;
+  const { title, boardId, columnId, _id: taskId, order } = taskData;
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {
@@ -31,10 +31,10 @@ const TaskWrapper: FC<IProps> = ({
       onDrop={(e) => onDragDropFn(e, taskData)}
       onDragLeave={onDragLeaveFn}
       onDragEnd={onDragEndFn}
-      className="relative w-full rounded shadow"
+      className="relative w-full rounded shadow-md"
     >
       <div className="w-full flex-shrink-0 pl-1 pr-8 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100">
-        {title}
+        name: {title}, order: {order}
       </div>
       <div className="absolute top-0 right-0 text-gray-700 cursor-pointer">
         <Menu placement="left">

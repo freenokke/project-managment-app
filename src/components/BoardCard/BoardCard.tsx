@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '../../hooks/redux.hooks';
 import { Link } from 'react-router-dom';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
+import { setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { IBoardProps } from './Board.types';
 
 const BoardCard = ({ id, title, description }: IBoardProps) => {
@@ -15,9 +16,13 @@ const BoardCard = ({ id, title, description }: IBoardProps) => {
     dispatch(showModal({ type: ModalTypes.editBoard, data: { boardId: id } }));
   }, [id, dispatch]);
 
+  const openBoardPage = useCallback(() => {
+    dispatch(setOpenedBoard(id));
+  }, [dispatch, id]);
+
   return (
     <div id={id} className="boardCard md:w-[45%] lg:w-[30%] h-[120px]">
-      <Link to={`/board/${id}`} className="block w-full h-full">
+      <Link to={`/board/${id}`} className="block w-full h-full" onClick={openBoardPage}>
         <p className="text-left text-lg font-bold text-gray-700">{title}</p>
         <p>{description}</p>
       </Link>

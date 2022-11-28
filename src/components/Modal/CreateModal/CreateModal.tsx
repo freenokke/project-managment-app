@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { SubmitHandler } from 'react-hook-form';
 import { useCallback } from 'react';
-import { useAppDispatch } from '../../../hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
 import { closeModal } from '../../../redux/features/modalSlice';
 import { IFormFields } from './CreateModal.types';
 import ModalInput from '../ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
+import useColumnModal from '../useColumnModal';
 import useTaskModal from '../useTaskModal';
 import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
@@ -25,7 +26,7 @@ const CreateModal = ({
   data,
 }: ModalChild) => {
   const { t } = useTranslation();
-
+  const { boardId, maxOrder } = useAppSelector((state) => state.boardInfo);
   const dispatch = useAppDispatch();
 
   const onCloseModal = useCallback(() => {
@@ -33,6 +34,7 @@ const CreateModal = ({
   }, [dispatch]);
 
   const { createBoard } = useBoardModal();
+  const { createColumn } = useColumnModal();
   const { createTask } = useTaskModal();
 
   const useQueryStateResult = tasksApi.endpoints.getTasks.useQueryState({
@@ -47,8 +49,9 @@ const CreateModal = ({
         createBoard(boardData);
       }
       if (type === ModalTypes.createColumn) {
-        const columnData = { title: formData.title, owner: userId ?? '', users: [] };
-        console.log(columnData);
+        const order = maxOrder + 1;
+        const columnData = { title: formData?.title, order };
+        createColumn(boardId, columnData);
       }
       if (type === ModalTypes.createTask) {
         const { data: queryData } = useQueryStateResult;
@@ -79,6 +82,9 @@ const CreateModal = ({
       userId,
       data?.boardId,
       data?.columnId,
+      createColumn,
+      boardId,
+      maxOrder,
       createTask,
       useQueryStateResult,
     ]
