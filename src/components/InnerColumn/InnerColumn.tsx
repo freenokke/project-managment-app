@@ -9,7 +9,7 @@ import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
 
-const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
+const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
   const dispatch = useAppDispatch();
   const {
     data: tasks,
@@ -39,8 +39,15 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, columnTitle }) => {
   }, [dispatch, boardId, columnId]);
 
   return (
-    <div className="bg-blue-gray-50 rounded flex flex-col w-full h-full relative whitespace-normal text-sm font-sans">
-      <InnerColumnHeader columnTitle={columnTitle} taskCount={tasks?.length} />
+    <div className="rounded flex flex-col w-full h-full relative whitespace-normal text-sm font-sans">
+      <InnerColumnHeader
+        columnTitle={columnTitle}
+        taskCount={tasks?.length}
+        deleteColumn={deleteColumnFn}
+        boardId={boardId}
+        columnId={columnId}
+        order={order}
+      />
       <InnerColumnContent
         onDragOverFn={dragOverHandler}
         onDragDropFn={dragDropHandler}

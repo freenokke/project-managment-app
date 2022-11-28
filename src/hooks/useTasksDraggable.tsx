@@ -2,12 +2,14 @@ import { useCallback } from 'react';
 import { ITaskData } from '../redux/api/tasksApi';
 import { useUpdateSetOfTasksMutation } from '../redux/api/tasksApi';
 import { useAppDispatch, useAppSelector } from './redux.hooks';
-import { setCurrentDraggable } from '../redux/features/dragSlice';
+import { setCurrentDraggable, resetCurrentDraggable } from '../redux/features/dragSlice';
 
 export const useDraggable = () => {
   const [updateTasksSetCall, { isLoading: isUpdate }] = useUpdateSetOfTasksMutation();
   const dispatch = useAppDispatch();
-  const currentDraggable = useAppSelector((state) => state.drag.currentDraggable);
+  const currentDraggable = useAppSelector(
+    (state) => state.drag.currentDraggable
+  ) as ITaskData | null;
 
   const updateTasksSet = useCallback(
     async (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => {
@@ -30,7 +32,7 @@ export const useDraggable = () => {
             _id: draggedElemId,
             order: draggedElemOrder,
             columnId: draggedElemCol,
-          } = currentDraggable;
+          } = currentDraggable as ITaskData;
           const { _id: droppedElemId, order: droppedElemOrder, columnId: droppedElemCol } = data;
 
           const requestBody = [
@@ -67,7 +69,7 @@ export const useDraggable = () => {
   const dragStartHandler = useCallback(
     (e: React.DragEvent, data: ITaskData) => {
       e.stopPropagation();
-      dispatch(setCurrentDraggable(data));
+      dispatch(setCurrentDraggable({ itemInfo: data, type: 'task' }));
     },
     [dispatch]
   );
@@ -87,7 +89,7 @@ export const useDraggable = () => {
     (e: React.DragEvent) => {
       e.stopPropagation();
       (e.target as HTMLDivElement).classList.remove('shadow', 'shadow-blue-400');
-      dispatch(setCurrentDraggable(null));
+      dispatch(resetCurrentDraggable());
     },
     [dispatch]
   );

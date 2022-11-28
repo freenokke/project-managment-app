@@ -1,13 +1,22 @@
 import { Menu, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
 import React, { FC, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useEditColumnMutation } from '../../../redux/api/columnsApi';
 import { IProps } from './InnerColumnHeader.type';
 
-const InnerColumnHeader: FC<IProps> = ({ columnTitle, taskCount }) => {
+const InnerColumnHeader: FC<IProps> = ({
+  columnTitle,
+  taskCount,
+  deleteColumn,
+  boardId,
+  columnId,
+  order,
+}) => {
   const ref = useRef<HTMLHeadingElement | null>(null);
   const [title, setTitle] = useState(columnTitle);
   const [editStatus, setEditStatus] = useState(false);
   const [currentTitle, setCurrentTitle] = useState('');
+  const [editColumn, {}] = useEditColumnMutation();
 
   const { t } = useTranslation();
 
@@ -23,23 +32,24 @@ const InnerColumnHeader: FC<IProps> = ({ columnTitle, taskCount }) => {
 
   const onBlurHandler = useCallback(() => {
     setEditStatus(false);
-  }, []);
+    editColumn({ boardId, columnId, body: { title, order } });
+  }, [boardId, columnId, order, title, editColumn]);
 
   const onKeyUpHandler = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
         setEditStatus(false);
+        editColumn({ boardId, columnId, body: { title, order } });
       }
       if (e.key === 'Escape') {
         setTitle(currentTitle);
         setEditStatus(false);
       }
     },
-    [currentTitle]
+    [currentTitle, boardId, columnId, order, title, editColumn]
   );
 
   const hideColumn = () => {};
-  const deleteColumn = () => {};
 
   return (
     <div className="flex items-center min-h-[50px] py-[10px] px-[8px] relative pr-[36px]">
@@ -74,16 +84,12 @@ const InnerColumnHeader: FC<IProps> = ({ columnTitle, taskCount }) => {
             </span>
           </MenuHandler>
           <MenuList className="flex flex-col min-w-min">
-            <MenuItem className="flex items-center">
-              <span onClick={hideColumn} className="material-icons mr-2">
-                visibility_off
-              </span>
+            <MenuItem onClick={hideColumn} className="flex items-center">
+              <span className="material-icons mr-2">visibility_off</span>
               {t('column.hide')}
             </MenuItem>
-            <MenuItem className="flex items-center">
-              <span onClick={deleteColumn} className="material-icons mr-2 text-red-700">
-                delete_forever
-              </span>
+            <MenuItem onClick={deleteColumn} className="flex items-center">
+              <span className="material-icons mr-2 text-red-700">delete_forever</span>
               {t('column.delete')}
             </MenuItem>
           </MenuList>

@@ -62,7 +62,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   return (
     <div
-      className="boardColumn relative"
+      className="boardColumn h-[500px] relative"
       draggable
       data-type="column"
       onDragStart={(e) => dragStartEventHandler(e, { _id: id, boardId, title, order })}
@@ -71,9 +71,16 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDragLeave={dragLeaveEventHandler}
       onDragEnd={dragEndEventHandler}
     >
-      {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} />}
+      {
+        <InnerColumn
+          boardId={boardId}
+          columnId={id}
+          columnTitle={title}
+          order={order}
+          deleteColumnFn={deleteColumnHandler}
+        />
+      }
       {isLoading ? <Loader /> : null}
-      <button onClick={deleteColumnHandler}>DELETE</button>
     </div>
   );
 };

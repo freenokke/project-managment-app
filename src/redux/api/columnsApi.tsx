@@ -60,6 +60,16 @@ export const columnsApi = createApi({
       }),
       invalidatesTags: [{ type: 'Columns', id: 'LIST' }],
     }),
+    editColumn: build.mutation<
+      IColumnsResponse,
+      { boardId: string; columnId: string; body: IColumnData }
+    >({
+      query: ({ boardId, columnId, body }) => ({
+        url: `/boards/${boardId}/columns/${columnId}`,
+        method: 'PUT',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -68,4 +78,5 @@ export const {
   useCreateColumnMutation,
   usePatchColumnsSetMutation,
   useDeleteColumnMutation,
+  useEditColumnMutation,
 } = columnsApi;
