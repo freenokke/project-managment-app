@@ -10,4 +10,6 @@ export interface IModalTextarea {
   name: Path<IFormFields>;
   register: UseFormRegister<IFormFields>;
   errors: FieldErrors<IFormFields>;
+  value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }

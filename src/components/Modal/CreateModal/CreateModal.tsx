@@ -32,7 +32,8 @@ const CreateModal = ({
 
   const onCloseModal = useCallback(() => {
     dispatch(closeModal());
-  }, [dispatch]);
+    reset();
+  }, [dispatch, reset]);
 
   const { createBoard } = useBoardModal();
   const { createColumn } = useColumnModal();
@@ -71,7 +72,7 @@ const CreateModal = ({
             title: formData.title,
             description: formData.description,
             userId: userId ?? '',
-            order: 0,
+            order: queryData.length + 1,
             users: [],
           };
           const requestTaskData: ITaskCreate = {
@@ -82,7 +83,6 @@ const CreateModal = ({
           createTask(requestTaskData);
         }
       }
-      reset();
       onCloseModal();
     },
     [
@@ -95,7 +95,6 @@ const CreateModal = ({
       createColumn,
       boardId,
       useQueryStateResult,
-      reset,
       onCloseModal,
       createTask,
     ]
@@ -125,7 +124,11 @@ const CreateModal = ({
             errors={errors}
           />
         )}
-        <Button type="submit" className="w-full" disabled={!isDirty || (isSubmitted && !isValid)}>
+        <Button
+          type="submit"
+          className="w-full h-[50px]"
+          disabled={!isDirty || (isSubmitted && !isValid)}
+        >
           {t('createModal.modalButton')}
         </Button>
       </form>

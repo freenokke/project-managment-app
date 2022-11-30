@@ -24,7 +24,7 @@ const TaskModalInfo = () => {
 
   return (
     <>
-      <div className="column flex-grow gap-[20px]">
+      <div className="column flex-grow gap-[20px] text-gray-700">
         <div className="flex w-full">
           <div className="w-[50%]">{t('taskModalInfo.board')}</div>
           <div className="w-[50%] font-bold">{board?.title}</div>
@@ -52,7 +52,12 @@ const TaskModalInfo = () => {
           </div>
         </div>
       </div>
-      <Button variant="text" color="red" className="flex items-end self-end" onClick={deleteModal}>
+      <Button
+        variant="text"
+        color="red"
+        className="flex items-center self-end h-[36px] lg:h-[40px]"
+        onClick={deleteModal}
+      >
         {t('taskModalInfo.deleteTask')}
       </Button>
     </>
