@@ -1,3 +1,4 @@
+import React from 'react';
 import { Path, UseFormRegister, FieldErrors } from 'react-hook-form';
 
 export interface IFormFields {
@@ -10,4 +11,6 @@ export interface IModalInput {
   name: Path<IFormFields>;
   register: UseFormRegister<IFormFields>;
   errors: FieldErrors<IFormFields>;
+  value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }

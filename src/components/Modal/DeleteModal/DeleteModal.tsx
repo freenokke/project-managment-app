@@ -5,6 +5,7 @@ import { closeModal, ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import { ModalChild } from '../Modal.types';
+import { closeTaskModal } from '../../../redux/features/taskModalSlice';
 import useTaskModal from '../useTaskModal';
 
 const DeleteModal = ({ data, type }: ModalChild) => {
@@ -27,9 +28,10 @@ const DeleteModal = ({ data, type }: ModalChild) => {
     }
     if (type === ModalTypes.deleteTask) {
       deleteTask(data ?? {});
+      dispatch(closeTaskModal());
     }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data, deleteTask]);
+  }, [type, onCloseModal, deleteBoard, data, deleteTask, dispatch]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
@@ -58,10 +60,10 @@ const DeleteModal = ({ data, type }: ModalChild) => {
       <p className="text-[18px]">{t(text)}</p>
       <div className="flex justify-end gap-[10px] w-full">
         <Button variant="outlined" onClick={onCloseModal}>
-          {t('deleteModal.modalCancelButton')}
+          {t('modal.modalCancelButton')}
         </Button>
         <Button onClick={onDelete} color="red">
-          {t('deleteModal.modalDeleteButton')}
+          {t('modal.modalDeleteButton')}
         </Button>
       </div>
     </div>
