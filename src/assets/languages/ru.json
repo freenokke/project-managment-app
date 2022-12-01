@@ -56,5 +56,10 @@
   "column.hide": "Скрыть колонку",
   "boardPage.backToBoardsList": "Вернуться к списку досок",
   "boardPage.noColumns": "В этой доске пока нету колонок",
-  "editProfile.title": "Редактировать профиль"
+  "editProfile.title": "Редактировать профиль",
+  "notFound.title": "Страница не найдена",
+  "notFound.text": "Страница в данный момент недоступна или адрес неверен. Пожалуйста, попробуйте снова.",
+  "usersModal.title": "Добавить пользователя",
+  "usersModal.select": "Добавить",
+  "usersModal.button": "Добавить"
 }
