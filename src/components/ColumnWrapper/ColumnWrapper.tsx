@@ -6,6 +6,9 @@ import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
 import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
 import Loader from '../Loader/Loader';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { useDispatch } from 'react-redux';
+import { setLocalColumns } from '../../redux/features/localDataSlice';
+import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
@@ -25,6 +28,11 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
   const { currentDraggable } = useAppSelector((state) => state.drag);
+  const dispatch = useDispatch();
+
+  useEnhancedEffect(() => {
+    dispatch(setLocalColumns(id));
+  }, []);
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);

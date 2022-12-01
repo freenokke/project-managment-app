@@ -27,8 +27,14 @@ export interface ITaskUpdate extends Pick<ITaskData, 'boardId' | 'columnId' | '_
   body: INewTask;
 }
 
-const sortCards = (a: ITaskData, b: ITaskData) => {
+export const sortCards = (a: ITaskData, b: ITaskData) => {
   return a.order - b.order;
+};
+
+export const reorder = (item: ITaskData, index: number) => {
+  const task = { ...item };
+  task.order = index + 1;
+  return task;
 };
 
 export const tasksApi = boardsApi.injectEndpoints({
@@ -36,11 +42,7 @@ export const tasksApi = boardsApi.injectEndpoints({
     getTasks: builder.query<ITaskData[], Pick<ITaskData, 'boardId' | 'columnId'>>({
       query: ({ boardId, columnId }) => `/boards/${boardId}/columns/${columnId}/tasks`,
       transformResponse: (response: ITaskData[]) => {
-        return response.sort(sortCards).map((item, index) => {
-          const task = { ...item };
-          task.order = index + 1;
-          return task;
-        });
+        return response.sort(sortCards).map(reorder);
       },
       providesTags: (result, error, arg) =>
         result
@@ -88,7 +90,6 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: [{ type: 'Tasks' }],
     }),
   }),
 });
