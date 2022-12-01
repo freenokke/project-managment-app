@@ -83,6 +83,7 @@ interface IState {
   name: string | null;
   login: string | null;
   editStatus: {
+    isSuccess: boolean;
     isLoading: boolean;
     error: SerializedError | null;
   };
@@ -97,6 +98,7 @@ const initialState: IState = {
   name: null,
   login: null,
   editStatus: {
+    isSuccess: false,
     isLoading: false,
     error: null,
   },
@@ -109,7 +111,12 @@ const initialState: IState = {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    resetEditStatus: (state) => {
+      state.editStatus.isSuccess = false;
+      state.editStatus.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserById.fulfilled, (state, action) => {
@@ -125,17 +132,20 @@ const userSlice = createSlice({
       .addCase(editUser.pending, (state) => {
         state.editStatus.isLoading = true;
         state.editStatus.error = null;
+        state.editStatus.isSuccess = false;
       })
       .addCase(editUser.fulfilled, (state, action) => {
         state.id = action.payload._id;
         state.login = action.payload.login;
         state.name = action.payload.name;
+        state.editStatus.isSuccess = true;
         state.editStatus.isLoading = false;
         state.editStatus.error = null;
       })
       .addCase(editUser.rejected, (state, action) => {
         state.editStatus.error = action.error;
         state.editStatus.isLoading = false;
+        state.editStatus.isSuccess = false;
       })
       .addCase(deleteUser.pending, (state) => {
         state.deleteStatus.isLoading = true;
@@ -156,4 +166,5 @@ const userSlice = createSlice({
 });
 
 const { reducer } = userSlice;
+export const { resetEditStatus } = userSlice.actions;
 export default reducer;

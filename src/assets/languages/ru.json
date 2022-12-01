@@ -60,5 +60,7 @@
   "editProfile.button": "Сохранить",
   "editProfile.delete": "Удалить аккаунт",
   "editProfile.modalTitle": "аккаунт",
-  "editProfile.modalText": "Это дейсвтие удалит ваш акканут и все его данные, включая доски"
+  "editProfile.modalText": "Это дейсвтие удалит ваш акканут и все его данные, включая доски",
+  "back": "Назад",
+  "editProfile.backIfSuccess": "Вернуться назад"
 }

@@ -60,5 +60,7 @@
   "editProfile.button": "Save",
   "editProfile.delete": "Delete user",
   "editProfile.modalTitle": "user",
-  "editProfile.modalText": "This action will delete your account and all its data, including boards"
+  "editProfile.modalText": "This action will delete your account and all its data, including boards",
+  "back": "Back",
+  "editProfile.backIfSuccess": "Back"
 }
