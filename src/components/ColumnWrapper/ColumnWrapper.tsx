@@ -62,7 +62,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   return (
     <div
-      className="boardColumn h-[500px] relative"
+      className="boardColumn h-full relative"
       draggable
       data-type="column"
       onDragStart={(e) => dragStartEventHandler(e, { _id: id, boardId, title, order })}

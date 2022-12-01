@@ -68,7 +68,7 @@ const BoardPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
+    <div className="relative p-2 flex-grow flex flex-col justify-start items-center overflow-y-hidden">
       <Modal />
       <TaskModal />
       <Link
