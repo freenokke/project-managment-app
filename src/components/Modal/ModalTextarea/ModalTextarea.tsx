@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { IModalTextarea } from './ModalTextarea.types';
 
-const ModalTextarea = ({ name, label, register, errors }: IModalTextarea) => {
+const ModalTextarea = ({ name, label, register, errors, value, onChange }: IModalTextarea) => {
   const { t } = useTranslation();
 
   return (
@@ -10,13 +10,15 @@ const ModalTextarea = ({ name, label, register, errors }: IModalTextarea) => {
         <textarea
           className="p-1 pl-2 rounded-lg outline-none w-[100%] content-center resize-none whitespace-normal"
           id={name}
-          rows={3}
+          rows={5}
           {...register(name, {
             required: 'modalValidation.requiredError',
             maxLength: {
               value: 100,
               message: 'modalValidation.maxLengthText',
             },
+            value: value,
+            onChange: onChange,
           })}
         />
         <div className="absolute left-2 top-[-13px] p-1 bg-white uppercase text-xs">{label}</div>

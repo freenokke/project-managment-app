@@ -62,5 +62,10 @@
   "editProfile.modalTitle": "user",
   "editProfile.modalText": "This action will delete your account and all its data, including boards",
   "back": "Back",
-  "editProfile.backIfSuccess": "Back"
+  "editProfile.backIfSuccess": "Back",
+  "notFound.title": "Not Found",
+  "notFound.text": "Page currently unavailable or address incorrect. Please try again.",
+  "usersModal.title": "Assign users",
+  "usersModal.select": "Assignees",
+  "usersModal.button": "Assign"
 }

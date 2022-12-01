@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { IModalInput } from './ModalInput.types';
 
-const ModalInput = ({ name, label, register, errors }: IModalInput) => {
+const ModalInput = ({ name, label, register, errors, value, onChange }: IModalInput) => {
   const { t } = useTranslation();
 
   return (
@@ -16,6 +16,8 @@ const ModalInput = ({ name, label, register, errors }: IModalInput) => {
               value: 25,
               message: 'modalValidation.maxLength',
             },
+            value: value,
+            onChange: onChange,
           })}
         />
         <div className="absolute left-2 top-[-13px] p-1 bg-white uppercase text-xs">{label}</div>

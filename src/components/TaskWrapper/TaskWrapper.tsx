@@ -21,8 +21,8 @@ const TaskWrapper: FC<IProps> = ({
   }, [dispatch, boardId, columnId, taskId]);
 
   const editModal = useCallback(() => {
-    dispatch(showModal({ type: ModalTypes.editTask, data: { boardId, columnId, taskId } }));
-  }, [dispatch, boardId, columnId, taskId]);
+    dispatch(showModal({ type: ModalTypes.editTask, data: { taskData } }));
+  }, [dispatch, taskData]);
 
   const taskModal = useCallback(() => {
     dispatch(showTaskModal(taskData));

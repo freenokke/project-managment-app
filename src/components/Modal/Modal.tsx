@@ -31,6 +31,7 @@ const Modal = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isValid, isSubmitted },
+    setValue,
   } = useForm<IFormFields>();
 
   const onCloseModal = useCallback(() => {
@@ -48,6 +49,7 @@ const Modal = () => {
         register={register}
         handleSubmit={handleSubmit}
         reset={reset}
+        setValue={setValue}
         errors={errors}
         isDirty={isDirty}
         isValid={isValid}

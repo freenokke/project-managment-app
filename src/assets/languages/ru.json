@@ -62,5 +62,10 @@
   "editProfile.modalTitle": "аккаунт",
   "editProfile.modalText": "Это дейсвтие удалит ваш акканут и все его данные, включая доски",
   "back": "Назад",
-  "editProfile.backIfSuccess": "Вернуться назад"
+  "editProfile.backIfSuccess": "Вернуться назад",
+  "notFound.title": "Страница не найдена",
+  "notFound.text": "Страница в данный момент недоступна или адрес неверен. Пожалуйста, попробуйте снова.",
+  "usersModal.title": "Добавить пользователя",
+  "usersModal.select": "Добавить",
+  "usersModal.button": "Добавить"
 }
