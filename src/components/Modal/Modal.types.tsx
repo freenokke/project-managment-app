@@ -28,6 +28,7 @@ export interface ModalChild {
   data: ModalData | null;
   type: ModalTypes;
   userId: string | null;
+  token: string | null;
 }
 
 export interface ModalData {
@@ -35,4 +36,6 @@ export interface ModalData {
   columnId?: string;
   taskId?: string;
   taskData?: ITaskData;
+  token?: string;
+  userId?: string;
 }

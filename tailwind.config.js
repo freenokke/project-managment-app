@@ -7,7 +7,7 @@ const config = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
-      sans: ['Graphik', 'sans-serif'], // для примера
+      sans: ['Graphik', 'sans-serif'],
       serif: ['Merriweather', 'serif'],
     },
     container: {

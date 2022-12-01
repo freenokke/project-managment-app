@@ -56,5 +56,9 @@
   "column.hide": "Скрыть колонку",
   "boardPage.backToBoardsList": "Вернуться к списку досок",
   "boardPage.noColumns": "В этой доске пока нету колонок",
-  "editProfile.title": "Редактировать профиль"
+  "editProfile.title": "Редактировать профиль",
+  "editProfile.button": "Сохранить",
+  "editProfile.delete": "Удалить аккаунт",
+  "editProfile.modalTitle": "аккаунт",
+  "editProfile.modalText": "Это дейсвтие удалит ваш акканут и все его данные, включая доски"
 }

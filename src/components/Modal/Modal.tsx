@@ -18,11 +18,12 @@ const ModalTypeMapper = {
   [ModalTypes.editBoard]: EditModal,
   [ModalTypes.editColumn]: EditModal,
   [ModalTypes.editTask]: EditModal,
+  [ModalTypes.deleteUser]: DeleteModal,
 };
 
 const Modal = () => {
   const { visible, type, data } = useAppSelector((state) => state.modal);
-  const { userId } = useAppSelector((state) => state.auth);
+  const { userId, token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const {
@@ -54,6 +55,7 @@ const Modal = () => {
         data={data}
         type={type}
         userId={userId}
+        token={token}
       />
     </ModalWrapper>
   );

@@ -56,5 +56,9 @@
   "column.hide": "Hide column",
   "boardPage.backToBoardsList": "Back to boards list",
   "boardPage.noColumns": "This board has no columns yet",
-  "editProfile.title": "Edit profile"
+  "editProfile.title": "Edit profile",
+  "editProfile.button": "Save",
+  "editProfile.delete": "Delete user",
+  "editProfile.modalTitle": "user",
+  "editProfile.modalText": "This action will delete your account and all its data, including boards"
 }

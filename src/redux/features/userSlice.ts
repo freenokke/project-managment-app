@@ -52,7 +52,27 @@ export const editUser = createAsyncThunk('user/editUser', async (userInfo: INewU
       }
     );
     console.log('Успешно отредактированный пользователь', data);
+    console.log(data);
     return data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const deleteUser = createAsyncThunk('user/deleteUser', async (userInfo: IUserInfo) => {
+  try {
+    const data: IUserResponse = await request(
+      `${baseUrl}/users/${userInfo.userId}`,
+      'DELETE',
+      null,
+      {
+        authorization: `Bearer ${userInfo.token}`,
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    );
+    console.log('удаление user ');
+    console.log(data);
   } catch (error) {
     throw error;
   }
@@ -62,16 +82,28 @@ interface IState {
   id: string | null;
   name: string | null;
   login: string | null;
-  isLoading: boolean;
-  error: SerializedError | null;
+  editStatus: {
+    isLoading: boolean;
+    error: SerializedError | null;
+  };
+  deleteStatus: {
+    isLoading: boolean;
+    error: SerializedError | null;
+  };
 }
 
 const initialState: IState = {
   id: null,
   name: null,
   login: null,
-  isLoading: false,
-  error: null,
+  editStatus: {
+    isLoading: false,
+    error: null,
+  },
+  deleteStatus: {
+    isLoading: false,
+    error: null,
+  },
 };
 
 const userSlice = createSlice({
@@ -83,27 +115,42 @@ const userSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.login = action.payload.login;
         state.name = action.payload.name;
-        state.error = null;
+        state.editStatus.error = null;
       })
       .addCase(getUserById.rejected, (state, action) => {
-        state.error = action.error;
+        state.editStatus.error = action.error;
         state.login = '';
         state.name = '';
       })
       .addCase(editUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.editStatus.isLoading = true;
+        state.editStatus.error = null;
       })
       .addCase(editUser.fulfilled, (state, action) => {
         state.id = action.payload._id;
         state.login = action.payload.login;
         state.name = action.payload.name;
-        state.isLoading = false;
-        state.error = null;
+        state.editStatus.isLoading = false;
+        state.editStatus.error = null;
       })
       .addCase(editUser.rejected, (state, action) => {
-        state.error = action.error;
-        state.isLoading = false;
+        state.editStatus.error = action.error;
+        state.editStatus.isLoading = false;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.deleteStatus.isLoading = true;
+        state.deleteStatus.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.id = null;
+        state.login = null;
+        state.name = null;
+        state.deleteStatus.isLoading = false;
+        state.deleteStatus.error = null;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.deleteStatus.error = action.error;
+        state.deleteStatus.isLoading = false;
       });
   },
 });
