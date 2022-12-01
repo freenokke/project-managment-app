@@ -1,20 +1,26 @@
 import { Menu, MenuHandler, MenuItem, MenuList, Tooltip } from '@material-tailwind/react';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/redux.hooks';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import { logOut } from '../../redux/features/authSlice';
-import { parseJwt } from '../../utils/utils';
 import { Props } from './AccountMenu.type';
 import { useNavigate } from 'react-router-dom';
+import { getUserById } from '../../redux/features/userSlice';
 
 const AccountMenu: FC<Props> = ({ closeNav }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { token } = useAppSelector((state) => state.auth);
-  const { login } = parseJwt(token ?? '');
+  const { token, userId } = useAppSelector((state) => state.auth);
+  const { login } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (userId && token) {
+      dispatch(getUserById({ userId, token }));
+    }
+  }, [userId, token, dispatch]);
 
   const onLogout = useCallback(() => {
     closeNav();

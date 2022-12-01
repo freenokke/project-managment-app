@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { request } from '../../utils/request';
 import { SerializedError } from '@reduxjs/toolkit';
+import { baseUrl } from '../../utils/constants/constants';
 
 interface IUserResponse {
   _id: string;
@@ -11,6 +12,9 @@ interface IUserResponse {
 interface IUserInfo {
   userId: string;
   token: string;
+}
+
+interface INewUserInfo extends IUserInfo {
   newUser: {
     name: string;
     login: string;
@@ -18,7 +22,21 @@ interface IUserInfo {
   };
 }
 
-export const editUser = createAsyncThunk('user/getUserById', async (userInfo: IUserInfo) => {
+export const getUserById = createAsyncThunk('user/getUserById', async (userInfo: IUserInfo) => {
+  try {
+    const data: IUserResponse = await request(`${baseUrl}/users/${userInfo.userId}`, 'GET', null, {
+      authorization: `Bearer ${userInfo.token}`,
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    });
+    console.log('Запрос user ');
+    return data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const editUser = createAsyncThunk('user/editUser', async (userInfo: INewUserInfo) => {
   console.log(userInfo);
   const body = JSON.stringify(userInfo.newUser);
   console.log('body', body);
@@ -33,10 +51,10 @@ export const editUser = createAsyncThunk('user/getUserById', async (userInfo: IU
         'Content-Type': 'application/json',
       }
     );
-    console.log(data);
+    console.log('Успешно отредактированный пользователь', data);
     return data;
-  } catch (e) {
-    throw e;
+  } catch (error) {
+    throw error;
   }
 });
 
@@ -62,6 +80,16 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.login = action.payload.login;
+        state.name = action.payload.name;
+        state.error = null;
+      })
+      .addCase(getUserById.rejected, (state, action) => {
+        state.error = action.error;
+        state.login = '';
+        state.name = '';
+      })
       .addCase(editUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
