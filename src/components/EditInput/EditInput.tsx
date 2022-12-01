@@ -20,8 +20,8 @@ const EditInput = ({ name, error, register, password }: IEditInputProps) => {
   }, [passwordType]);
 
   const visibilityBtnColor = passwordType
-    ? 'material-icons text-gray-500 cursor-pointer right-2 top-0 absolute'
-    : 'material-icons text-blue-500 cursor-pointer right-2 top-0 absolute';
+    ? 'material-icons text-gray-500 cursor-pointer right-0 top-[50%] translate-y-[-50%]  absolute'
+    : 'material-icons text-blue-500 cursor-pointer right-0 top-[50%] translate-y-[-50%] absolute';
 
   return (
     <div className="flex flex-col relative">
@@ -30,7 +30,7 @@ const EditInput = ({ name, error, register, password }: IEditInputProps) => {
           {t(name)}
         </label>
         <input
-          className="outline-none border-b-2 border-b-blue-400"
+          className="outline-none border-b-2 border-b-blue-400 tra"
           type={passwordType ? 'password' : 'text'}
           {...register(name)}
           autoComplete="off"

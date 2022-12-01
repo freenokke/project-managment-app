@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { ISignUpData } from './SignUp.types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { signUp } from '../../redux/features/authSlice';
+import { clearError, signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignInput } from '../../components';
@@ -27,6 +27,11 @@ const SignUpPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!error && !isLoading && token) {
