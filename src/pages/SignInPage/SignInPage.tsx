@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { SignInput } from '../../components';
 import { Button } from '@material-tailwind/react';
+import { errorTextCreator } from '../../utils/utils';
 
 const schema = yup.object({
   login: yup.string().required('validation.noLogin').min(4, 'validation.minLoginLength'),
@@ -63,8 +64,7 @@ const SignInPage = () => {
           </Button>
         </form>
 
-        {error && <div className="text-red-600 ">{error?.message}</div>}
-
+        {error && <div className="text-red-600 ">{t(errorTextCreator(error?.message))}</div>}
         <Link
           to="/signup"
           className="mt-3 text-gray-400 transition-colors cursor-pointer hover:text-blue-600 "
