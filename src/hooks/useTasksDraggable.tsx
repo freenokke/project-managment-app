@@ -14,8 +14,8 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
   const displayedData = useAppSelector((state) => state.localData);
 
   const updateTasksSet = useCallback(
-    async (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => {
-      await updateTasksSetCall(data).unwrap();
+    (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => {
+      updateTasksSetCall(data);
     },
     [updateTasksSetCall]
   );
@@ -121,7 +121,7 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
 async function dropOnTaskRequest(
   draggedTask: ITaskData,
   droppedTask: ITaskData,
-  callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => Promise<void>
+  callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => void
 ) {
   if (droppedTask.order !== draggedTask?.order || droppedTask.columnId !== draggedTask?.columnId) {
     const { _id: draggedElemId, order: draggedElemOrder, columnId: draggedElemCol } = draggedTask;
@@ -146,7 +146,7 @@ async function dropOnTaskRequest(
 async function dropOnColumnRequest(
   draggedTask: ITaskData,
   droppedColumn: { columnId: string },
-  callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => Promise<void>
+  callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => void
 ) {
   if (droppedColumn.columnId !== draggedTask.columnId) {
     const requestBody = [

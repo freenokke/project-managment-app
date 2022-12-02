@@ -112,6 +112,13 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+      async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          dispatch(setError({ error: true, type: 'task' }));
+        }
+      },
     }),
   }),
 });

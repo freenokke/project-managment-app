@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './InnerColumn.type';
@@ -10,6 +10,7 @@ import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
 import { setLocalTasks } from '../../redux/features/localDataSlice';
 import { setError } from '../../redux/features/errorSlice';
+import { Link } from 'react-router-dom';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
   const dispatch = useAppDispatch();
@@ -18,7 +19,6 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     data: tasks,
     isLoading,
     isFetching,
-    isError: getTasksError,
   } = useGetTasksQuery({
     boardId,
     columnId,
@@ -36,22 +36,12 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     };
   }, [tasks, columnId, dispatch]);
 
-  const {
-    dragDropHandler,
-    dragEndHandler,
-    dragLeaveHandler,
-    dragOverHandler,
-    dragStartHandler,
-    isPatchTasksError,
-  } = useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
+  const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
+    useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createTask, data: { boardId, columnId } }));
   }, [dispatch, boardId, columnId]);
-
-  const isError = useMemo(() => {
-    return isPatchTasksError || getTasksError || taskError;
-  }, [isPatchTasksError, getTasksError, taskError]);
 
   return (
     <div className="rounded flex flex-col w-full h-full relative whitespace-normal text-sm font-sans">
@@ -63,7 +53,7 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         columnId={columnId}
         order={order}
       />
-      {!isError && (
+      {!taskError && (
         <InnerColumnContent
           onDragOverFn={dragOverHandler}
           onDragDropFn={dragDropHandler}
@@ -84,9 +74,23 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
           ))}
         </InnerColumnContent>
       )}
-      {isError && (
-        <div className="absolute flex items-center justify-center inset-0 z-10 bg-gray-100">
-          Error!!
+      {/* пока что вместо компонента ошибки */}
+      {taskError && (
+        <div className="absolute flex flex-col items-center justify-center inset-0 z-10 text-cyan-800 bg-gray-100">
+          😥 Something went wrong...
+          <div>
+            Please
+            <Link className="ml-1 underline font-semibold" to="/main">
+              return back
+            </Link>
+          </div>
+          or
+          <span
+            className="cursor-pointer underline font-semibold"
+            onClick={() => window.location.reload()}
+          >
+            reload App
+          </span>
         </div>
       )}
       <InnerColumnFooter openModalFn={openCreateModal} />
