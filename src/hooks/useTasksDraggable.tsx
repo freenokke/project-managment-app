@@ -6,7 +6,8 @@ import { setCurrentDraggable, resetCurrentDraggable } from '../redux/features/dr
 import { setLocalTasks } from '../redux/features/localDataSlice';
 
 export const useDraggable = (tasks: ITaskData[], columnId: string) => {
-  const [updateTasksSetCall, { isLoading: isUpdate }] = useUpdateSetOfTasksMutation();
+  const [updateTasksSetCall, { isLoading: isUpdate, isError: isPatchTasksError }] =
+    useUpdateSetOfTasksMutation();
   const dispatch = useAppDispatch();
   const currentDraggable = useAppSelector((state) => state.drag.currentDraggable) as ITaskData;
   const type = useAppSelector((state) => state.drag.type);
@@ -26,7 +27,6 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
         e.preventDefault();
         //если order присутствует в объекте, значит дроп происходит на таске, а не на колонке.
         if ('order' in data && currentDraggable) {
-          dropOnTaskRequest(currentDraggable, data, updateTasksSet);
           const rebuiltLocalTasksList = tasks
             ?.map((task) => {
               if (task.order === data.order) {
@@ -38,7 +38,7 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
               return task;
             })
             .sort(sortCards);
-          console.log(tasks, rebuiltLocalTasksList);
+          dropOnTaskRequest(currentDraggable, data, updateTasksSet);
           dispatch(setLocalTasks({ tasks: rebuiltLocalTasksList, columnId }));
         } else {
           dropOnColumnRequest(currentDraggable, data, updateTasksSet);
@@ -114,6 +114,7 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
     dragStartHandler,
     updateTasksSet,
     isUpdate,
+    isPatchTasksError,
   };
 };
 

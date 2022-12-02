@@ -6,6 +6,7 @@ import auth from './features/authSlice';
 import user from './features/userSlice';
 import drag from './features/dragSlice';
 import localData from './features/localDataSlice';
+import error from './features/errorSlice';
 import { columnsApi } from './api/columnsApi';
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
     user,
     drag,
     localData,
+    error,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(boardsApi.middleware).concat(columnsApi.middleware),

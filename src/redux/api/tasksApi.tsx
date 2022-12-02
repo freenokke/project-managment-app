@@ -1,4 +1,5 @@
 import { ModalData } from '../../components/Modal/Modal.types';
+import { setError } from '../features/errorSlice';
 import { boardsApi } from './boardsApi';
 
 export interface ITaskData {
@@ -64,14 +65,28 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          dispatch(setError({ error: true, type: 'task' }));
+        }
+      },
     }),
     deleteTask: builder.mutation<ITaskData, ModalData>({
       query: ({ boardId, columnId, taskId }) => ({
         url: `/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          dispatch(setError({ error: true, type: 'task' }));
+        }
+      },
     }),
     editTask: builder.mutation<ITaskData, ITaskUpdate>({
       query: ({ boardId, columnId, _id, body }) => ({
@@ -79,7 +94,14 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          dispatch(setError({ error: true, type: 'task' }));
+        }
+      },
     }),
     updateSetOfTasks: builder.mutation<
       ITaskData[],

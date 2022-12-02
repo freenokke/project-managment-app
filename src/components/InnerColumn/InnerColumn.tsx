@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './InnerColumn.type';
@@ -9,15 +9,16 @@ import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
 import { setLocalTasks } from '../../redux/features/localDataSlice';
-import { useTranslation } from 'react-i18next';
+import { setError } from '../../redux/features/errorSlice';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
   const dispatch = useAppDispatch();
+  const taskError = useAppSelector((state) => state.error.taskError);
   const {
     data: tasks,
     isLoading,
     isFetching,
-    isError,
+    isError: getTasksError,
   } = useGetTasksQuery({
     boardId,
     columnId,
@@ -25,20 +26,32 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
   const displayedTasks = useAppSelector((state) =>
     state.localData.find((item) => item.column === columnId)
   );
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (tasks) {
       dispatch(setLocalTasks({ tasks, columnId }));
     }
+    return () => {
+      dispatch(setError({ error: false, type: 'task' }));
+    };
   }, [tasks, columnId, dispatch]);
 
-  const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
-    useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
+  const {
+    dragDropHandler,
+    dragEndHandler,
+    dragLeaveHandler,
+    dragOverHandler,
+    dragStartHandler,
+    isPatchTasksError,
+  } = useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createTask, data: { boardId, columnId } }));
   }, [dispatch, boardId, columnId]);
+
+  const isError = useMemo(() => {
+    return isPatchTasksError || getTasksError || taskError;
+  }, [isPatchTasksError, getTasksError, taskError]);
 
   return (
     <div className="rounded flex flex-col w-full h-full relative whitespace-normal text-sm font-sans">
@@ -72,8 +85,8 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         </InnerColumnContent>
       )}
       {isError && (
-        <div className="absolute flex items-center justify-center inset-0 z-50 bg-gray-100">
-          {t('main.errorMessage')}
+        <div className="absolute flex items-center justify-center inset-0 z-10 bg-gray-100">
+          Error!!
         </div>
       )}
       <InnerColumnFooter openModalFn={openCreateModal} />
