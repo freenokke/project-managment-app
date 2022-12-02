@@ -13,6 +13,7 @@ import InnerColumn from './InnerColumn/InnerColumn';
 import TaskWrapper from './TaskWrapper/TaskWrapper';
 import Modal from './Modal/Modal';
 import TaskModal from './TaskModal/TaskModal';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 export {
   Header,
@@ -30,4 +31,5 @@ export {
   TaskWrapper,
   Modal,
   TaskModal,
+  ErrorBoundary,
 };

@@ -8,12 +8,12 @@ import {
   EditProfilePage,
   NotFound,
 } from './pages';
-import { Footer, Header } from './components';
+import { ErrorBoundary, Footer, Header } from './components';
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Header />
       <Routes>
         <Route element={<PrivateRoute />}>
@@ -27,7 +27,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
-    </>
+    </ErrorBoundary>
   );
 }
 
