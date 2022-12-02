@@ -67,5 +67,8 @@
   "notFound.text": "Page currently unavailable or address incorrect. Please try again.",
   "usersModal.title": "Assign users",
   "usersModal.select": "Assignees",
-  "usersModal.button": "Assign"
+  "usersModal.button": "Assign",
+  "errorBoundary.title": "Something went wrong...",
+  "errorBoundary.text": "An error has occurred. Please try again",
+  "errorBoundary.reload": "Reload Page"
 }

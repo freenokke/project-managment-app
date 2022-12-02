@@ -67,6 +67,8 @@ const BoardPage = () => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
 
+  throw new Error('Something went wrong');
+
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center overflow-y-hidden">
       <Modal />

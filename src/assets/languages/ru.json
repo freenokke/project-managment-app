@@ -67,5 +67,8 @@
   "notFound.text": "Страница в данный момент недоступна или адрес неверен. Пожалуйста, попробуйте снова.",
   "usersModal.title": "Добавить пользователя",
   "usersModal.select": "Добавить",
-  "usersModal.button": "Добавить"
+  "usersModal.button": "Добавить",
+  "errorBoundary.title": "Что-то пошло не так...",
+  "errorBoundary.text": "Произошла ошибка. Пожалуйста, попробуйте снова",
+  "errorBoundary.reload": "Перезагрузить страницу"
 }
