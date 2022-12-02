@@ -29,7 +29,6 @@ export const getUserById = createAsyncThunk('user/getUserById', async (userInfo:
       accept: 'application/json',
       'Content-Type': 'application/json',
     });
-    console.log('Запрос user ');
     return data;
   } catch (error) {
     throw error;
@@ -37,9 +36,7 @@ export const getUserById = createAsyncThunk('user/getUserById', async (userInfo:
 });
 
 export const editUser = createAsyncThunk('user/editUser', async (userInfo: INewUserInfo) => {
-  console.log(userInfo);
   const body = JSON.stringify(userInfo.newUser);
-  console.log('body', body);
   try {
     const data: IUserResponse = await request(
       `https://final-task-backend-production-e06d.up.railway.app/users/${userInfo.userId}`,
@@ -51,8 +48,6 @@ export const editUser = createAsyncThunk('user/editUser', async (userInfo: INewU
         'Content-Type': 'application/json',
       }
     );
-    console.log('Успешно отредактированный пользователь', data);
-    console.log(data);
     return data;
   } catch (error) {
     throw error;
@@ -61,18 +56,11 @@ export const editUser = createAsyncThunk('user/editUser', async (userInfo: INewU
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (userInfo: IUserInfo) => {
   try {
-    const data: IUserResponse = await request(
-      `${baseUrl}/users/${userInfo.userId}`,
-      'DELETE',
-      null,
-      {
-        authorization: `Bearer ${userInfo.token}`,
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    );
-    console.log('удаление user ');
-    console.log(data);
+    await request(`${baseUrl}/users/${userInfo.userId}`, 'DELETE', null, {
+      authorization: `Bearer ${userInfo.token}`,
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    });
   } catch (error) {
     throw error;
   }

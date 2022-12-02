@@ -31,7 +31,6 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     return () => {
-      console.log('qwerty');
       dispatch(resetEditStatus());
     };
   }, [dispatch]);
@@ -56,7 +55,6 @@ const EditProfilePage = () => {
   }, [navigate]);
 
   const onSubmit = (data: ISignUpData) => {
-    console.log(data);
     const newUser = {
       name: data.name ? data.name : '',
       login: data.login,

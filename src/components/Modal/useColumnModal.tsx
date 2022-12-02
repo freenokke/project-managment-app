@@ -16,7 +16,6 @@ const useColumnModal = () => {
   const createColumn = async (boardId: string, body: IColumnData) => {
     await createColumnCall({ boardId, body })
       .unwrap()
-      .then((data) => console.log(data))
       .catch(() => {
         toast.error(t('createColumn.error'), options);
       });
