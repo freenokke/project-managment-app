@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { data, isLoading } = useGetColumnsQuery(id ? id : '');
+  const { data, isLoading, isError } = useGetColumnsQuery(id ? id : '');
   const { data: boardData } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
@@ -70,6 +70,10 @@ const BoardPage = () => {
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
+
+  if (isError) {
+    return <div className="flex items-center justify-center flex-grow">Что-то пошло не так</div>;
+  }
 
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center overflow-y-hidden">

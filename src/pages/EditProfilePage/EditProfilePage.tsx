@@ -11,6 +11,7 @@ import EditInput from '../../components/EditInput/EditInput';
 import { Loader, Modal } from '../../components';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { useNavigate } from 'react-router-dom';
+import { errorTextCreator } from '../../utils/utils';
 
 const schema = yup.object({
   name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
@@ -87,7 +88,7 @@ const EditProfilePage = () => {
         </form>
         <div className="minh-[24px] mb-3">
           <p className="align-middle text-red-700 text-center">
-            {editStatus.error ? editStatus.error.message : null}
+            {editStatus.error ? t(errorTextCreator(editStatus.error.message)) : null}
           </p>
           {editStatus.isSuccess && (
             <div className="flex flex-col items-center">
