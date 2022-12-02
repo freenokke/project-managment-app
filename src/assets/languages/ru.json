@@ -70,5 +70,6 @@
   "usersModal.button": "Добавить",
   "errorBoundary.title": "Что-то пошло не так...",
   "errorBoundary.text": "Произошла ошибка. Пожалуйста, попробуйте снова",
-  "errorBoundary.reload": "Перезагрузить страницу"
+  "errorBoundary.reload": "Перезагрузить приложение",
+  "createColumn.error": "Ошибка при создании колонки. Попробуйте еще раз"
 }

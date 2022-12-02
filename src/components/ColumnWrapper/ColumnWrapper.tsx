@@ -4,8 +4,10 @@ import { IColumnProps } from './ColumnWrapperTypes';
 import { sortByOrder } from '../../utils/utils';
 import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
 import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
+import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { useTranslation } from 'react-i18next';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
@@ -25,11 +27,10 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
   const { currentDraggable } = useAppSelector((state) => state.drag);
+  const { t } = useTranslation();
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);
-    // console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
-    // console.log('С колонкой', title, 'order', order);
     if (columnsList && order !== currentDraggable?.order) {
       const newColumnsList = columnsList?.map((column) => {
         if (currentDraggable) {
@@ -47,17 +48,23 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   };
 
   const deleteColumnHandler = async () => {
-    await deleteColumn({ boardId, columnId: id });
-    const newColumnsList = columnsList
-      ?.filter((item) => {
-        return item._id !== id;
+    await deleteColumn({ boardId, columnId: id })
+      .unwrap()
+      .then(() => {
+        const newColumnsList = columnsList
+          ?.filter((item) => {
+            return item._id !== id;
+          })
+          .map((column, index) => {
+            return { ...column, order: index + 1 };
+          });
+        if (newColumnsList) {
+          updateColumnsList(newColumnsList, 'DELETE');
+        }
       })
-      .map((column, index) => {
-        return { ...column, order: index + 1 };
+      .catch(() => {
+        toast.error(t('errorBoundary.text'));
       });
-    if (newColumnsList) {
-      updateColumnsList(newColumnsList, 'DELETE');
-    }
   };
 
   return (

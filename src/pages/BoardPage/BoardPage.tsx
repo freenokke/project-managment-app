@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +28,6 @@ const BoardPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log('Данные с сервера:', data);
       setColumnsList(data);
       dispatch(setColumnsOrder(data.length));
     } else {
@@ -39,7 +40,7 @@ const BoardPage = () => {
   const updateColumnsList = useCallback(
     (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
       if (elementType && elementType === 'column') {
-        console.log('type column');
+        const oldColumnsList = columnsList;
         if (type === 'UPDATE') {
           setColumnsList(newColumnsList);
           patchColumns(
@@ -48,7 +49,10 @@ const BoardPage = () => {
             })
           )
             .unwrap()
-            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+            .catch(() => {
+              toast.error(t('errorBoundary.text'));
+              setColumnsList(oldColumnsList);
+            });
         }
         if (type === 'DELETE') {
           setColumnsList(newColumnsList);
@@ -56,23 +60,22 @@ const BoardPage = () => {
             newColumnsList.map((column, index) => {
               return { _id: column._id, order: index + 1 };
             })
-          );
+          ).unwrap();
         }
       }
     },
-    [patchColumns, elementType]
+    [patchColumns, elementType, columnsList, t]
   );
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
   }, [dispatch]);
 
-  throw new Error('Something went wrong');
-
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center overflow-y-hidden">
       <Modal />
       <TaskModal />
+      <ToastContainer />
       <Link
         className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
         to="/main"
@@ -85,6 +88,7 @@ const BoardPage = () => {
         <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
       ) : null}
       {isLoading && <Loader />}
+
       <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
         {columnsList?.map(({ _id, title, order, boardId }) => {
           return (

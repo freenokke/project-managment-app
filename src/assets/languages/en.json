@@ -70,5 +70,6 @@
   "usersModal.button": "Assign",
   "errorBoundary.title": "Something went wrong...",
   "errorBoundary.text": "An error has occurred. Please try again",
-  "errorBoundary.reload": "Reload Page"
+  "errorBoundary.reload": "Reload app",
+  "createColumn.error": "An error occurred while creating the column. Try again"
 }

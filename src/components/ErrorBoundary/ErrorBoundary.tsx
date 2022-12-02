@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<IProps, IState> {
               className="flex items-center gap-2 transition-colors cursor-pointer text-gray-500 hover:text-blue-500"
             >
               <span className="material-icons">refresh</span>
-              {i18next.t('boardPage.backToBoardsList')}
+              {i18next.t('errorBoundary.reload')}
             </div>
           </div>
         </div>
