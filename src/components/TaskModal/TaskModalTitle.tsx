@@ -65,7 +65,7 @@ const TaskModalTitle = ({
 
   return !editing ? (
     <div className="flex flex-col lg:flex-row justify-between items-end lg:items-center lg:gap-[10px] p-[20px_10px_57px] lg:p-[24px_20px_36px]  border-b-2">
-      <h1 className="text-[22px] lg:text-[24px] self-start overflow-x-scroll pl-[20px]">{title}</h1>
+      <h1 className="text-[22px] lg:text-[24px] self-start break-words pl-[20px]">{title}</h1>
       <Button
         variant="text"
         className="flex order-first lg:order-2 items-center h-[36px] lg:h-[40px]"

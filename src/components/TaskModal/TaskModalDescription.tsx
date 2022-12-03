@@ -69,7 +69,7 @@ const TaskModalDescription = ({
         {t('editModal.modalButton')}
       </Button>
       <h3 className="p-[0_20px] text-[20px]">{t('modal.labelTextarea')}</h3>
-      <div className="p-[20px_10px] h-[188px] md:h-[194px] lg:p-[20px] mb-[0px] lg:mb-[56px] overflow-x-scroll flex-grow">
+      <div className="p-[20px_10px] h-[188px] md:h-[194px] lg:p-[20px] mb-[0px] lg:mb-[56px] break-words flex-grow">
         {description}
       </div>
     </div>

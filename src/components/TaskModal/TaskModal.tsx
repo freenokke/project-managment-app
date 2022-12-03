@@ -32,7 +32,7 @@ const TaskModal = () => {
         onClick={onCloseTaskModal}
         className="modalOverlay absolute bg-blue-gray-300/[0.4] z-10"
       />
-      <div className="absolute top-0 bottom-0 right-0 left-0 sm:left-[15%] z-20 overflow-y-scroll shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white p-[40px_10px] md:p-[40px_30px] lg:p-[50px]h-full">
+      <div className="absolute top-0 bottom-0 right-0 left-0 sm:left-[15%] lg:left-[35%] z-20 overflow-y-scroll shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-white p-[40px_10px] md:p-[40px_30px] lg:p-[50px] h-full">
         <span
           className="material-icons absolute top-[15px] right-[15px] text-slate-900 cursor-pointer"
           onClick={onCloseTaskModal}
