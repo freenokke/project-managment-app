@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -69,6 +71,7 @@ const BoardPage = () => {
 
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
+      <ToastContainer />
       <Modal />
       <TaskModal />
       <Link
