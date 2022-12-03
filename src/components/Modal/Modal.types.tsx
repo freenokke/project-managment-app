@@ -46,7 +46,7 @@ export interface EditModalProps extends DefaultModalProps, FormModalProps {
 }
 export interface DeleteModalProps extends DefaultModalProps {
   deleteBoard: (data: ModalData) => Promise<void>;
-  deleteColumn: (boardId: string, body: IColumnData) => Promise<void>;
+  deleteColumn: ({ boardId, columnId }: ModalData) => Promise<void>;
   deleteTask: (data: ModalData) => Promise<void>;
 }
 

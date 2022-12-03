@@ -3,5 +3,4 @@ export interface IProps {
   columnId: string;
   columnTitle: string;
   order: number;
-  deleteColumnFn: () => void;
 }

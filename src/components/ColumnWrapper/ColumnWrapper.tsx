@@ -12,7 +12,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   title,
   order,
   boardId,
-  updateColumnsList,
+  onDropHandler,
   columnsList,
 }) => {
   const {
@@ -23,7 +23,6 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
     dropEventHandler,
   } = useColumnsDraggable();
 
-  const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
   const { currentDraggable } = useAppSelector((state) => state.drag);
 
   const dropHandler = (e: React.DragEvent) => {
@@ -42,21 +41,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
           return column;
         } else return column;
       });
-      updateColumnsList(newColumnsList.sort(sortByOrder), 'UPDATE');
-    }
-  };
-
-  const deleteColumnHandler = async () => {
-    await deleteColumn({ boardId, columnId: id });
-    const newColumnsList = columnsList
-      ?.filter((item) => {
-        return item._id !== id;
-      })
-      .map((column, index) => {
-        return { ...column, order: index + 1 };
-      });
-    if (newColumnsList) {
-      updateColumnsList(newColumnsList, 'DELETE');
+      onDropHandler(newColumnsList.sort(sortByOrder));
     }
   };
 
@@ -71,16 +56,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDragLeave={dragLeaveEventHandler}
       onDragEnd={dragEndEventHandler}
     >
-      {
-        <InnerColumn
-          boardId={boardId}
-          columnId={id}
-          columnTitle={title}
-          order={order}
-          deleteColumnFn={deleteColumnHandler}
-        />
-      }
-      {isLoading ? <Loader /> : null}
+      <InnerColumn boardId={boardId} columnId={id} columnTitle={title} order={order} />
     </div>
   );
 };

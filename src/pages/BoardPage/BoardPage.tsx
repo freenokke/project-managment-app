@@ -1,24 +1,28 @@
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useGetColumnsQuery } from '../../redux/api/columnsApi';
-import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
 import { ColumnWrapper, Loader, TaskModal, Error } from '../../components';
 import { useCallback, useEffect } from 'react';
-import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
+import {
+  setColumnsOrder,
+  setColumnToReorder,
+  setOpenedBoard,
+} from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
 import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
-import { useAppSelector } from '../../hooks/redux.hooks';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 
 const BoardPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { id } = useParams();
   const { data, isLoading, isError: getColumnError } = useGetColumnsQuery(id ? id : '');
   const { data: boardData, isError: getBoardError } = useGetBoardQuery(id ? id : '');
+  const { columnToReorder } = useAppSelector((state) => state.boardInfo);
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
@@ -35,31 +39,43 @@ const BoardPage = () => {
     dispatch(setOpenedBoard(id ? id : ''));
   }, [data, dispatch, id]);
 
-  const updateColumnsList = useCallback(
-    (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
+  const onDropHandler = useCallback(
+    (newColumnsList: IColumnsResponse[]) => {
       if (elementType && elementType === 'column') {
-        if (type === 'UPDATE') {
-          setColumnsList(newColumnsList);
-          patchColumns(
-            newColumnsList.map((column, index) => {
-              return { _id: column._id, order: index + 1 };
-            })
-          )
-            .unwrap()
-            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
-        }
-        if (type === 'DELETE') {
-          setColumnsList(newColumnsList);
-          patchColumns(
-            newColumnsList.map((column, index) => {
-              return { _id: column._id, order: index + 1 };
-            })
-          );
-        }
+        setColumnsList(newColumnsList);
+        patchColumns(
+          newColumnsList.map((column, index) => {
+            return { _id: column._id, order: index + 1 };
+          })
+        )
+          .unwrap()
+          .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
       }
     },
     [patchColumns, elementType]
   );
+
+  useEffect(() => {
+    if (columnToReorder) {
+      dispatch(setColumnToReorder(null));
+      const newColumnsList = columnsList
+        ?.filter((item) => {
+          return item._id !== columnToReorder;
+        })
+        .map((column, index) => {
+          return { ...column, order: index + 1 };
+        });
+
+      if (newColumnsList) {
+        setColumnsList(newColumnsList);
+        patchColumns(
+          newColumnsList.map((column, index) => {
+            return { _id: column._id, order: index + 1 };
+          })
+        );
+      }
+    }
+  }, [columnToReorder, columnsList, dispatch, patchColumns]);
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
@@ -94,7 +110,7 @@ const BoardPage = () => {
                   title={title}
                   order={order}
                   boardId={boardId}
-                  updateColumnsList={updateColumnsList}
+                  onDropHandler={onDropHandler}
                   columnsList={columnsList}
                 />
               );

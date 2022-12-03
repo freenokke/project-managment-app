@@ -1,22 +1,18 @@
 import { Menu, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
 import React, { FC, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAppDispatch } from '../../../hooks/redux.hooks';
 import { useEditColumnMutation } from '../../../redux/api/columnsApi';
+import { ModalTypes, showModal } from '../../../redux/features/modalSlice';
 import { IProps } from './InnerColumnHeader.type';
 
-const InnerColumnHeader: FC<IProps> = ({
-  columnTitle,
-  taskCount,
-  deleteColumn,
-  boardId,
-  columnId,
-  order,
-}) => {
+const InnerColumnHeader: FC<IProps> = ({ columnTitle, taskCount, boardId, columnId, order }) => {
   const ref = useRef<HTMLHeadingElement | null>(null);
   const [title, setTitle] = useState(columnTitle);
   const [editStatus, setEditStatus] = useState(false);
   const [currentTitle, setCurrentTitle] = useState('');
   const [editColumn, {}] = useEditColumnMutation();
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
 
@@ -50,6 +46,18 @@ const InnerColumnHeader: FC<IProps> = ({
   );
 
   const hideColumn = () => {};
+
+  const showDeleteModal = () => {
+    dispatch(
+      showModal({
+        type: ModalTypes.deleteColumn,
+        data: {
+          boardId,
+          columnId,
+        },
+      })
+    );
+  };
 
   return (
     <div className="flex items-center min-h-[50px] py-[10px] px-[8px] relative pr-[36px]">
@@ -88,7 +96,7 @@ const InnerColumnHeader: FC<IProps> = ({
               <span className="material-icons mr-2">visibility_off</span>
               {t('column.hide')}
             </MenuItem>
-            <MenuItem onClick={deleteColumn} className="flex items-center">
+            <MenuItem onClick={showDeleteModal} className="flex items-center">
               <span className="material-icons mr-2 text-red-700">delete_forever</span>
               {t('column.delete')}
             </MenuItem>

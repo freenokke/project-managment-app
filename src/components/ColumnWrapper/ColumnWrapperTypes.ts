@@ -5,7 +5,7 @@ export interface IColumnProps {
   title: string;
   order: number;
   boardId: string;
-  updateColumnsList: (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => void;
+  onDropHandler: (newColumnsList: IColumnsResponse[]) => void;
   columnsList: IColumnsResponse[] | null;
 }
 

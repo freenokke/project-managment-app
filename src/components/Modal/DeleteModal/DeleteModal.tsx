@@ -5,8 +5,16 @@ import { ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
 import { DeleteModalProps } from '../Modal.types';
 import { closeTaskModal } from '../../../redux/features/taskModalSlice';
+import { setColumnToReorder } from '../../../redux/features/boardInfoSlice';
 
-const DeleteModal = ({ data, type, onCloseModal, deleteBoard, deleteTask }: DeleteModalProps) => {
+const DeleteModal = ({
+  data,
+  type,
+  onCloseModal,
+  deleteBoard,
+  deleteColumn,
+  deleteTask,
+}: DeleteModalProps) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
@@ -16,14 +24,15 @@ const DeleteModal = ({ data, type, onCloseModal, deleteBoard, deleteTask }: Dele
       deleteBoard(data ?? {});
     }
     if (type === ModalTypes.deleteColumn) {
-      console.log('DELETE COLUMN');
+      dispatch(setColumnToReorder(data?.columnId ?? null));
+      deleteColumn(data ?? {});
     }
     if (type === ModalTypes.deleteTask) {
       deleteTask(data ?? {});
       dispatch(closeTaskModal());
     }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data, deleteTask, dispatch]);
+  }, [type, onCloseModal, deleteBoard, data, dispatch, deleteColumn, deleteTask]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
