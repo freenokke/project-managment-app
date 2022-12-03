@@ -1,6 +1,9 @@
 import { ModalData } from '../../components/Modal/Modal.types';
-import { setError } from '../features/errorSlice';
+import { updateLocalState } from '../features/localDataSlice';
+import { store } from '../store';
 import { boardsApi } from './boardsApi';
+import { toast } from 'react-toastify';
+import i18n from '../../i18next/i18next';
 
 export interface ITaskData {
   _id: string;
@@ -61,7 +64,7 @@ export const tasksApi = boardsApi.injectEndpoints({
     }),
     createTask: builder.mutation<ITaskData, ITaskCreate>({
       query: ({ boardId, columnId, body }) => ({
-        url: `/boards/${boardId}/columns/${columnId}/tasks`,
+        url: `/boards/${boardId}/columns/${columnId}/tasks1`,
         method: 'POST',
         body,
       }),
@@ -70,13 +73,13 @@ export const tasksApi = boardsApi.injectEndpoints({
           await queryFulfilled;
           dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
         } catch (error) {
-          dispatch(setError({ error: true, type: 'task' }));
+          toast.error(i18n.t('task.createError'));
         }
       },
     }),
     deleteTask: builder.mutation<ITaskData, ModalData>({
       query: ({ boardId, columnId, taskId }) => ({
-        url: `/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+        url: `/boards/${boardId}/columns/${columnId}/tasks1/${taskId}`,
         method: 'DELETE',
       }),
       async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
@@ -84,7 +87,7 @@ export const tasksApi = boardsApi.injectEndpoints({
           await queryFulfilled;
           dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
         } catch (error) {
-          dispatch(setError({ error: true, type: 'task' }));
+          toast.error(i18n.t('task.deleteError'));
         }
       },
     }),
@@ -99,7 +102,7 @@ export const tasksApi = boardsApi.injectEndpoints({
           await queryFulfilled;
           dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
         } catch (error) {
-          dispatch(setError({ error: true, type: 'task' }));
+          toast.error(i18n.t('task.editError'));
         }
       },
     }),
@@ -113,10 +116,12 @@ export const tasksApi = boardsApi.injectEndpoints({
         body,
       }),
       async onQueryStarted({}, { dispatch, queryFulfilled }) {
+        const backUp = store.getState().localData;
         try {
           await queryFulfilled;
         } catch (error) {
-          dispatch(setError({ error: true, type: 'task' }));
+          toast.error(i18n.t('task.patchError'));
+          dispatch(updateLocalState(backUp));
         }
       },
     }),

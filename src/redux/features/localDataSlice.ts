@@ -28,15 +28,14 @@ const localDataSlice = createSlice({
       });
     },
     updateLocalState: (state, action: PayloadAction<IState[]>) => {
-      state = [...action.payload];
-    },
-    resetLocalData: (state) => {
       state.length = 0;
+      action.payload.forEach((item) => {
+        state.push(item);
+      });
     },
   },
 });
 
 const { reducer } = localDataSlice;
-export const { setLocalColumns, setLocalTasks, resetLocalData, updateLocalState } =
-  localDataSlice.actions;
+export const { setLocalColumns, setLocalTasks, updateLocalState } = localDataSlice.actions;
 export default reducer;

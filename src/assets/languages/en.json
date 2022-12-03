@@ -49,5 +49,10 @@
   "column.hide": "Hide column",
   "boardPage.backToBoardsList": "Back to boards list",
   "boardPage.noColumns": "This board has no columns yet",
-  "editProfile.title": "Edit profile"
+  "editProfile.title": "Edit profile",
+  "task.editError": "An error occurred while editing the task. Try again",
+  "task.deleteError": "An error occurred while deleting the task. Try again",
+  "task.createError": "An error occurred while creating the task. Try again",
+  "task.patchError": "An error occurred while updating the task list. Try again",
+  "task.dragError": "Something went wrong. Try again or reload app otherwise"
 }

@@ -9,12 +9,9 @@ import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
 import { setLocalTasks } from '../../redux/features/localDataSlice';
-import { setError } from '../../redux/features/errorSlice';
-import { Link } from 'react-router-dom';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
   const dispatch = useAppDispatch();
-  const taskError = useAppSelector((state) => state.error.taskError);
   const {
     data: tasks,
     isLoading,
@@ -31,9 +28,6 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     if (tasks) {
       dispatch(setLocalTasks({ tasks, columnId }));
     }
-    return () => {
-      dispatch(setError({ error: false, type: 'task' }));
-    };
   }, [tasks, columnId, dispatch]);
 
   const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
@@ -53,46 +47,25 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         columnId={columnId}
         order={order}
       />
-      {!taskError && (
-        <InnerColumnContent
-          onDragOverFn={dragOverHandler}
-          onDragDropFn={dragDropHandler}
-          onDragLeaveFn={dragLeaveHandler}
-          loading={isLoading || isFetching}
-          columnId={columnId}
-        >
-          {displayedTasks?.tasks?.map((task) => (
-            <TaskWrapper
-              key={task._id}
-              taskData={task}
-              onDragStartFn={dragStartHandler}
-              onDragDropFn={dragDropHandler}
-              onDragOverFn={dragOverHandler}
-              onDragLeaveFn={dragLeaveHandler}
-              onDragEndFn={dragEndHandler}
-            />
-          ))}
-        </InnerColumnContent>
-      )}
-      {/* пока что вместо компонента ошибки */}
-      {taskError && (
-        <div className="absolute flex flex-col items-center justify-center inset-0 z-10 text-cyan-800 bg-gray-100">
-          😥 Something went wrong...
-          <div>
-            Please
-            <Link className="ml-1 underline font-semibold" to="/main">
-              return back
-            </Link>
-          </div>
-          or
-          <span
-            className="cursor-pointer underline font-semibold"
-            onClick={() => window.location.reload()}
-          >
-            reload App
-          </span>
-        </div>
-      )}
+      <InnerColumnContent
+        onDragOverFn={dragOverHandler}
+        onDragDropFn={dragDropHandler}
+        onDragLeaveFn={dragLeaveHandler}
+        loading={isLoading || isFetching}
+        columnId={columnId}
+      >
+        {displayedTasks?.tasks?.map((task) => (
+          <TaskWrapper
+            key={task._id}
+            taskData={task}
+            onDragStartFn={dragStartHandler}
+            onDragDropFn={dragDropHandler}
+            onDragOverFn={dragOverHandler}
+            onDragLeaveFn={dragLeaveHandler}
+            onDragEndFn={dragEndHandler}
+          />
+        ))}
+      </InnerColumnContent>
       <InnerColumnFooter openModalFn={openCreateModal} />
     </div>
   );
