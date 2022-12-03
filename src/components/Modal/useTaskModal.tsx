@@ -9,7 +9,9 @@ import { ModalData } from './Modal.types';
 
 export interface Updates {
   title: string;
-  owner: string;
+  order: number;
+  description: string;
+  userId: string;
   users: string[];
 }
 

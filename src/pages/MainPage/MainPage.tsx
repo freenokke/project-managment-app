@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { CreateCard } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
-import { BoardCard } from '../../components';
+import { BoardCard, Loader } from '../../components';
 import { useGetBoardsQuery } from '../../redux/api/boardsApi';
 import Modal from '../../components/Modal/Modal';
 import { modalText } from '../../utils/constants/constants';
@@ -12,7 +12,7 @@ const MainPage = () => {
   const { t } = useTranslation();
   const { title } = modalText.board;
   const { userId } = useAppSelector((state) => state.auth);
-  const { isLoading, isError, data: boardsSet } = useGetBoardsQuery(userId ?? '');
+  const { isLoading, isFetching, isError, data: boardsSet } = useGetBoardsQuery(userId ?? '');
 
   const dispatch = useAppDispatch();
 
@@ -31,7 +31,7 @@ const MainPage = () => {
         ))}
       </div>
       <div className="flex justify-center items-center w-full h-[150px] text-2xl">
-        {isLoading && <p>{t('main.loading')}</p>}
+        {(isLoading || isFetching) && <Loader />}
         {isError && <p>{t('main.errorMessage')}</p>}
       </div>
     </div>

@@ -11,6 +11,8 @@ import Loader from './Loader/Loader';
 import ColumnWrapper from './ColumnWrapper/ColumnWrapper';
 import InnerColumn from './InnerColumn/InnerColumn';
 import TaskWrapper from './TaskWrapper/TaskWrapper';
+import Modal from './Modal/Modal';
+import TaskModal from './TaskModal/TaskModal';
 
 export {
   Header,
@@ -26,4 +28,6 @@ export {
   ColumnWrapper,
   InnerColumn,
   TaskWrapper,
+  Modal,
+  TaskModal,
 };

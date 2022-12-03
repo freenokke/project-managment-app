@@ -1,5 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import { SignUpPage, MainPage, WelcomePage, BoardPage, SignInPage, EditProfilePage } from './pages';
+import {
+  SignUpPage,
+  MainPage,
+  WelcomePage,
+  BoardPage,
+  SignInPage,
+  EditProfilePage,
+  NotFound,
+} from './pages';
 import { Footer, Header } from './components';
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 
@@ -16,6 +24,7 @@ function App() {
         <Route path="/" element={<WelcomePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<SignInPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </>

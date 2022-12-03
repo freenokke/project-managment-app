@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './TaskWrapper.type';
 import { Menu, MenuHandler, MenuList, MenuItem } from '@material-tailwind/react';
+import { showTaskModal } from '../../redux/features/taskModalSlice';
 
 const TaskWrapper: FC<IProps> = ({
   taskData,
@@ -12,7 +13,7 @@ const TaskWrapper: FC<IProps> = ({
   onDragLeaveFn,
   onDragEndFn,
 }) => {
-  const { title, boardId, columnId, _id: taskId, order } = taskData;
+  const { title, boardId, columnId, _id: taskId } = taskData;
   const dispatch = useAppDispatch();
 
   const deleteModal = useCallback(() => {
@@ -21,6 +22,10 @@ const TaskWrapper: FC<IProps> = ({
 
   const editModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.editTask, data: { taskData } }));
+  }, [dispatch, taskData]);
+
+  const taskModal = useCallback(() => {
+    dispatch(showTaskModal(taskData));
   }, [dispatch, taskData]);
 
   return (
@@ -33,8 +38,11 @@ const TaskWrapper: FC<IProps> = ({
       onDragEnd={onDragEndFn}
       className="relative w-full rounded shadow-md"
     >
-      <div className="w-full flex-shrink-0 pl-1 pr-8 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100">
-        name: {title}, order: {order}
+      <div
+        className="w-full flex-shrink-0 pl-1 pr-8 py-2 rounded cursor-pointer transition-all bg-white hover:bg-blue-100"
+        onClick={taskModal}
+      >
+        {title}
       </div>
       <div className="absolute top-0 right-0 text-gray-700 cursor-pointer">
         <Menu placement="left">

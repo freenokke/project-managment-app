@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { SubmitHandler } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
 import { closeModal } from '../../../redux/features/modalSlice';
 import { IFormFields } from './CreateModal.types';
 import ModalInput from '../ModalInput/ModalInput';
+import ModalTextarea from '../ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
 import useBoardModal from '../useBoardModal';
 import useColumnModal from '../useColumnModal';
@@ -31,7 +32,8 @@ const CreateModal = ({
 
   const onCloseModal = useCallback(() => {
     dispatch(closeModal());
-  }, [dispatch]);
+    reset();
+  }, [dispatch, reset]);
 
   const { createBoard } = useBoardModal();
   const { createColumn } = useColumnModal();
@@ -41,6 +43,16 @@ const CreateModal = ({
     boardId: data?.boardId ?? '',
     columnId: data?.columnId ?? '',
   });
+
+  const title = useMemo(() => {
+    if (type === ModalTypes.createBoard) {
+      return 'boardTitle';
+    } else if (type === ModalTypes.createColumn) {
+      return 'columnTitle';
+    } else {
+      return 'taskTitle';
+    }
+  }, [type]);
 
   const onSubmit: SubmitHandler<IFormFields> = useCallback(
     (formData) => {
@@ -71,31 +83,31 @@ const CreateModal = ({
           createTask(requestTaskData);
         }
       }
-      reset();
       onCloseModal();
     },
     [
-      createBoard,
-      onCloseModal,
-      reset,
       type,
       userId,
+      createBoard,
+      maxOrder,
       data?.boardId,
       data?.columnId,
       createColumn,
       boardId,
-      maxOrder,
-      createTask,
       useQueryStateResult,
+      onCloseModal,
+      createTask,
     ]
   );
 
   return (
     <div className="container flex flex-col items-center justify-center w-full">
-      <h1 className="text-2xl mb-10">{t('createModal.modalTitle')}</h1>
+      <h1 className="text-2xl mb-10">
+        {t('createModal.modalTitle')} {t(title)}
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-9 w-full mb-[40px]"
+        className="flex flex-col items-center gap-[10px] w-full mb-[20px]"
         autoComplete="off"
       >
         <ModalInput
@@ -105,14 +117,18 @@ const CreateModal = ({
           errors={errors}
         />
         {type === ModalTypes.createTask && (
-          <ModalInput
+          <ModalTextarea
             name="description"
             label={t('modal.labelTextarea')}
             register={register}
             errors={errors}
           />
         )}
-        <Button type="submit" className="w-full" disabled={!isDirty || (isSubmitted && !isValid)}>
+        <Button
+          type="submit"
+          className="w-full h-[50px]"
+          disabled={!isDirty || (isSubmitted && !isValid)}
+        >
           {t('createModal.modalButton')}
         </Button>
       </form>
