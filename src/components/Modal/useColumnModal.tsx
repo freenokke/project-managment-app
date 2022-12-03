@@ -10,8 +10,11 @@ const useColumnModal = () => {
       .then((data) => console.log(data));
   };
 
+  const deleteColumn = async (boardId: string, body: IColumnData) => {};
+
   return {
     createColumn,
+    deleteColumn,
   };
 };
 

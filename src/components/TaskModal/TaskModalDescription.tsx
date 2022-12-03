@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/redux.hooks';
-import { ModalChild } from '../Modal/Modal.types';
 import ModalTextarea from '../Modal/ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
 import useTaskModal from '../Modal/useTaskModal';
+import { TaskModalProps } from './TaskModal.types';
 
 const TaskModalDescription = ({
   register,
@@ -14,7 +14,7 @@ const TaskModalDescription = ({
   isDirty,
   isValid,
   isSubmitted,
-}: ModalChild) => {
+}: TaskModalProps) => {
   const { t } = useTranslation();
   const { editTask } = useTaskModal();
 

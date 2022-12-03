@@ -1,23 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
 import { useAppDispatch } from '../../../hooks/redux.hooks';
-import { closeModal, ModalTypes } from '../../../redux/features/modalSlice';
+import { ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
-import useBoardModal from '../useBoardModal';
-import { ModalChild } from '../Modal.types';
+import { DeleteModalProps } from '../Modal.types';
 import { closeTaskModal } from '../../../redux/features/taskModalSlice';
-import useTaskModal from '../useTaskModal';
 
-const DeleteModal = ({ data, type }: ModalChild) => {
+const DeleteModal = ({ data, type, onCloseModal, deleteBoard, deleteTask }: DeleteModalProps) => {
   const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
-  const onCloseModal = useCallback(() => {
-    dispatch(closeModal());
-  }, [dispatch]);
-
-  const { deleteBoard } = useBoardModal();
-  const { deleteTask } = useTaskModal();
 
   const onDelete = useCallback(() => {
     if (type === ModalTypes.deleteBoard) {

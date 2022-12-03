@@ -14,6 +14,7 @@ const MainPage = () => {
   const { title } = modalText.board;
   const { userId } = useAppSelector((state) => state.auth);
   const { isLoading, isFetching, isError, data: boardsSet } = useGetBoardsQuery(userId ?? '');
+  const { isLoadingBoards } = useAppSelector((state) => state.boardInfo);
 
   const dispatch = useAppDispatch();
 
@@ -37,7 +38,7 @@ const MainPage = () => {
             ))}
           </div>
           <div className="flex justify-center items-center w-full h-[150px] text-2xl">
-            {(isLoading || isFetching) && <Loader />}
+            {(isLoading || isFetching || isLoadingBoards) && <Loader />}
           </div>
         </>
       )}

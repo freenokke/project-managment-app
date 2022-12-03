@@ -5,6 +5,8 @@ interface IBoardState {
   columnId: string;
   taskId: string;
   maxOrder: number;
+
+  isLoadingBoards: boolean;
 }
 
 const initialState: IBoardState = {
@@ -12,6 +14,8 @@ const initialState: IBoardState = {
   columnId: '',
   taskId: '',
   maxOrder: 0,
+
+  isLoadingBoards: false,
 };
 
 const boardInfoSlice = createSlice({
@@ -24,9 +28,12 @@ const boardInfoSlice = createSlice({
     setColumnsOrder: (state, action: PayloadAction<number>) => {
       state.maxOrder = action.payload;
     },
+    setIsLoadingBoard(state, action: PayloadAction<boolean>) {
+      state.isLoadingBoards = action.payload;
+    },
   },
 });
 
 const { reducer } = boardInfoSlice;
-export const { setOpenedBoard, setColumnsOrder } = boardInfoSlice.actions;
+export const { setOpenedBoard, setColumnsOrder, setIsLoadingBoard } = boardInfoSlice.actions;
 export default reducer;

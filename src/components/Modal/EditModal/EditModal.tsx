@@ -1,40 +1,30 @@
 import { useTranslation } from 'react-i18next';
-import { useAppDispatch } from '../../../hooks/redux.hooks';
-import { closeModal } from '../../../redux/features/modalSlice';
-import useBoardModal from '../useBoardModal';
+import { useAppSelector } from '../../../hooks/redux.hooks';
 import { SubmitHandler } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IFormFields } from './EditModal.type';
 import ModalInput from '../ModalInput/ModalInput';
 import ModalTextarea from '../ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
-import { ModalChild } from '../Modal.types';
+import { EditModalProps } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
-import useTaskModal from '../useTaskModal';
 import { useGetBoardsQuery } from '../../../redux/api/boardsApi';
 
 const EditModal = ({
   register,
   handleSubmit,
-  reset,
   setValue,
-  errors,
-  isDirty,
-  isValid,
-  isSubmitted,
+  formState,
   data,
   type,
-  userId,
-}: ModalChild) => {
-  const dispatch = useAppDispatch();
-  const onCloseModal = useCallback(() => {
-    reset();
-    dispatch(closeModal());
-  }, [dispatch, reset]);
+  onCloseModal,
+  editBoard,
+  editTask,
+}: EditModalProps) => {
+  const { errors, isDirty, isValid, isSubmitted } = formState;
+  const { userId } = useAppSelector((state) => state.auth);
 
   const { t } = useTranslation();
-  const { editBoard } = useBoardModal();
-  const { editTask } = useTaskModal();
 
   const { data: boardsSet } = useGetBoardsQuery(userId ?? '');
   const board = boardsSet?.find(({ _id }) => _id === data?.boardId);

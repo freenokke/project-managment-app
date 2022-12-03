@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useState, useEffect } from 'react';
 import { useAppSelector } from '../../hooks/redux.hooks';
-import { ModalChild } from '../Modal/Modal.types';
 import ModalInput from '../Modal/ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
 import useTaskModal from '../Modal/useTaskModal';
-import { IFormFields } from './TaskModal.types';
+import { IFormFields, TaskModalProps } from './TaskModal.types';
 import { SubmitHandler } from 'react-hook-form';
 
 const TaskModalTitle = ({
@@ -17,7 +16,7 @@ const TaskModalTitle = ({
   isDirty,
   isValid,
   isSubmitted,
-}: ModalChild) => {
+}: TaskModalProps) => {
   const { t } = useTranslation();
 
   const { editTask } = useTaskModal();

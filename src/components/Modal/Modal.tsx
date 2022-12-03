@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IFormFields } from './Modal.types';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { closeModal, ModalTypes } from '../../redux/features/modalSlice';
@@ -7,58 +7,86 @@ import ModalWrapper from './ModalWrapper/ModalWrapper';
 import CreateModal from './CreateModal/CreateModal';
 import EditModal from './EditModal/EditModal';
 import DeleteModal from './DeleteModal/DeleteModal';
+import useBoardModal from './useBoardModal';
+import useColumnModal from './useColumnModal';
+import useTaskModal from './useTaskModal';
 
-const ModalTypeMapper = {
-  [ModalTypes.createBoard]: CreateModal,
-  [ModalTypes.createColumn]: CreateModal,
-  [ModalTypes.createTask]: CreateModal,
-  [ModalTypes.deleteBoard]: DeleteModal,
-  [ModalTypes.deleteColumn]: DeleteModal,
-  [ModalTypes.deleteTask]: DeleteModal,
-  [ModalTypes.editBoard]: EditModal,
-  [ModalTypes.editColumn]: EditModal,
-  [ModalTypes.editTask]: EditModal,
-};
+const CreateTypes = [ModalTypes.createBoard, ModalTypes.createColumn, ModalTypes.createTask];
+const EditTypes = [ModalTypes.editBoard, ModalTypes.editColumn, ModalTypes.editTask];
+const DeleteTypes = [ModalTypes.deleteBoard, ModalTypes.deleteColumn, ModalTypes.deleteTask];
 
 const Modal = () => {
   const { visible, type, data } = useAppSelector((state) => state.modal);
-  const { userId } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isDirty, isValid, isSubmitted },
-    setValue,
-  } = useForm<IFormFields>();
+  const { createBoard, editBoard, deleteBoard } = useBoardModal();
+  const { createColumn, deleteColumn } = useColumnModal();
+  const { createTask, editTask, deleteTask } = useTaskModal();
+
+  const formProps = useForm<IFormFields>();
+
+  const { reset } = formProps;
 
   const onCloseModal = useCallback(() => {
     dispatch(closeModal());
     reset();
   }, [dispatch, reset]);
 
+  const Component = useMemo(() => {
+    if (CreateTypes.includes(type)) {
+      return (
+        <CreateModal
+          {...formProps}
+          onCloseModal={onCloseModal}
+          type={type}
+          data={data}
+          createBoard={createBoard}
+          createColumn={createColumn}
+          createTask={createTask}
+        />
+      );
+    } else if (EditTypes.includes(type)) {
+      return (
+        <EditModal
+          {...formProps}
+          onCloseModal={onCloseModal}
+          type={type}
+          data={data}
+          editBoard={editBoard}
+          editTask={editTask}
+        />
+      );
+    } else if (DeleteTypes.includes(type)) {
+      return (
+        <DeleteModal
+          onCloseModal={onCloseModal}
+          type={type}
+          data={data}
+          deleteBoard={deleteBoard}
+          deleteColumn={deleteColumn}
+          deleteTask={deleteTask}
+        />
+      );
+    }
+    return null;
+  }, [
+    createBoard,
+    createColumn,
+    createTask,
+    data,
+    deleteBoard,
+    deleteColumn,
+    deleteTask,
+    editBoard,
+    editTask,
+    formProps,
+    onCloseModal,
+    type,
+  ]);
+
   if (!visible) return null;
 
-  const Component = ModalTypeMapper[type];
-
-  return (
-    <ModalWrapper onCloseModal={onCloseModal}>
-      <Component
-        register={register}
-        handleSubmit={handleSubmit}
-        reset={reset}
-        setValue={setValue}
-        errors={errors}
-        isDirty={isDirty}
-        isValid={isValid}
-        isSubmitted={isSubmitted}
-        data={data}
-        type={type}
-        userId={userId}
-      />
-    </ModalWrapper>
-  );
+  return <ModalWrapper onCloseModal={onCloseModal}>{Component}</ModalWrapper>;
 };
 
 export default Modal;
