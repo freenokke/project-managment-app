@@ -27,7 +27,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   } = useColumnsDraggable();
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
-  const { currentDraggable } = useAppSelector((state) => state.drag);
+  const { currentDraggableColumn } = useAppSelector((state) => state.drag);
   const dispatch = useDispatch();
 
   useEnhancedEffect(() => {
@@ -38,14 +38,14 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
     dropEventHandler(e);
     // console.log('Меняем колонку', selectedColumn?.title, 'order', selectedColumn?.order);
     // console.log('С колонкой', title, 'order', order);
-    if (columnsList && order !== currentDraggable?.order) {
+    if (columnsList && order !== currentDraggableColumn?.order) {
       const newColumnsList = columnsList?.map((column) => {
-        if (currentDraggable) {
-          if (column.order === currentDraggable.order) {
+        if (currentDraggableColumn) {
+          if (column.order === currentDraggableColumn.order) {
             return { ...column, order: order };
           }
           if (column.order === order) {
-            return { ...column, order: currentDraggable?.order };
+            return { ...column, order: currentDraggableColumn?.order };
           }
           return column;
         } else return column;
