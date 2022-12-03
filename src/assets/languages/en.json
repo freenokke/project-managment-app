@@ -73,5 +73,11 @@
   "errorBoundary.reload": "Reload app",
   "createColumn.error": "An error occurred while creating the column. Try again",
   "auth.loginAlreadyExist": "This login already exists",
-  "auth.wrongLogin": "Wrong login or password"
+  "auth.wrongLogin": "Wrong login or password",
+  "loadingData.error": "Error Loading",
+  "loadingData.text": "An error occurred while loading the data",
+  "loadingData.button": "Try again",
+  "createBoard.error": "An error occurred while creating the board. Try again",
+  "editBoard.error": "An error occurred while editing the board. Try again",
+  "deleteBoard.error": "An error occurred while deleting the board. Try again"
 }

@@ -14,6 +14,7 @@ import TaskWrapper from './TaskWrapper/TaskWrapper';
 import Modal from './Modal/Modal';
 import TaskModal from './TaskModal/TaskModal';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import Error from './Error/Error';
 
 export {
   Header,
@@ -32,4 +33,5 @@ export {
   Modal,
   TaskModal,
   ErrorBoundary,
+  Error,
 };
