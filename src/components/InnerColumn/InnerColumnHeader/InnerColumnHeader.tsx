@@ -30,11 +30,6 @@ const InnerColumnHeader: FC<IProps> = ({
     setEditStatus(true);
   }, []);
 
-  const onBlurHandler = useCallback(() => {
-    setEditStatus(false);
-    editColumn({ boardId, columnId, body: { title, order } });
-  }, [boardId, columnId, order, title, editColumn]);
-
   const onKeyUpHandler = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
@@ -49,21 +44,41 @@ const InnerColumnHeader: FC<IProps> = ({
     [currentTitle, boardId, columnId, order, title, editColumn]
   );
 
+  const changeTitle = useCallback(() => {
+    setEditStatus(false);
+    editColumn({ boardId, columnId, body: { title, order } });
+  }, [boardId, columnId, order, title, editColumn]);
+
+  const cancelTitleChanging = useCallback(() => {
+    setTitle(currentTitle);
+    setEditStatus(false);
+  }, [currentTitle]);
+
   const hideColumn = () => {};
 
   return (
     <div className="flex items-center min-h-[50px] py-[10px] px-[8px] relative pr-[36px]">
       {editStatus ? (
-        <input
-          value={title}
-          onChange={updateTitleHandler}
-          onBlur={onBlurHandler}
-          onKeyUp={onKeyUpHandler}
-          autoFocus
-          maxLength={50}
-          type="text"
-          className="pl-1 outline-gray-700/50"
-        />
+        <div className="flex justify-center items-center gap-1">
+          <input
+            value={title}
+            onChange={updateTitleHandler}
+            onKeyUp={onKeyUpHandler}
+            autoFocus
+            maxLength={50}
+            type="text"
+            className="pl-1 outline-gray-700/50"
+          />
+          <span onClick={changeTitle} className="material-icons text-green-700 cursor-pointer">
+            done
+          </span>
+          <span
+            onClick={cancelTitleChanging}
+            className="material-icons text-red-700 cursor-pointer"
+          >
+            close
+          </span>
+        </div>
       ) : (
         <h3
           className="max-w-[70%] text-base font-semibold tracking-wide break-words cursor-default"

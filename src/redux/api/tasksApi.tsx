@@ -64,7 +64,7 @@ export const tasksApi = boardsApi.injectEndpoints({
     }),
     createTask: builder.mutation<ITaskData, ITaskCreate>({
       query: ({ boardId, columnId, body }) => ({
-        url: `/boards/${boardId}/columns/${columnId}/tasks1`,
+        url: `/boards/${boardId}/columns/${columnId}/tasks`,
         method: 'POST',
         body,
       }),
@@ -79,7 +79,7 @@ export const tasksApi = boardsApi.injectEndpoints({
     }),
     deleteTask: builder.mutation<ITaskData, ModalData>({
       query: ({ boardId, columnId, taskId }) => ({
-        url: `/boards/${boardId}/columns/${columnId}/tasks1/${taskId}`,
+        url: `/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         method: 'DELETE',
       }),
       async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {

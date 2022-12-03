@@ -16,6 +16,7 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     data: tasks,
     isLoading,
     isFetching,
+    isError,
   } = useGetTasksQuery({
     boardId,
     columnId,
@@ -67,6 +68,11 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         ))}
       </InnerColumnContent>
       <InnerColumnFooter openModalFn={openCreateModal} />
+      {isError && (
+        <div className="absolute flex flex-col items-center justify-center inset-0 z-10 bg-gray-100">
+          😥 Error while data loading...
+        </div>
+      )}
     </div>
   );
 };
