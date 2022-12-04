@@ -1,5 +1,9 @@
 import { ModalData } from '../../components/Modal/Modal.types';
+import { updateLocalState } from '../features/localDataSlice';
 import { boardsApi } from './boardsApi';
+import { toast } from 'react-toastify';
+import i18n from '../../i18next/i18next';
+import { IState } from '../../redux/features/localDataSlice';
 
 export interface ITaskData {
   _id: string;
@@ -27,8 +31,14 @@ export interface ITaskUpdate extends Pick<ITaskData, 'boardId' | 'columnId' | '_
   body: INewTask;
 }
 
-const sortCards = (a: ITaskData, b: ITaskData) => {
+export const sortCards = (a: ITaskData, b: ITaskData) => {
   return a.order - b.order;
+};
+
+export const reorder = (item: ITaskData, index: number) => {
+  const task = { ...item };
+  task.order = index + 1;
+  return task;
 };
 
 export const tasksApi = boardsApi.injectEndpoints({
@@ -36,11 +46,7 @@ export const tasksApi = boardsApi.injectEndpoints({
     getTasks: builder.query<ITaskData[], Pick<ITaskData, 'boardId' | 'columnId'>>({
       query: ({ boardId, columnId }) => `/boards/${boardId}/columns/${columnId}/tasks`,
       transformResponse: (response: ITaskData[]) => {
-        return response.sort(sortCards).map((item, index) => {
-          const task = { ...item };
-          task.order = index + 1;
-          return task;
-        });
+        return response.sort(sortCards).map(reorder);
       },
       providesTags: (result, error, arg) =>
         result
@@ -62,14 +68,28 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          toast.error(i18n.t('task.createError'));
+        }
+      },
     }),
     deleteTask: builder.mutation<ITaskData, ModalData>({
       query: ({ boardId, columnId, taskId }) => ({
         url: `/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          toast.error(i18n.t('task.deleteError'));
+        }
+      },
     }),
     editTask: builder.mutation<ITaskData, ITaskUpdate>({
       query: ({ boardId, columnId, _id, body }) => ({
@@ -77,18 +97,35 @@ export const tasksApi = boardsApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Tasks', id: arg.columnId }],
+      async onQueryStarted({ columnId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(tasksApi.util.invalidateTags([{ type: 'Tasks', id: columnId }]));
+        } catch (error) {
+          toast.error(i18n.t('task.editError'));
+        }
+      },
     }),
     updateSetOfTasks: builder.mutation<
       ITaskData[],
-      Pick<ITaskData, '_id' | 'order' | 'columnId'>[]
+      {
+        body: Pick<ITaskData, '_id' | 'order' | 'columnId'>[];
+        backup?: IState[];
+      }
     >({
-      query: (body) => ({
+      query: ({ body }) => ({
         url: `/tasksSet`,
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: [{ type: 'Tasks' }],
+      async onQueryStarted({ backup }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          toast.error(i18n.t('task.patchError'));
+          if (backup) dispatch(updateLocalState(backup));
+        }
+      },
     }),
   }),
 });

@@ -19,35 +19,27 @@ export interface Updates {
   users: string[];
 }
 
-const useTaskModal = () => {
-  const dispatch = useAppDispatch();
-  const [createTaskCall] = useCreateTaskMutation();
-  const [editTaskCall, { isLoading: isEditingTask, isError: editTaskError }] =
-    useEditTaskMutation();
-  const [deleteTaskCall, { isLoading: isDeletingTask }] = useDeleteTaskMutation();
+export const useTaskModal = () => {
+  const [createTaskCall, {}] = useCreateTaskMutation();
+  const [editTaskCall, {}] = useEditTaskMutation();
+  const [deleteTaskCall, {}] = useDeleteTaskMutation();
 
-  useEffect(() => {
-    dispatch(setIsLoadingTask(isEditingTask || isDeletingTask));
-  }, [isEditingTask, isDeletingTask, dispatch]);
-
-  const createTask = async (data: ITaskCreate) => {
-    await createTaskCall(data).unwrap();
+  const createTask = (data: ITaskCreate) => {
+    createTaskCall(data);
   };
 
-  const deleteTask = async (data: ModalData) => {
-    await deleteTaskCall(data).unwrap();
+  const deleteTask = (data: ModalData) => {
+    deleteTaskCall(data);
   };
 
-  const editTask = async (data: ITaskUpdate) => {
-    await editTaskCall(data).unwrap();
+  const editTask = (data: ITaskUpdate) => {
+    editTaskCall(data);
   };
 
   return {
     createTask,
     editTask,
     deleteTask,
-    isEditingTask,
-    editTaskError,
   };
 };
 
