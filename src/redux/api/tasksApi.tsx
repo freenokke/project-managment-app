@@ -1,9 +1,9 @@
 import { ModalData } from '../../components/Modal/Modal.types';
 import { updateLocalState } from '../features/localDataSlice';
-import { store } from '../store';
 import { boardsApi } from './boardsApi';
 import { toast } from 'react-toastify';
 import i18n from '../../i18next/i18next';
+import { IState } from '../../redux/features/localDataSlice';
 
 export interface ITaskData {
   _id: string;
@@ -108,20 +108,22 @@ export const tasksApi = boardsApi.injectEndpoints({
     }),
     updateSetOfTasks: builder.mutation<
       ITaskData[],
-      Pick<ITaskData, '_id' | 'order' | 'columnId'>[]
+      {
+        body: Pick<ITaskData, '_id' | 'order' | 'columnId'>[];
+        backup?: IState[];
+      }
     >({
-      query: (body) => ({
+      query: ({ body }) => ({
         url: `/tasksSet`,
         method: 'PATCH',
         body,
       }),
-      async onQueryStarted({}, { dispatch, queryFulfilled }) {
-        const backUp = store.getState().localData;
+      async onQueryStarted({ backup }, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error) {
           toast.error(i18n.t('task.patchError'));
-          dispatch(updateLocalState(backUp));
+          if (backup) dispatch(updateLocalState(backup));
         }
       },
     }),
