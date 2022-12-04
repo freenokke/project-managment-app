@@ -1,45 +1,57 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState } from 'react';
-import { useAppSelector } from '../../hooks/redux.hooks';
-import { ModalChild } from '../Modal/Modal.types';
+import { useAppSelector, useAppDispatch } from '../../hooks/redux.hooks';
+import { TaskModalProps } from './TaskModal.types';
 import ModalTextarea from '../Modal/ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
-import useTaskModal from '../Modal/useTaskModal';
+import { setIsErrorEditTask } from '../../redux/features/boardInfoSlice';
 
 const TaskModalDescription = ({
   register,
   handleSubmit,
   setValue,
+  reset,
   errors,
   isDirty,
   isValid,
   isSubmitted,
-}: ModalChild) => {
+  editTask,
+}: TaskModalProps) => {
   const { t } = useTranslation();
-  const { editTask } = useTaskModal();
-
   const { taskData } = useAppSelector((state) => state.taskModal);
+  const { isErrorEditTask } = useAppSelector((state) => state.boardInfo);
+  const dispatch = useAppDispatch();
 
   const [editing, setEditing] = useState(false);
   const [description, setDescription] = useState(taskData?.description ?? '');
   const [textValue, setTextValue] = useState(description);
+  const [prevDescription, setPrevDescription] = useState('');
 
-  const toggleEditMode = useCallback(() => {
+  const openEditMode = useCallback(() => {
     setEditing(!editing);
     setTextValue(description);
-  }, [description, editing]);
+    dispatch(setIsErrorEditTask(false));
+    setValue('description', textValue);
+  }, [description, dispatch, editing, setValue, textValue]);
+
+  const closeEditMode = useCallback(() => {
+    setEditing(!editing);
+    reset();
+  }, [editing, reset]);
 
   const handleTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(event.target?.value);
   };
 
   useEffect(() => {
+    if (isErrorEditTask) {
+      setDescription(prevDescription);
+    }
     setValue('description', textValue);
-  });
+  }, [dispatch, isErrorEditTask, prevDescription, setValue, textValue]);
 
   const editDescription = () => {
-    setDescription(textValue);
-    toggleEditMode();
+    setPrevDescription(description);
     if (taskData) {
       const body = {
         title: taskData.title,
@@ -55,7 +67,10 @@ const TaskModalDescription = ({
         _id: taskData._id,
         body,
       };
-      editTask(data);
+      editTask(data).finally(() => closeEditMode());
+      if (!isErrorEditTask) {
+        setDescription(textValue);
+      }
     }
   };
 
@@ -64,7 +79,7 @@ const TaskModalDescription = ({
       <Button
         variant="text"
         className="self-end h-[36px] lg:h-[40px] flex items-center"
-        onClick={toggleEditMode}
+        onClick={openEditMode}
       >
         {t('editModal.modalButton')}
       </Button>
@@ -93,7 +108,7 @@ const TaskModalDescription = ({
           <Button
             variant="outlined"
             className="h-[36px] lg:h-[40px] flex items-center"
-            onClick={toggleEditMode}
+            onClick={closeEditMode}
           >
             {t('modal.modalCancelButton')}
           </Button>

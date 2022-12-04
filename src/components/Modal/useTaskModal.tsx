@@ -5,7 +5,11 @@ import {
   useDeleteTaskMutation,
   useEditTaskMutation,
 } from '../../redux/api/tasksApi';
+import { useAppDispatch } from '../../hooks/redux.hooks';
 import { ModalData } from './Modal.types';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
+import { setIsLoadingTask } from '../../redux/features/boardInfoSlice';
 
 export interface Updates {
   title: string;
@@ -16,9 +20,15 @@ export interface Updates {
 }
 
 const useTaskModal = () => {
-  const [createTaskCall, { isError: createTaskError }] = useCreateTaskMutation();
-  const [editTaskCall, { isError: editTaskError }] = useEditTaskMutation();
-  const [deleteTaskCall, { isError: deleteTaskError }] = useDeleteTaskMutation();
+  const dispatch = useAppDispatch();
+  const [createTaskCall] = useCreateTaskMutation();
+  const [editTaskCall, { isLoading: isEditingTask, isError: editTaskError }] =
+    useEditTaskMutation();
+  const [deleteTaskCall, { isLoading: isDeletingTask }] = useDeleteTaskMutation();
+
+  useEffect(() => {
+    dispatch(setIsLoadingTask(isEditingTask || isDeletingTask));
+  }, [isEditingTask, isDeletingTask, dispatch]);
 
   const createTask = async (data: ITaskCreate) => {
     await createTaskCall(data).unwrap();
@@ -36,6 +46,8 @@ const useTaskModal = () => {
     createTask,
     editTask,
     deleteTask,
+    isEditingTask,
+    editTaskError,
   };
 };
 
