@@ -13,12 +13,14 @@ import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { data, isLoading, isError: getColumnError } = useGetColumnsQuery(id ? id : '');
-  const { data: boardData, isError: getBoardError } = useGetBoardQuery(id ? id : '');
+  const { data, isLoading, isError: columnError } = useGetColumnsQuery(id ? id : '');
+  const { data: boardData, isError: boardError } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
@@ -38,6 +40,7 @@ const BoardPage = () => {
   const updateColumnsList = useCallback(
     (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
       if (elementType && elementType === 'column') {
+        const oldColumnsList = columnsList;
         if (type === 'UPDATE') {
           setColumnsList(newColumnsList);
           patchColumns(
@@ -46,7 +49,10 @@ const BoardPage = () => {
             })
           )
             .unwrap()
-            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+            .catch(() => {
+              toast.error(t('errorBoundary.text'));
+              setColumnsList(oldColumnsList);
+            });
         }
         if (type === 'DELETE') {
           setColumnsList(newColumnsList);
@@ -54,11 +60,11 @@ const BoardPage = () => {
             newColumnsList.map((column, index) => {
               return { _id: column._id, order: index + 1 };
             })
-          );
+          ).unwrap();
         }
       }
     },
-    [patchColumns, elementType]
+    [patchColumns, elementType, columnsList, t]
   );
 
   const openCreateModal = useCallback(() => {
@@ -67,7 +73,7 @@ const BoardPage = () => {
 
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
-      {getColumnError || getBoardError ? (
+      {columnError || boardError ? (
         <Error />
       ) : (
         <>

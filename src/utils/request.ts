@@ -14,10 +14,8 @@ export const request = async (
 
     const data = await response.json();
     if (!response.ok) {
-      console.log(response);
       throw new Error(data.message);
     }
-    console.log(data);
     return data;
   } catch (e) {
     throw e;

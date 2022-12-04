@@ -38,6 +38,7 @@ export interface FormModalProps {
   userId?: string | null;
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  token?: string | null;
 }
 
 export interface CreateModalProps extends DefaultModalProps, FormModalProps {
@@ -60,4 +61,6 @@ export interface ModalData {
   columnId?: string;
   taskId?: string;
   taskData?: ITaskData;
+  token?: string;
+  userId?: string;
 }

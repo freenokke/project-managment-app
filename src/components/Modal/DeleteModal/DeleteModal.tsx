@@ -1,11 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
-import { useAppDispatch } from '../../../hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
 import { ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
 import { DeleteModalProps } from '../Modal.types';
 import { closeTaskModal } from '../../../redux/features/taskModalSlice';
 import { setColumnToReorder } from '../../../redux/features/boardInfoSlice';
+import { deleteUser } from '../../../redux/features/userSlice';
+import { logOut } from '../../../redux/features/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const DeleteModal = ({
   data,
@@ -16,10 +19,12 @@ const DeleteModal = ({
   deleteTask,
 }: DeleteModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { userId, token } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
-  const onDelete = useCallback(() => {
+  const onDelete = useCallback(async () => {
     if (type === ModalTypes.deleteBoard) {
       deleteBoard(data ?? {});
     }
@@ -28,10 +33,29 @@ const DeleteModal = ({
       deleteColumn(data ?? {});
     }
     if (type === ModalTypes.deleteTask) {
-      deleteTask(data ?? {}).finally(() => dispatch(closeTaskModal()));
+      deleteTask(data ?? {});
+      dispatch(closeTaskModal());
+    }
+    if (type === ModalTypes.deleteUser) {
+      if (userId && token) {
+        dispatch(logOut());
+        navigate('/');
+        await dispatch(deleteUser({ userId, token }));
+      }
     }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data, deleteColumn, deleteTask, dispatch]);
+  }, [
+    type,
+    onCloseModal,
+    deleteBoard,
+    data,
+    deleteColumn,
+    deleteTask,
+    dispatch,
+    userId,
+    token,
+    navigate,
+  ]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
@@ -43,6 +67,11 @@ const DeleteModal = ({
       return {
         title: 'columnTitle',
         text: 'deleteModal.columnText',
+      };
+    } else if (type === ModalTypes.deleteUser) {
+      return {
+        title: 'editProfile.modalTitle',
+        text: 'editProfile.modalText',
       };
     } else {
       return {
