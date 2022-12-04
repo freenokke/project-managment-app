@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ITaskData } from '../api/tasksApi';
 
-interface IState {
+export interface IState {
   column?: string;
   tasks?: ITaskData[];
 }

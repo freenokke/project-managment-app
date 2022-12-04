@@ -17,9 +17,9 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
 
   const updateTasksSet = useCallback(
     (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => {
-      updateTasksSetCall(data);
+      updateTasksSetCall({ body: data, backup: displayedData });
     },
-    [updateTasksSetCall]
+    [updateTasksSetCall, displayedData]
   );
 
   const dragDropHandler = useCallback(
@@ -29,7 +29,6 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
         e.preventDefault();
         try {
           const isAtTheEnd = !('order' in data);
-
           //если order присутствует в объекте, значит дроп происходит на таске, а не на колонке.
           if (currentDraggableTask) {
             if (data.columnId === currentDraggableTask.columnId) {
@@ -40,24 +39,21 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
                       .sort(sortCards),
                     currentDraggableTask,
                   ]
-                : tasks
-                    ?.map((task) => {
-                      if (task.order === data.order) {
-                        return { ...task, order: currentDraggableTask?.order };
-                      }
-                      if (task.order === currentDraggableTask?.order) {
-                        return { ...task, order: data.order };
-                      }
-                      return task;
-                    })
-                    .sort(sortCards);
+                : tasks?.map((task) => {
+                    if (task.order === data.order) {
+                      return { ...task, order: currentDraggableTask?.order };
+                    }
+                    if (task.order === currentDraggableTask?.order) {
+                      return { ...task, order: data.order };
+                    }
+                    return task;
+                  });
               dispatch(setLocalTasks({ tasks: rebuiltLocalTasksList ?? [], columnId }));
             } else {
               const endDragCol = displayedData.find((item) => item.column === data.columnId);
               const startDragCol = displayedData.find(
                 (item) => item.column === currentDraggableTask.columnId
               );
-              console.log(endDragCol, startDragCol);
               const rebuiltStartDragCol: ITaskData[] = [];
               startDragCol?.tasks?.forEach((item) => {
                 if (item._id === currentDraggableTask._id) {
@@ -89,18 +85,20 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
                     }
                     return item;
                   });
-              console.log(endDragCol, startDragCol);
               dispatch(
                 setLocalTasks({
-                  tasks: rebuiltStartDragCol ?? [],
+                  tasks: rebuiltStartDragCol.map(reorder),
                   columnId: currentDraggableTask.columnId,
                 })
               );
-              dispatch(setLocalTasks({ tasks: rebuiltEndDragCol ?? [], columnId: data.columnId }));
+              dispatch(
+                setLocalTasks({
+                  tasks: rebuiltEndDragCol?.map(reorder) ?? [],
+                  columnId: data.columnId,
+                })
+              );
+              dropOnTaskRequest(rebuiltStartDragCol, rebuiltEndDragCol ?? [], updateTasksSet);
             }
-
-            const request = isAtTheEnd ? dropOnColumnRequest : dropOnTaskRequest;
-            request(currentDraggableTask, data, updateTasksSet);
           }
         } catch {
           toast.error(i18n.t('task.dragError'));
@@ -163,47 +161,21 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
 };
 
 async function dropOnTaskRequest(
-  draggedTask: ITaskData,
-  droppedTask: ITaskData | Pick<ITaskData, 'columnId'>,
+  starRebuiltCol: ITaskData[],
+  endRebuiltCol: ITaskData[],
   callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => void
 ) {
-  if (
-    'order' in droppedTask &&
-    (droppedTask.order !== draggedTask?.order || droppedTask.columnId !== draggedTask?.columnId)
-  ) {
-    const { _id: draggedElemId, order: draggedElemOrder, columnId: draggedElemCol } = draggedTask;
-    const { _id: droppedElemId, order: droppedElemOrder, columnId: droppedElemCol } = droppedTask;
-
-    const requestBody = [
-      {
-        _id: draggedElemId,
-        order: droppedElemOrder,
-        columnId: droppedElemCol,
-      },
-      {
-        _id: droppedElemId,
-        order: draggedElemOrder,
-        columnId: draggedElemCol,
-      },
-    ];
-
-    callback(requestBody);
-  }
-}
-
-async function dropOnColumnRequest(
-  draggedTask: ITaskData | null,
-  droppedColumn: ITaskData | Pick<ITaskData, 'columnId'>,
-  callback: (data: Pick<ITaskData, '_id' | 'order' | 'columnId'>[]) => void
-) {
-  if (draggedTask && droppedColumn.columnId !== draggedTask?.columnId) {
-    const requestBody = [
-      {
-        _id: draggedTask?._id,
-        order: draggedTask?.order,
-        columnId: droppedColumn.columnId,
-      },
-    ];
-    callback(requestBody);
-  }
+  const requestBody = [
+    ...starRebuiltCol.map(reorder).map((item) => ({
+      _id: item._id,
+      order: item.order,
+      columnId: item.columnId,
+    })),
+    ...endRebuiltCol.map(reorder).map((item) => ({
+      _id: item._id,
+      order: item.order,
+      columnId: item.columnId,
+    })),
+  ];
+  callback(requestBody);
 }
