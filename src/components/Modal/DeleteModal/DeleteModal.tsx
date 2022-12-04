@@ -21,6 +21,7 @@ const DeleteModal = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { userId, token } = useAppSelector((state) => state.auth);
+  const { deletingColumnError } = useAppSelector((state) => state.boardInfo);
 
   const dispatch = useAppDispatch();
 
@@ -50,8 +51,8 @@ const DeleteModal = ({
     deleteBoard,
     data,
     deleteColumn,
-    deleteTask,
     dispatch,
+    deleteTask,
     userId,
     token,
     navigate,

@@ -7,8 +7,10 @@ interface IBoardState {
   maxOrder: number;
   columnToReorder: string | null;
   isLoadingBoards: boolean;
+  isLoadingColumn: boolean;
   isLoadingTask: boolean;
   isErrorEditTask: boolean;
+  deletingColumnError: boolean;
 }
 
 const initialState: IBoardState = {
@@ -18,8 +20,10 @@ const initialState: IBoardState = {
   maxOrder: 0,
   columnToReorder: null,
   isLoadingBoards: false,
+  isLoadingColumn: false,
   isLoadingTask: false,
   isErrorEditTask: false,
+  deletingColumnError: false,
 };
 
 const boardInfoSlice = createSlice({
@@ -38,11 +42,17 @@ const boardInfoSlice = createSlice({
     setIsLoadingBoard(state, action: PayloadAction<boolean>) {
       state.isLoadingBoards = action.payload;
     },
+    setIsLoadingColumn(state, action: PayloadAction<boolean>) {
+      state.isLoadingColumn = action.payload;
+    },
     setIsLoadingTask(state, action: PayloadAction<boolean>) {
       state.isLoadingTask = action.payload;
     },
     setIsErrorEditTask(state, action: PayloadAction<boolean>) {
       state.isErrorEditTask = action.payload;
+    },
+    setDeletingColumnError(state, action: PayloadAction<boolean>) {
+      state.deletingColumnError = action.payload;
     },
   },
 });
@@ -53,7 +63,9 @@ export const {
   setColumnsOrder,
   setColumnToReorder,
   setIsLoadingBoard,
+  setIsLoadingColumn,
   setIsLoadingTask,
   setIsErrorEditTask,
+  setDeletingColumnError,
 } = boardInfoSlice.actions;
 export default reducer;
