@@ -1,43 +1,30 @@
 import { useTranslation } from 'react-i18next';
 import { SubmitHandler } from 'react-hook-form';
 import { useCallback, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
-import { closeModal } from '../../../redux/features/modalSlice';
+import { useAppSelector } from '../../../hooks/redux.hooks';
 import { IFormFields } from './CreateModal.types';
 import ModalInput from '../ModalInput/ModalInput';
 import ModalTextarea from '../ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
-import useBoardModal from '../useBoardModal';
-import useColumnModal from '../useColumnModal';
-import useTaskModal from '../useTaskModal';
-import { ModalChild } from '../Modal.types';
 import { ModalTypes } from '../../../redux/features/modalSlice';
+import { CreateModalProps } from '../Modal.types';
 import { INewTask, ITaskCreate, tasksApi } from '../../../redux/api/tasksApi';
 
 const CreateModal = ({
   register,
   handleSubmit,
-  reset,
-  errors,
-  isDirty,
-  isValid,
-  isSubmitted,
+  formState,
   type,
-  userId,
   data,
-}: ModalChild) => {
+  onCloseModal,
+  createBoard,
+  createColumn,
+  createTask,
+}: CreateModalProps) => {
   const { t } = useTranslation();
   const { boardId, maxOrder } = useAppSelector((state) => state.boardInfo);
-  const dispatch = useAppDispatch();
-
-  const onCloseModal = useCallback(() => {
-    dispatch(closeModal());
-    reset();
-  }, [dispatch, reset]);
-
-  const { createBoard } = useBoardModal();
-  const { createColumn } = useColumnModal();
-  const { createTask } = useTaskModal();
+  const { userId } = useAppSelector((state) => state.auth);
+  const { errors, isDirty, isValid, isSubmitted } = formState;
 
   const useQueryStateResult = tasksApi.endpoints.getTasks.useQueryState({
     boardId: data?.boardId ?? '',
