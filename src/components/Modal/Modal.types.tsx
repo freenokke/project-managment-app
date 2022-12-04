@@ -27,6 +27,7 @@ export interface ModalChild {
   userId?: string | null;
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  token?: string | null;
 }
 
 export interface ModalData {
@@ -34,4 +35,6 @@ export interface ModalData {
   columnId?: string;
   taskId?: string;
   taskData?: ITaskData;
+  token?: string;
+  userId?: string;
 }

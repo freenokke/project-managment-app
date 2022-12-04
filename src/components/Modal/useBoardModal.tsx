@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   useCreateBoardMutation,
   useEditBoardMutation,
@@ -6,6 +7,8 @@ import {
 
 import { IBoardData } from '../BoardCard/Board.types';
 import { ModalData } from './Modal.types';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface Updates {
   title: string;
@@ -14,23 +17,30 @@ export interface Updates {
 }
 
 const useBoardModal = () => {
-  const [createBoardCall, {}] = useCreateBoardMutation();
-  const [editBoardCall, {}] = useEditBoardMutation();
-  const [deleteBoardCall, {}] = useDeleteBoardMutation();
+  const { t } = useTranslation();
+  const [createBoardCall] = useCreateBoardMutation();
+  const [editBoardCall] = useEditBoardMutation();
+  const [deleteBoardCall] = useDeleteBoardMutation();
 
   const createBoard = async (data: IBoardData) => {
-    await createBoardCall(data).unwrap();
+    await createBoardCall(data)
+      .unwrap()
+      .catch(() => toast.error(t('createBoard.error')));
   };
 
   const editBoard = async (data: ModalData, updates: Updates) => {
     const body: IBoardData = {
       ...updates,
     };
-    await editBoardCall({ data, body }).unwrap();
+    await editBoardCall({ data, body })
+      .unwrap()
+      .catch(() => toast.error(t('editBoard.error')));
   };
 
   const deleteBoard = async (data: ModalData) => {
-    await deleteBoardCall(data).unwrap();
+    await deleteBoardCall(data)
+      .unwrap()
+      .catch(() => toast.error(t('deleteBoard.error')));
   };
 
   return {

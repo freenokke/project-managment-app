@@ -17,11 +17,9 @@ const PrivateRoute = () => {
     const timeRightNow = Date.now();
     const tokenExpTime = new Date().setTime(exp) * 1000;
     if (timeRightNow > tokenExpTime) {
-      console.log('токен устарел');
       dispatch(logOut());
     }
   }
-  console.log('private route');
   return token ? <Outlet /> : <Navigate to="/signin" state={{ from: location }} />;
 };
 

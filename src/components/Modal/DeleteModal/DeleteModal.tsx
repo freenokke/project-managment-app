@@ -7,9 +7,13 @@ import useBoardModal from '../useBoardModal';
 import { ModalChild } from '../Modal.types';
 import { closeTaskModal } from '../../../redux/features/taskModalSlice';
 import useTaskModal from '../useTaskModal';
+import { deleteUser } from '../../../redux/features/userSlice';
+import { logOut } from '../../../redux/features/authSlice';
+import { useNavigate } from 'react-router-dom';
 
-const DeleteModal = ({ data, type }: ModalChild) => {
+const DeleteModal = ({ data, type, userId, token }: ModalChild) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const onCloseModal = useCallback(() => {
@@ -19,7 +23,7 @@ const DeleteModal = ({ data, type }: ModalChild) => {
   const { deleteBoard } = useBoardModal();
   const { deleteTask } = useTaskModal();
 
-  const onDelete = useCallback(() => {
+  const onDelete = useCallback(async () => {
     if (type === ModalTypes.deleteBoard) {
       deleteBoard(data ?? {});
     }
@@ -30,8 +34,15 @@ const DeleteModal = ({ data, type }: ModalChild) => {
       deleteTask(data ?? {});
       dispatch(closeTaskModal());
     }
+    if (type === ModalTypes.deleteUser) {
+      if (userId && token) {
+        dispatch(logOut());
+        navigate('/');
+        await dispatch(deleteUser({ userId, token }));
+      }
+    }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data, deleteTask, dispatch]);
+  }, [type, onCloseModal, deleteBoard, data, deleteTask, dispatch, userId, token, navigate]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {
@@ -43,6 +54,11 @@ const DeleteModal = ({ data, type }: ModalChild) => {
       return {
         title: 'columnTitle',
         text: 'deleteModal.columnText',
+      };
+    } else if (type === ModalTypes.deleteUser) {
+      return {
+        title: 'editProfile.modalTitle',
+        text: 'editProfile.modalText',
       };
     } else {
       return {
