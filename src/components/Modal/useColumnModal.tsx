@@ -33,11 +33,7 @@ const useColumnModal = () => {
       });
   };
   const deleteColumn = async ({ boardId, columnId }: ModalData) => {
-    await deleteColumnCall({ boardId, columnId })
-      .unwrap()
-      .catch(() => {
-        toast.error(t('errorBoundary.text'));
-      });
+    return await deleteColumnCall({ boardId, columnId });
   };
 
   return {

@@ -13,7 +13,12 @@ import useTaskModal from './useTaskModal';
 
 const CreateTypes = [ModalTypes.createBoard, ModalTypes.createColumn, ModalTypes.createTask];
 const EditTypes = [ModalTypes.editBoard, ModalTypes.editColumn, ModalTypes.editTask];
-const DeleteTypes = [ModalTypes.deleteBoard, ModalTypes.deleteColumn, ModalTypes.deleteTask];
+const DeleteTypes = [
+  ModalTypes.deleteBoard,
+  ModalTypes.deleteColumn,
+  ModalTypes.deleteTask,
+  ModalTypes.deleteUser,
+];
 
 const Modal = () => {
   const { visible, type, data } = useAppSelector((state) => state.modal);

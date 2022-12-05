@@ -1,3 +1,6 @@
+import { SerializedError } from '@reduxjs/toolkit';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+
 import {
   FieldErrors,
   UseFormHandleSubmit,
@@ -5,7 +8,7 @@ import {
   UseFormReset,
   UseFormSetValue,
 } from 'react-hook-form';
-import { IColumnData } from '../../pages/BoardPage/BoardPage.types';
+import { IColumnsResponse, IColumnData } from '../../pages/BoardPage/BoardPage.types';
 import { ITaskCreate, ITaskData, ITaskUpdate } from '../../redux/api/tasksApi';
 import { ModalTypes } from '../../redux/features/modalSlice';
 import { IBoardData } from '../BoardCard/Board.types';
@@ -44,15 +47,23 @@ export interface FormModalProps {
 export interface CreateModalProps extends DefaultModalProps, FormModalProps {
   createBoard: (data: IBoardData) => Promise<void>;
   createColumn: (boardId: string, body: IColumnData) => Promise<void>;
-  createTask: (data: ITaskCreate) => Promise<void>;
+  createTask: (data: ITaskCreate) => void;
 }
 export interface EditModalProps extends DefaultModalProps, FormModalProps {
   editBoard: (data: ModalData, updates: Updates) => Promise<void>;
-  editTask: (data: ITaskUpdate) => Promise<void>;
+  editTask: (data: ITaskUpdate) => void;
+  editTaskModal?: (data: ITaskUpdate) => Promise<void>;
 }
 export interface DeleteModalProps extends DefaultModalProps {
   deleteBoard: (data: ModalData) => Promise<void>;
-  deleteColumn: (data: ModalData) => Promise<void>;
+  deleteColumn: (data: ModalData) => Promise<
+    | {
+        data: IColumnsResponse;
+      }
+    | {
+        error: FetchBaseQueryError | SerializedError;
+      }
+  >;
   deleteTask: (data: ModalData) => Promise<void>;
 }
 

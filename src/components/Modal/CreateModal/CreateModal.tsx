@@ -94,7 +94,7 @@ const CreateModal = ({
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-[10px] w-full mb-[20px]"
+        className="flex flex-col items-center gap-[10px] w-full mb-[0px] lg:mb-[20px]"
         autoComplete="off"
       >
         <ModalInput

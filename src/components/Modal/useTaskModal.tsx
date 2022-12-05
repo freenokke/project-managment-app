@@ -20,26 +20,36 @@ export interface Updates {
 }
 
 export const useTaskModal = () => {
-  const [createTaskCall, {}] = useCreateTaskMutation();
-  const [editTaskCall, {}] = useEditTaskMutation();
-  const [deleteTaskCall, {}] = useDeleteTaskMutation();
+  const dispatch = useAppDispatch();
+  const [createTaskCall] = useCreateTaskMutation();
+  const [editTaskCall, { isLoading: isEditingTask, isError: editTaskError }] =
+    useEditTaskMutation();
+  const [deleteTaskCall, { isLoading: isDeletingTask, isError: deletingTaskError }] =
+    useDeleteTaskMutation();
+
+  useEffect(() => {
+    dispatch(setIsLoadingTask(isEditingTask || isDeletingTask));
+  }, [isEditingTask, dispatch, isDeletingTask]);
 
   const createTask = (data: ITaskCreate) => {
     createTaskCall(data);
   };
 
-  const deleteTask = (data: ModalData) => {
-    deleteTaskCall(data);
+  const deleteTask = async (data: ModalData) => {
+    await deleteTaskCall(data);
   };
 
-  const editTask = (data: ITaskUpdate) => {
-    editTaskCall(data);
+  const editTask = async (data: ITaskUpdate) => {
+    await editTaskCall(data);
   };
 
   return {
     createTask,
     editTask,
     deleteTask,
+    isEditingTask,
+    editTaskError,
+    deletingTaskError,
   };
 };
 
