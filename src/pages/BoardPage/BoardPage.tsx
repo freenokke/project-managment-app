@@ -26,9 +26,7 @@ const BoardPage = () => {
   const { data: boardData, isError: boardError } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
-  const { columnToReorder, isLoadingColumn, deletingColumnError } = useAppSelector(
-    (state) => state.boardInfo
-  );
+  const { columnToReorder, isLoadingColumn } = useAppSelector((state) => state.boardInfo);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
   const { type: elementType } = useAppSelector((state) => state.drag);
 
@@ -76,11 +74,12 @@ const BoardPage = () => {
 
       if (newColumnsList) {
         setColumnsList(newColumnsList);
-        patchColumns(
-          newColumnsList.map((column, index) => {
-            return { _id: column._id, order: index + 1 };
-          })
-        );
+        newColumnsList.length &&
+          patchColumns(
+            newColumnsList.map((column, index) => {
+              return { _id: column._id, order: index + 1 };
+            })
+          );
       }
     }
   }, [columnToReorder, dispatch, columnsList, patchColumns]);

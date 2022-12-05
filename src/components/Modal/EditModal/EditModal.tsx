@@ -65,7 +65,6 @@ const EditModal = ({
         editBoard(data ?? {}, { title: formData.title, owner: userId ?? '', users: [] });
       }
       if (type === ModalTypes.editColumn) {
-        console.log(formData);
       }
       if (type === ModalTypes.editTask) {
         if (data?.taskData) {
@@ -99,7 +98,7 @@ const EditModal = ({
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-[15px] w-full lg:mb-[40px]"
+        className="flex flex-col pb-[0] items-center gap-[15px] w-full lg:mb-[40px]"
         autoComplete="off"
       >
         <ModalInput

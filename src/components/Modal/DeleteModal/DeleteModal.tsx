@@ -9,6 +9,7 @@ import { setColumnToReorder } from '../../../redux/features/boardInfoSlice';
 import { deleteUser } from '../../../redux/features/userSlice';
 import { logOut } from '../../../redux/features/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DeleteModal = ({
   data,
@@ -21,7 +22,6 @@ const DeleteModal = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { userId, token } = useAppSelector((state) => state.auth);
-  const { deletingColumnError } = useAppSelector((state) => state.boardInfo);
 
   const dispatch = useAppDispatch();
 
@@ -30,12 +30,16 @@ const DeleteModal = ({
       deleteBoard(data ?? {});
     }
     if (type === ModalTypes.deleteColumn) {
-      dispatch(setColumnToReorder(data?.columnId ?? null));
-      deleteColumn(data ?? {});
+      deleteColumn(data ?? {}).then((result) => {
+        if ('data' in result) {
+          dispatch(setColumnToReorder(data?.columnId ?? null));
+        } else {
+          toast.error(t('errorBoundary.text'));
+        }
+      });
     }
     if (type === ModalTypes.deleteTask) {
-      deleteTask(data ?? {});
-      dispatch(closeTaskModal());
+      deleteTask(data ?? {}).finally(() => dispatch(closeTaskModal()));
     }
     if (type === ModalTypes.deleteUser) {
       if (userId && token) {
@@ -51,6 +55,7 @@ const DeleteModal = ({
     deleteBoard,
     data,
     deleteColumn,
+    t,
     dispatch,
     deleteTask,
     userId,
