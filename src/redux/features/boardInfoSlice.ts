@@ -11,6 +11,7 @@ interface IBoardState {
   isLoadingTask: boolean;
   isErrorEditTask: boolean;
   deletingColumnError: boolean;
+  deletingTaskError: boolean;
 }
 
 const initialState: IBoardState = {
@@ -24,6 +25,7 @@ const initialState: IBoardState = {
   isLoadingTask: false,
   isErrorEditTask: false,
   deletingColumnError: false,
+  deletingTaskError: false,
 };
 
 const boardInfoSlice = createSlice({
@@ -53,6 +55,9 @@ const boardInfoSlice = createSlice({
     },
     setDeletingColumnError(state, action: PayloadAction<boolean>) {
       state.deletingColumnError = action.payload;
+    },
+    setDeletingTaskError(state, action: PayloadAction<boolean>) {
+      state.deletingTaskError = action.payload;
     },
   },
 });

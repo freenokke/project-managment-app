@@ -15,6 +15,7 @@ const TaskModal = () => {
   const dispatch = useAppDispatch();
   const { editTask, editTaskError } = useTaskModal();
   const { visible } = useAppSelector((state) => state.taskModal);
+  const { taskData } = useAppSelector((state) => state.taskModal);
 
   const { isLoadingTask } = useAppSelector((state) => state.boardInfo);
 
@@ -62,6 +63,7 @@ const TaskModal = () => {
             isValid={isValid}
             isSubmitted={isSubmitted}
             editTask={editTask}
+            taskData={taskData}
           />
           <div className="column flex-grow lg:row">
             <div className="column flex-grow lg:w-[60%] p-[20px_10px] lg:p-[20px]  border-b-2 lg:border-r-2 lg:border-b-0">
@@ -75,6 +77,7 @@ const TaskModal = () => {
                 isValid={isValid}
                 isSubmitted={isSubmitted}
                 editTask={editTask}
+                taskData={taskData}
               />
             </div>
             <div className="column gap-[40px] p-[22px_20px] lg:w-[40%]">

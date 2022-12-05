@@ -10,7 +10,7 @@ const ModalTextarea = ({ name, label, register, errors, value, onChange }: IModa
         <textarea
           className="p-1 pl-2 rounded-lg outline-none w-[100%] content-center resize-none whitespace-normal"
           id={name}
-          rows={5}
+          rows={4}
           {...register(name, {
             required: 'modalValidation.requiredError',
             maxLength: {

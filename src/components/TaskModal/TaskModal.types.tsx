@@ -6,6 +6,7 @@ import {
   UseFormSetValue,
 } from 'react-hook-form';
 import { ITaskUpdate } from '../../redux/api/tasksApi';
+import { ITaskData } from '../../redux/api/tasksApi';
 
 export interface IFormFields {
   title: string;
@@ -22,4 +23,5 @@ export interface TaskModalProps {
   isValid: boolean;
   isSubmitted: boolean;
   editTask: (data: ITaskUpdate) => Promise<void>;
+  taskData?: ITaskData | null;
 }

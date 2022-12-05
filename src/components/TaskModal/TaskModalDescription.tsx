@@ -5,6 +5,9 @@ import { TaskModalProps } from './TaskModal.types';
 import ModalTextarea from '../Modal/ModalTextarea/ModalTextarea';
 import { Button } from '@material-tailwind/react';
 import { setIsErrorEditTask } from '../../redux/features/boardInfoSlice';
+import { SubmitHandler } from 'react-hook-form';
+import { IFormFields } from '../Modal/EditModal/EditModal.type';
+import { useGetTasksQuery } from '../../redux/api/tasksApi';
 
 const TaskModalDescription = ({
   register,
@@ -16,14 +19,20 @@ const TaskModalDescription = ({
   isValid,
   isSubmitted,
   editTask,
+  taskData,
 }: TaskModalProps) => {
   const { t } = useTranslation();
-  const { taskData } = useAppSelector((state) => state.taskModal);
   const { isErrorEditTask } = useAppSelector((state) => state.boardInfo);
   const dispatch = useAppDispatch();
 
+  const { data: tasks } = useGetTasksQuery({
+    boardId: taskData?.boardId ?? '',
+    columnId: taskData?.columnId ?? '',
+  });
+  const task = tasks?.find(({ _id }) => _id === taskData?._id);
+
   const [editing, setEditing] = useState(false);
-  const [description, setDescription] = useState(taskData?.description ?? '');
+  const [description, setDescription] = useState(task?.description ?? '');
   const [textValue, setTextValue] = useState(description);
   const [prevDescription, setPrevDescription] = useState('');
 
@@ -45,26 +54,26 @@ const TaskModalDescription = ({
 
   useEffect(() => {
     if (isErrorEditTask) {
-      setDescription(prevDescription);
+      setDescription(prevDescription || (task?.description ?? ''));
     }
     setValue('description', textValue);
-  }, [dispatch, isErrorEditTask, prevDescription, setValue, textValue]);
+  }, [dispatch, isErrorEditTask, prevDescription, setValue, task?.description, textValue]);
 
-  const editDescription = () => {
+  const editDescription: SubmitHandler<IFormFields> = (formData: IFormFields) => {
     setPrevDescription(description);
-    if (taskData) {
+    if (task) {
       const body = {
-        title: taskData.title,
-        description: textValue,
-        columnId: taskData.columnId,
-        userId: taskData.userId,
-        order: taskData.order,
-        users: taskData.users,
+        title: task.title,
+        description: formData.description,
+        columnId: task.columnId,
+        userId: task.userId,
+        order: task.order,
+        users: task.users,
       };
       const data = {
-        boardId: taskData.boardId,
-        columnId: taskData.columnId,
-        _id: taskData._id,
+        boardId: task.boardId,
+        columnId: task.columnId,
+        _id: task._id,
         body,
       };
       editTask(data).finally(() => closeEditMode());
