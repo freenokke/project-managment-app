@@ -11,6 +11,7 @@ export enum ModalTypes {
   editBoard,
   editColumn,
   editTask,
+  deleteUser,
 }
 
 interface IModalState {

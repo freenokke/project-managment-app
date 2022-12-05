@@ -23,3 +23,18 @@ export function parseJwt(token: string) {
 export const sortByOrder = (a: IColumnsResponse, b: IColumnsResponse) => {
   return a.order - b.order;
 };
+
+export const errorTextCreator = (errorMessage: string | undefined): string => {
+  switch (errorMessage) {
+    case 'Login already exist':
+      return 'auth.loginAlreadyExist';
+    case 'Bad Request':
+      return 'errorBoundary.text';
+    case 'Authorization error':
+      return 'auth.wrongLogin';
+    case undefined:
+      return '';
+    default:
+      return 'errorBoundary.text';
+  }
+};
