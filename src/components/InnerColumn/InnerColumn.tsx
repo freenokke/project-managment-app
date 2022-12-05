@@ -1,5 +1,5 @@
-import { FC, useCallback, useMemo } from 'react';
-import { useAppDispatch } from '../../hooks/redux.hooks';
+import { FC, useCallback, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux.hooks';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import { IProps } from './InnerColumn.type';
 import { useGetTasksQuery } from '../../redux/api/tasksApi';
@@ -8,6 +8,7 @@ import { useDraggable } from '../../hooks/useTasksDraggable';
 import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
+import { setLocalTasks } from '../../redux/features/localDataSlice';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
   const dispatch = useAppDispatch();
@@ -15,24 +16,23 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     data: tasks,
     isLoading,
     isFetching,
+    isError,
   } = useGetTasksQuery({
     boardId,
     columnId,
   });
-
-  const {
-    dragDropHandler,
-    dragEndHandler,
-    dragLeaveHandler,
-    dragOverHandler,
-    dragStartHandler,
-    isUpdate,
-  } = useDraggable();
-
-  const loading = useMemo(
-    () => isLoading || isFetching || isUpdate,
-    [isFetching, isLoading, isUpdate]
+  const displayedTasks = useAppSelector((state) =>
+    state.localData.find((item) => item.column === columnId)
   );
+
+  useEffect(() => {
+    if (tasks) {
+      dispatch(setLocalTasks({ tasks, columnId }));
+    }
+  }, [tasks, columnId, dispatch]);
+
+  const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
+    useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createTask, data: { boardId, columnId } }));
@@ -42,7 +42,7 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
     <div className="rounded flex flex-col w-full h-full relative whitespace-normal text-sm font-sans">
       <InnerColumnHeader
         columnTitle={columnTitle}
-        taskCount={tasks?.length}
+        taskCount={displayedTasks?.tasks?.length}
         deleteColumn={deleteColumnFn}
         boardId={boardId}
         columnId={columnId}
@@ -52,10 +52,10 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         onDragOverFn={dragOverHandler}
         onDragDropFn={dragDropHandler}
         onDragLeaveFn={dragLeaveHandler}
-        loading={loading}
+        loading={isLoading || isFetching}
         columnId={columnId}
       >
-        {tasks?.map((task) => (
+        {displayedTasks?.tasks?.map((task) => (
           <TaskWrapper
             key={task._id}
             taskData={task}
@@ -68,6 +68,11 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
         ))}
       </InnerColumnContent>
       <InnerColumnFooter openModalFn={openCreateModal} />
+      {isError && (
+        <div className="absolute flex flex-col items-center justify-center inset-0 z-10 bg-gray-100">
+          😥 Error while data loading...
+        </div>
+      )}
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -77,6 +78,7 @@ const BoardPage = () => {
         <Error />
       ) : (
         <>
+          <ToastContainer />
           <Modal />
           <TaskModal />
           <Link

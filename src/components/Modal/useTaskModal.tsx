@@ -15,21 +15,21 @@ export interface Updates {
   users: string[];
 }
 
-const useTaskModal = () => {
-  const [createTaskCall, { isError: createTaskError }] = useCreateTaskMutation();
-  const [editTaskCall, { isError: editTaskError }] = useEditTaskMutation();
-  const [deleteTaskCall, { isError: deleteTaskError }] = useDeleteTaskMutation();
+export const useTaskModal = () => {
+  const [createTaskCall, {}] = useCreateTaskMutation();
+  const [editTaskCall, {}] = useEditTaskMutation();
+  const [deleteTaskCall, {}] = useDeleteTaskMutation();
 
-  const createTask = async (data: ITaskCreate) => {
-    await createTaskCall(data).unwrap();
+  const createTask = (data: ITaskCreate) => {
+    createTaskCall(data);
   };
 
-  const deleteTask = async (data: ModalData) => {
-    await deleteTaskCall(data).unwrap();
+  const deleteTask = (data: ModalData) => {
+    deleteTaskCall(data);
   };
 
-  const editTask = async (data: ITaskUpdate) => {
-    await editTaskCall(data).unwrap();
+  const editTask = (data: ITaskUpdate) => {
+    editTaskCall(data);
   };
 
   return {

@@ -7,6 +7,9 @@ import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
 import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
 import { useAppSelector } from '../../hooks/redux.hooks';
+import { useDispatch } from 'react-redux';
+import { setLocalColumns } from '../../redux/features/localDataSlice';
+import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import { useTranslation } from 'react-i18next';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
@@ -26,19 +29,24 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
   } = useColumnsDraggable();
 
   const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
-  const { currentDraggable } = useAppSelector((state) => state.drag);
+  const { currentDraggableColumn } = useAppSelector((state) => state.drag);
+  const dispatch = useDispatch();
+
+  useEnhancedEffect(() => {
+    dispatch(setLocalColumns(id));
+  }, []);
   const { t } = useTranslation();
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);
-    if (columnsList && order !== currentDraggable?.order) {
+    if (columnsList && order !== currentDraggableColumn?.order) {
       const newColumnsList = columnsList?.map((column) => {
-        if (currentDraggable) {
-          if (column.order === currentDraggable.order) {
+        if (currentDraggableColumn) {
+          if (column.order === currentDraggableColumn.order) {
             return { ...column, order: order };
           }
           if (column.order === order) {
-            return { ...column, order: currentDraggable?.order };
+            return { ...column, order: currentDraggableColumn?.order };
           }
           return column;
         } else return column;
