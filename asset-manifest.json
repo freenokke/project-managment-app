@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ce71280b.css",
+    "main.js": "/static/js/main.df3a2897.js",
+    "static/media/app.png": "/static/media/app.153cab33158fdb9566dc.png",
+    "static/media/logo.png": "/static/media/logo.3c38db1eebcd1843b5f6.png",
+    "static/media/rs_school_logo.svg": "/static/media/rs_school_logo.ad178c0df28bc133be34b982d62f431d.svg",
+    "static/media/cloud.svg": "/static/media/cloud.d16a6199399dd5646e5a7eba6a70c74d.svg",
+    "index.html": "/index.html",
+    "static/media/js.svg": "/static/media/js.7646c57af6a43da7d46f77a42d7e2edd.svg",
+    "static/media/crossplatform.svg": "/static/media/crossplatform.301c39df5eabc76c930d7e48b521807c.svg",
+    "main.ce71280b.css.map": "/static/css/main.ce71280b.css.map",
+    "main.df3a2897.js.map": "/static/js/main.df3a2897.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ce71280b.css",
+    "static/js/main.df3a2897.js"
+  ]
+}
