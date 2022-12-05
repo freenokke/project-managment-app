@@ -4,7 +4,9 @@ import {
   useEditBoardMutation,
   useDeleteBoardMutation,
 } from '../../redux/api/boardsApi';
-
+import { useAppDispatch } from '../../hooks/redux.hooks';
+import { setIsLoadingBoard } from '../../redux/features/boardInfoSlice';
+import { useEffect } from 'react';
 import { IBoardData } from '../BoardCard/Board.types';
 import { ModalData } from './Modal.types';
 import { toast } from 'react-toastify';
@@ -18,9 +20,15 @@ export interface Updates {
 
 const useBoardModal = () => {
   const { t } = useTranslation();
-  const [createBoardCall] = useCreateBoardMutation();
-  const [editBoardCall] = useEditBoardMutation();
-  const [deleteBoardCall] = useDeleteBoardMutation();
+
+  const dispatch = useAppDispatch();
+
+  const [createBoardCall, { isLoading: isCreatingBoard }] = useCreateBoardMutation();
+  const [editBoardCall, { isLoading: isEditingBoard }] = useEditBoardMutation();
+  const [deleteBoardCall, { isLoading: isDeletingBoard }] = useDeleteBoardMutation();
+  useEffect(() => {
+    dispatch(setIsLoadingBoard(isCreatingBoard || isEditingBoard || isDeletingBoard));
+  }, [isCreatingBoard, isEditingBoard, isDeletingBoard, dispatch]);
 
   const createBoard = async (data: IBoardData) => {
     await createBoardCall(data)

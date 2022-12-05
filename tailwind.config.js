@@ -88,7 +88,7 @@ const config = {
         },
         '.modalInner': {
           position: 'fixed',
-          top: '47%',
+          top: '50%',
           left: '50%',
           transform: 'translateX(-50%)',
           transform: 'translateY(-50%)',

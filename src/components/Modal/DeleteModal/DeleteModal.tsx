@@ -1,38 +1,45 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
-import { useAppDispatch } from '../../../hooks/redux.hooks';
-import { closeModal, ModalTypes } from '../../../redux/features/modalSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux.hooks';
+import { ModalTypes } from '../../../redux/features/modalSlice';
 import { Button } from '@material-tailwind/react';
-import useBoardModal from '../useBoardModal';
-import { ModalChild } from '../Modal.types';
+import { DeleteModalProps } from '../Modal.types';
 import { closeTaskModal } from '../../../redux/features/taskModalSlice';
-import useTaskModal from '../useTaskModal';
+import { setColumnToReorder } from '../../../redux/features/boardInfoSlice';
 import { deleteUser } from '../../../redux/features/userSlice';
 import { logOut } from '../../../redux/features/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const DeleteModal = ({ data, type, userId, token }: ModalChild) => {
+const DeleteModal = ({
+  data,
+  type,
+  onCloseModal,
+  deleteBoard,
+  deleteColumn,
+  deleteTask,
+}: DeleteModalProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { userId, token } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
-  const onCloseModal = useCallback(() => {
-    dispatch(closeModal());
-  }, [dispatch]);
-
-  const { deleteBoard } = useBoardModal();
-  const { deleteTask } = useTaskModal();
 
   const onDelete = useCallback(async () => {
     if (type === ModalTypes.deleteBoard) {
       deleteBoard(data ?? {});
     }
     if (type === ModalTypes.deleteColumn) {
-      console.log('DELETE COLUMN');
+      deleteColumn(data ?? {}).then((result) => {
+        if ('data' in result) {
+          dispatch(setColumnToReorder(data?.columnId ?? null));
+        } else {
+          toast.error(t('errorBoundary.text'));
+        }
+      });
     }
     if (type === ModalTypes.deleteTask) {
-      deleteTask(data ?? {});
-      dispatch(closeTaskModal());
+      deleteTask(data ?? {}).finally(() => dispatch(closeTaskModal()));
     }
     if (type === ModalTypes.deleteUser) {
       if (userId && token) {
@@ -42,7 +49,19 @@ const DeleteModal = ({ data, type, userId, token }: ModalChild) => {
       }
     }
     onCloseModal();
-  }, [type, onCloseModal, deleteBoard, data, deleteTask, dispatch, userId, token, navigate]);
+  }, [
+    type,
+    onCloseModal,
+    deleteBoard,
+    data,
+    deleteColumn,
+    t,
+    dispatch,
+    deleteTask,
+    userId,
+    token,
+    navigate,
+  ]);
 
   const { title, text } = useMemo(() => {
     if (type === ModalTypes.deleteBoard) {

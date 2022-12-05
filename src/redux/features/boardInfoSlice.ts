@@ -5,6 +5,13 @@ interface IBoardState {
   columnId: string;
   taskId: string;
   maxOrder: number;
+  columnToReorder: string | null;
+  isLoadingBoards: boolean;
+  isLoadingColumn: boolean;
+  isLoadingTask: boolean;
+  isErrorEditTask: boolean;
+  deletingColumnError: boolean;
+  deletingTaskError: boolean;
 }
 
 const initialState: IBoardState = {
@@ -12,6 +19,13 @@ const initialState: IBoardState = {
   columnId: '',
   taskId: '',
   maxOrder: 0,
+  columnToReorder: null,
+  isLoadingBoards: false,
+  isLoadingColumn: false,
+  isLoadingTask: false,
+  isErrorEditTask: false,
+  deletingColumnError: false,
+  deletingTaskError: false,
 };
 
 const boardInfoSlice = createSlice({
@@ -24,9 +38,39 @@ const boardInfoSlice = createSlice({
     setColumnsOrder: (state, action: PayloadAction<number>) => {
       state.maxOrder = action.payload;
     },
+    setColumnToReorder: (state, action: PayloadAction<string | null>) => {
+      state.columnToReorder = action.payload;
+    },
+    setIsLoadingBoard(state, action: PayloadAction<boolean>) {
+      state.isLoadingBoards = action.payload;
+    },
+    setIsLoadingColumn(state, action: PayloadAction<boolean>) {
+      state.isLoadingColumn = action.payload;
+    },
+    setIsLoadingTask(state, action: PayloadAction<boolean>) {
+      state.isLoadingTask = action.payload;
+    },
+    setIsErrorEditTask(state, action: PayloadAction<boolean>) {
+      state.isErrorEditTask = action.payload;
+    },
+    setDeletingColumnError(state, action: PayloadAction<boolean>) {
+      state.deletingColumnError = action.payload;
+    },
+    setDeletingTaskError(state, action: PayloadAction<boolean>) {
+      state.deletingTaskError = action.payload;
+    },
   },
 });
 
 const { reducer } = boardInfoSlice;
-export const { setOpenedBoard, setColumnsOrder } = boardInfoSlice.actions;
+export const {
+  setOpenedBoard,
+  setColumnsOrder,
+  setColumnToReorder,
+  setIsLoadingBoard,
+  setIsLoadingColumn,
+  setIsLoadingTask,
+  setIsErrorEditTask,
+  setDeletingColumnError,
+} = boardInfoSlice.actions;
 export default reducer;

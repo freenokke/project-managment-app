@@ -10,7 +10,7 @@ import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
 import { setLocalTasks } from '../../redux/features/localDataSlice';
 
-const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, deleteColumnFn }) => {
+const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle }) => {
   const dispatch = useAppDispatch();
   const {
     data: tasks,
@@ -43,7 +43,6 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle, delete
       <InnerColumnHeader
         columnTitle={columnTitle}
         taskCount={displayedTasks?.tasks?.length}
-        deleteColumn={deleteColumnFn}
         boardId={boardId}
         columnId={columnId}
         order={order}

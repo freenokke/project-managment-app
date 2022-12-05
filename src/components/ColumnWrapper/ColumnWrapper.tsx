@@ -3,21 +3,17 @@ import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
 import { sortByOrder } from '../../utils/utils';
 import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
-import { useDeleteColumnMutation } from '../../redux/api/columnsApi';
-import { toast } from 'react-toastify';
-import Loader from '../Loader/Loader';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import { useDispatch } from 'react-redux';
 import { setLocalColumns } from '../../redux/features/localDataSlice';
 import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
-import { useTranslation } from 'react-i18next';
 
 const ColumnWrapper: React.FC<IColumnProps> = ({
   id,
   title,
   order,
   boardId,
-  updateColumnsList,
+  onDropHandler,
   columnsList,
 }) => {
   const {
@@ -28,14 +24,12 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
     dropEventHandler,
   } = useColumnsDraggable();
 
-  const [deleteColumn, { isLoading }] = useDeleteColumnMutation();
   const { currentDraggableColumn } = useAppSelector((state) => state.drag);
   const dispatch = useDispatch();
 
   useEnhancedEffect(() => {
     dispatch(setLocalColumns(id));
   }, []);
-  const { t } = useTranslation();
 
   const dropHandler = (e: React.DragEvent) => {
     dropEventHandler(e);
@@ -51,28 +45,8 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
           return column;
         } else return column;
       });
-      updateColumnsList(newColumnsList.sort(sortByOrder), 'UPDATE');
+      onDropHandler(newColumnsList.sort(sortByOrder));
     }
-  };
-
-  const deleteColumnHandler = async () => {
-    await deleteColumn({ boardId, columnId: id })
-      .unwrap()
-      .then(() => {
-        const newColumnsList = columnsList
-          ?.filter((item) => {
-            return item._id !== id;
-          })
-          .map((column, index) => {
-            return { ...column, order: index + 1 };
-          });
-        if (newColumnsList) {
-          updateColumnsList(newColumnsList, 'DELETE');
-        }
-      })
-      .catch(() => {
-        toast.error(t('errorBoundary.text'));
-      });
   };
 
   return (
@@ -86,16 +60,7 @@ const ColumnWrapper: React.FC<IColumnProps> = ({
       onDragLeave={dragLeaveEventHandler}
       onDragEnd={dragEndEventHandler}
     >
-      {
-        <InnerColumn
-          boardId={boardId}
-          columnId={id}
-          columnTitle={title}
-          order={order}
-          deleteColumnFn={deleteColumnHandler}
-        />
-      }
-      {isLoading ? <Loader /> : null}
+      {<InnerColumn boardId={boardId} columnId={id} columnTitle={title} order={order} />}
     </div>
   );
 };

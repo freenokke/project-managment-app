@@ -14,6 +14,7 @@ const MainPage = () => {
   const { title } = modalText.board;
   const { userId } = useAppSelector((state) => state.auth);
   const { isLoading, isFetching, isError, data: boardsSet } = useGetBoardsQuery(userId ?? '');
+  const { isLoadingBoards } = useAppSelector((state) => state.boardInfo);
 
   const dispatch = useAppDispatch();
 
@@ -22,7 +23,7 @@ const MainPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="container flex flex-col align-top text-gray-700 flex-grow">
+    <div className="container flex flex-col align-top text-gray-700 flex-grow pb-[40px]">
       {isError ? (
         <Error />
       ) : (
@@ -36,9 +37,7 @@ const MainPage = () => {
               <BoardCard key={id} id={id} title={title} />
             ))}
           </div>
-          <div className="flex justify-center items-center w-full h-[150px] text-2xl">
-            {(isLoading || isFetching) && <Loader />}
-          </div>
+          {(isLoading || isFetching || isLoadingBoards) && <Loader />}
         </>
       )}
     </div>

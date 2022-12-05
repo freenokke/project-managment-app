@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useState, useEffect } from 'react';
-import { useAppSelector } from '../../hooks/redux.hooks';
-import { ModalChild } from '../Modal/Modal.types';
+import { useAppSelector, useAppDispatch } from '../../hooks/redux.hooks';
 import ModalInput from '../Modal/ModalInput/ModalInput';
 import { Button } from '@material-tailwind/react';
-import useTaskModal from '../Modal/useTaskModal';
-import { IFormFields } from './TaskModal.types';
+import { IFormFields, TaskModalProps } from './TaskModal.types';
 import { SubmitHandler } from 'react-hook-form';
+import { setIsErrorEditTask } from '../../redux/features/boardInfoSlice';
+import { useGetTasksQuery } from '../../redux/api/tasksApi';
 
 const TaskModalTitle = ({
   register,
@@ -17,49 +17,68 @@ const TaskModalTitle = ({
   isDirty,
   isValid,
   isSubmitted,
-}: ModalChild) => {
+  editTask,
+  taskData,
+}: TaskModalProps) => {
   const { t } = useTranslation();
+  const { isErrorEditTask } = useAppSelector((state) => state.boardInfo);
+  const { data: tasks } = useGetTasksQuery({
+    boardId: taskData?.boardId ?? '',
+    columnId: taskData?.columnId ?? '',
+  });
+  const task = tasks?.find(({ _id }) => _id === taskData?._id);
 
-  const { editTask } = useTaskModal();
-  const { taskData } = useAppSelector((state) => state.taskModal);
+  const dispatch = useAppDispatch();
 
   const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState(taskData?.title ?? '');
+  const [title, setTitle] = useState(task?.title ?? '');
   const [inputValue, setInputValue] = useState(title);
+  const [prevTitle, setPrevTitle] = useState('');
 
-  const toggleEditMode = useCallback(() => {
+  const openEditMode = useCallback(() => {
+    setEditing(!editing);
+    setInputValue(title);
+    dispatch(setIsErrorEditTask(false));
+    setValue('title', inputValue);
+  }, [dispatch, editing, inputValue, setValue, title]);
+
+  const closeEditMode = useCallback(() => {
     setEditing(!editing);
     reset();
-    setInputValue(title);
-  }, [editing, reset, title]);
+  }, [editing, reset]);
 
   useEffect(() => {
+    if (isErrorEditTask) {
+      setTitle(prevTitle || (task?.title ?? ''));
+    }
     setValue('title', inputValue);
-  }, [inputValue, setValue, taskData?.title]);
+  }, [dispatch, inputValue, isErrorEditTask, prevTitle, setValue, task?.title, title]);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const editTaskFromModal: SubmitHandler<IFormFields> = (formData: IFormFields) => {
-    setTitle(inputValue);
-    toggleEditMode();
-    if (taskData) {
+    setPrevTitle(title);
+    if (task) {
       const body = {
         title: formData.title,
-        description: taskData.description,
-        columnId: taskData.columnId,
-        userId: taskData.userId,
-        order: taskData.order,
-        users: taskData.users,
+        description: task.description,
+        columnId: task.columnId,
+        userId: task.userId,
+        order: task.order,
+        users: task.users,
       };
       const data = {
-        boardId: taskData.boardId,
-        columnId: taskData.columnId,
-        _id: taskData._id,
+        boardId: task.boardId,
+        columnId: task.columnId,
+        _id: task._id,
         body,
       };
-      editTask(data);
+      editTask(data).finally(() => closeEditMode());
+      if (!isErrorEditTask) {
+        setTitle(inputValue);
+      }
     }
   };
 
@@ -69,7 +88,7 @@ const TaskModalTitle = ({
       <Button
         variant="text"
         className="flex order-first lg:order-2 items-center h-[36px] lg:h-[40px]"
-        onClick={toggleEditMode}
+        onClick={openEditMode}
       >
         {t('editModal.modalButton')}
       </Button>
@@ -93,7 +112,7 @@ const TaskModalTitle = ({
           <Button
             variant="outlined"
             className="h-[36px] lg:h-[40px] flex items-center"
-            onClick={toggleEditMode}
+            onClick={closeEditMode}
           >
             {t('modal.modalCancelButton')}
           </Button>

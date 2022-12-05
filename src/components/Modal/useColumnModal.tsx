@@ -1,11 +1,23 @@
-import { useCreateColumnMutation } from '../../redux/api/columnsApi';
+import { useCreateColumnMutation, useDeleteColumnMutation } from '../../redux/api/columnsApi';
 import { IColumnData } from '../../pages/BoardPage/BoardPage.types';
+import { ModalData } from './Modal.types';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useAppDispatch } from '../../hooks/redux.hooks';
+import { useEffect } from 'react';
+import { setIsLoadingColumn, setDeletingColumnError } from '../../redux/features/boardInfoSlice';
 
 const useColumnModal = () => {
   const [createColumnCall, {}] = useCreateColumnMutation();
+  const [deleteColumnCall, { isLoading: isDeletingColumn, isError: deletingColumnError }] =
+    useDeleteColumnMutation();
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setIsLoadingColumn(isDeletingColumn));
+    dispatch(setDeletingColumnError(deletingColumnError));
+  }, [isDeletingColumn, dispatch, deletingColumnError]);
 
   const options = {
     className: 'black-background',
@@ -20,9 +32,13 @@ const useColumnModal = () => {
         toast.error(t('createColumn.error'), options);
       });
   };
+  const deleteColumn = async ({ boardId, columnId }: ModalData) => {
+    return await deleteColumnCall({ boardId, columnId });
+  };
 
   return {
     createColumn,
+    deleteColumn,
   };
 };
 
