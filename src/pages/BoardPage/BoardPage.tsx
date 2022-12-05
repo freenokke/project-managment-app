@@ -5,7 +5,7 @@ import { useGetColumnsQuery } from '../../redux/api/columnsApi';
 import { AppDispatch } from '../../redux/store';
 import { ModalTypes, showModal } from '../../redux/features/modalSlice';
 import Modal from '../../components/Modal/Modal';
-import { ColumnWrapper, Loader, TaskModal } from '../../components';
+import { ColumnWrapper, Loader, TaskModal, Error } from '../../components';
 import { useCallback, useEffect } from 'react';
 import { setColumnsOrder, setOpenedBoard } from '../../redux/features/boardInfoSlice';
 import { useGetBoardQuery } from '../../redux/api/boardsApi';
@@ -14,13 +14,14 @@ import { IColumnsResponse } from './BoardPage.types';
 import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const BoardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-  const { data, isLoading } = useGetColumnsQuery(id ? id : '');
-  const { data: boardData } = useGetBoardQuery(id ? id : '');
+  const { data, isLoading, isError: columnError } = useGetColumnsQuery(id ? id : '');
+  const { data: boardData, isError: boardError } = useGetBoardQuery(id ? id : '');
   const { t } = useTranslation();
   const [columnsList, setColumnsList] = useState<IColumnsResponse[] | null>(null);
   const [patchColumns, {}] = usePatchColumnsSetMutation();
@@ -28,7 +29,6 @@ const BoardPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log('Данные с сервера:', data);
       setColumnsList(data);
       dispatch(setColumnsOrder(data.length));
     } else {
@@ -41,7 +41,7 @@ const BoardPage = () => {
   const updateColumnsList = useCallback(
     (newColumnsList: IColumnsResponse[], type: 'UPDATE' | 'DELETE') => {
       if (elementType && elementType === 'column') {
-        console.log('type column');
+        const oldColumnsList = columnsList;
         if (type === 'UPDATE') {
           setColumnsList(newColumnsList);
           patchColumns(
@@ -50,7 +50,10 @@ const BoardPage = () => {
             })
           )
             .unwrap()
-            .then((data: IColumnsResponse) => console.log('Ответ сервера', data));
+            .catch(() => {
+              toast.error(t('errorBoundary.text'));
+              setColumnsList(oldColumnsList);
+            });
         }
         if (type === 'DELETE') {
           setColumnsList(newColumnsList);
@@ -58,11 +61,11 @@ const BoardPage = () => {
             newColumnsList.map((column, index) => {
               return { _id: column._id, order: index + 1 };
             })
-          );
+          ).unwrap();
         }
       }
     },
-    [patchColumns, elementType]
+    [patchColumns, elementType, columnsList, t]
   );
 
   const openCreateModal = useCallback(() => {
@@ -71,42 +74,48 @@ const BoardPage = () => {
 
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
-      <ToastContainer />
-      <Modal />
-      <TaskModal />
-      <Link
-        className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
-        to="/main"
-      >
-        <span className="material-icons">keyboard_backspace</span>
-        {t('boardPage.backToBoardsList')}
-      </Link>
-      <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
-      {data?.length === 0 ? (
-        <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
-      ) : null}
-      {isLoading && <Loader />}
-      <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
-        {columnsList?.map(({ _id, title, order, boardId }) => {
-          return (
-            <ColumnWrapper
-              key={_id}
-              id={_id}
-              title={title}
-              order={order}
-              boardId={boardId}
-              updateColumnsList={updateColumnsList}
-              columnsList={columnsList}
-            />
-          );
-        })}
-        <button
-          className="w-10 h-10 min-w-10 bg-white transition-colors text-[#57606A] text-xl material-icons border border-[#D8DEE4] rounded-md hover:bg-[#f6f8fa]"
-          onClick={openCreateModal}
-        >
-          add
-        </button>
-      </div>
+      {columnError || boardError ? (
+        <Error />
+      ) : (
+        <>
+          <ToastContainer />
+          <Modal />
+          <TaskModal />
+          <Link
+            className=" flex items-center gap-2 self-start transition-colors  cursor-pointer text-gray-500 hover:text-blue-500"
+            to="/main"
+          >
+            <span className="material-icons">keyboard_backspace</span>
+            {t('boardPage.backToBoardsList')}
+          </Link>
+          <h1 className="text-xl">{boardData ? boardData.title : t('main.loading')}</h1>
+          {data?.length === 0 ? (
+            <div className="text-gray-500 text-xl ">{t('boardPage.noColumns')}</div>
+          ) : null}
+          {isLoading && <Loader />}
+          <div className="flex gap-3 justify-start  overflow-y-hidden p-2 flex-grow w-full">
+            {columnsList?.map(({ _id, title, order, boardId }) => {
+              return (
+                <ColumnWrapper
+                  key={_id}
+                  id={_id}
+                  title={title}
+                  order={order}
+                  boardId={boardId}
+                  updateColumnsList={updateColumnsList}
+                  columnsList={columnsList}
+                />
+              );
+            })}
+            <button
+              className="w-10 h-10 min-w-10 bg-white transition-colors text-[#57606A] text-xl material-icons border border-[#D8DEE4] rounded-md hover:bg-[#f6f8fa]"
+              onClick={openCreateModal}
+            >
+              add
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -5,7 +5,7 @@ const NotFound = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full h-[100%] flex-grow pt-[10%] gap-[40px]">
+    <div className="w-full h-[100%] flex-grow pt-[20%] sm:pt-[10%] gap-[40px]">
       <div className="container w-[85%] sm:w-[60%] md:w-[500px] flex flex-col items-center gap-[30px] text-gray-700 text-center">
         <h1 className="text-[28px] md:text-[35px]">{t('notFound.title')}</h1>
         <p className="text-[18px] md:text-[24px] text-center">{t('notFound.text')}</p>

@@ -5,11 +5,12 @@ import * as yup from 'yup';
 import { ISignUpData } from './SignUp.types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { signUp } from '../../redux/features/authSlice';
+import { clearError, signUp } from '../../redux/features/authSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignInput } from '../../components';
 import { Button } from '@material-tailwind/react';
+import { errorTextCreator } from '../../utils/utils';
 
 const schema = yup.object({
   name: yup.string().required('validation.noName').min(2, 'validation.minNameLength'),
@@ -27,6 +28,11 @@ const SignUpPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token, error, isLoading } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!error && !isLoading && token) {
@@ -56,7 +62,7 @@ const SignUpPage = () => {
           </Button>
         </form>
 
-        {error && <div className="text-red-600 h-8">{error?.message}</div>}
+        {error && <div className="text-red-600 h-8">{t(errorTextCreator(error?.message))}</div>}
 
         <Link
           to="/signin"
