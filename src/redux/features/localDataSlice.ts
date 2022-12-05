@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ITaskData } from '../api/tasksApi';
 
-interface IState {
+export interface IState {
   column?: string;
   tasks?: ITaskData[];
 }
@@ -27,11 +27,8 @@ const localDataSlice = createSlice({
         }
       });
     },
-    updateLocalState: (state, action: PayloadAction<IState[]>) => {
-      state.length = 0;
-      action.payload.forEach((item) => {
-        state.push(item);
-      });
+    updateLocalState: (_, action: PayloadAction<IState[]>) => {
+      return action.payload;
     },
   },
 });
