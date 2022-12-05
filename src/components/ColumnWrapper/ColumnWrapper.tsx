@@ -3,8 +3,6 @@ import InnerColumn from '../InnerColumn/InnerColumn';
 import { IColumnProps } from './ColumnWrapperTypes';
 import { sortByOrder } from '../../utils/utils';
 import { useColumnsDraggable } from '../../hooks/useColumnsDraggable';
-// import { toast } from 'react-toastify';
-// import Loader from '../Loader/Loader';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import { useDispatch } from 'react-redux';
 import { setLocalColumns } from '../../redux/features/localDataSlice';

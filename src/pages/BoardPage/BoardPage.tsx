@@ -90,11 +90,11 @@ const BoardPage = () => {
 
   return (
     <div className="relative p-2 flex-grow flex flex-col justify-start items-center">
-      <ToastContainer />
       {columnError || boardError ? (
         <Error />
       ) : (
         <>
+          <ToastContainer />
           <Modal />
           <TaskModal />
           <Link
