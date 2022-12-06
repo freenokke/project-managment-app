@@ -8,7 +8,7 @@ import { useDraggable } from '../../hooks/useTasksDraggable';
 import InnerColumnHeader from './InnerColumnHeader/InnerColumnHeader';
 import InnerColumnFooter from './InnerColumnFooter/InnerColumnFooter';
 import InnerColumnContent from './InnerColumnContent/InnerColumnContent';
-import { setLocalTasks } from '../../redux/features/localDataSlice';
+import { setLocalTasks, updateLocalState } from '../../redux/features/localDataSlice';
 
 const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle }) => {
   const dispatch = useAppDispatch();
@@ -30,6 +30,12 @@ const InnerColumn: FC<IProps> = ({ boardId, columnId, order, columnTitle }) => {
       dispatch(setLocalTasks({ tasks, columnId }));
     }
   }, [tasks, columnId, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(updateLocalState([]));
+    };
+  }, [dispatch]);
 
   const { dragDropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler } =
     useDraggable(displayedTasks?.tasks ?? [], displayedTasks?.column ?? '');
