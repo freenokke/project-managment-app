@@ -18,6 +18,7 @@ import { usePatchColumnsSetMutation } from '../../redux/api/columnsApi';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { updateLocalState } from '../../redux/features/localDataSlice';
 
 const BoardPage = () => {
   const dispatch = useAppDispatch();
@@ -83,6 +84,12 @@ const BoardPage = () => {
       }
     }
   }, [columnToReorder, dispatch, columnsList, patchColumns]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(updateLocalState([]));
+    };
+  }, [dispatch]);
 
   const openCreateModal = useCallback(() => {
     dispatch(showModal({ type: ModalTypes.createColumn }));
