@@ -45,6 +45,7 @@ export const tasksApi = boardsApi.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<ITaskData[], Pick<ITaskData, 'boardId' | 'columnId'>>({
       query: ({ boardId, columnId }) => `/boards/${boardId}/columns/${columnId}/tasks`,
+      keepUnusedDataFor: 0,
       transformResponse: (response: ITaskData[]) => {
         return response.sort(sortCards).map(reorder);
       },

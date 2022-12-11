@@ -34,21 +34,22 @@ export const useDraggable = (tasks: ITaskData[], columnId: string) => {
             if (data.columnId === currentDraggableTask.columnId) {
               const rebuiltLocalTasksList = isAtTheEnd
                 ? [
-                    ...tasks
-                      ?.filter((item) => item._id !== currentDraggableTask._id)
-                      .sort(sortCards),
+                    ...tasks?.filter((item) => item._id !== currentDraggableTask._id),
                     currentDraggableTask,
-                  ]
-                : tasks?.map((task) => {
-                    if (task.order === data.order) {
-                      return { ...task, order: currentDraggableTask?.order };
-                    }
-                    if (task.order === currentDraggableTask?.order) {
-                      return { ...task, order: data.order };
-                    }
-                    return task;
-                  });
+                  ].map(reorder)
+                : tasks
+                    ?.map((task) => {
+                      if (task.order === data.order) {
+                        return { ...task, order: currentDraggableTask?.order };
+                      }
+                      if (task.order === currentDraggableTask?.order) {
+                        return { ...task, order: data.order };
+                      }
+                      return task;
+                    })
+                    .sort(sortCards);
               dispatch(setLocalTasks({ tasks: rebuiltLocalTasksList ?? [], columnId }));
+              dropOnTaskRequest(rebuiltLocalTasksList, [], updateTasksSet);
             } else {
               const endDragCol = displayedData.find((item) => item.column === data.columnId);
               const startDragCol = displayedData.find(
