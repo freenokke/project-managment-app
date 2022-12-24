@@ -4,6 +4,7 @@
 # Информация о проекте
 
 Проект финального [задания](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/project-management-system-EN.md) на курсе RSSchool-REACT2022Q3
+Приложение для ведения проектов, позволяющее авторизованному пользователю взаимодействовать с досками / колонками / тасками ( аналогично Trello и т.д. )
 
 
 
