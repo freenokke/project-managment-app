@@ -1,3 +1,6 @@
+# Deploy: **[project-management-app2.netlify.app](https://project-management-app2.netlify.app/)**
+
+
 # Информация о проекте
 
 Проект финального [задания](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/project-management-system-EN.md) на курсе RSSchool-REACT2022Q3
