@@ -1,4 +1,5 @@
-# Deploy: **[project-management-app2.netlify.app](https://project-management-app2.netlify.app/)**
+# Deploy: 
+* **https://project-management-app2.netlify.app/**
 При авторизации могут быть задержки (до 1 мин), т.к. есть задержка ответа от сервера при первом запуске.
 
 # Информация о проекте
