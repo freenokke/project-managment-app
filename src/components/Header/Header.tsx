@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { LangSwitch, NavList } from '../../components';
 import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/redux.hooks';
 import logo from '../../assets/images/logo.png';
 
@@ -9,13 +9,13 @@ const Header = () => {
   const { token } = useAppSelector((state) => state.auth);
   const [openNav, setOpenNav] = useState(false);
   const [pageYOffset, setPageYOffset] = useState(window.scrollY);
-  const { pathname } = useLocation();
-  const isSignPage = /sign/.test(pathname);
-  const isWelcomePage = pathname === '/';
+  // const { pathname } = useLocation();
+  // const isSignPage = /sign/.test(pathname);
+  // const isWelcomePage = pathname === '/';
 
   const stickHeader = useMemo(() => {
-    return !isSignPage && !isWelcomePage && pageYOffset > 0;
-  }, [isSignPage, isWelcomePage, pageYOffset]);
+    return pageYOffset > 0;
+  }, [pageYOffset]);
 
   const closeNav = useCallback(() => {
     setOpenNav(false);
@@ -31,15 +31,13 @@ const Header = () => {
     };
     const handleScroll = () => setPageYOffset(window.scrollY);
     window.addEventListener('resize', handleResize);
-    if (!isSignPage && !isWelcomePage) {
-      window.addEventListener('scroll', handleScroll);
-    }
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [stickHeader, isSignPage, isWelcomePage]);
+  }, []);
 
   return (
     <Navbar
