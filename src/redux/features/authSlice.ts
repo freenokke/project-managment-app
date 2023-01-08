@@ -3,32 +3,23 @@ import { request } from '../../utils/request';
 import { ISignInData, ISignUpData } from '../../pages/SignUpPage/SignUp.types';
 import { SerializedError } from '@reduxjs/toolkit';
 import { parseJwt } from '../../utils/utils';
+import { baseUrl } from '../../utils/constants/constants';
 
 export const signInRequest = async (data: ISignInData) => {
-  return await request(
-    'https://final-task-backend-production-e06d.up.railway.app/auth/signin',
-    'POST',
-    JSON.stringify(data),
-    {
-      accept: 'application/json',
-      'Content-Type': 'application/json',
-    }
-  );
+  return await request(`${baseUrl}/auth/signin`, 'POST', JSON.stringify(data), {
+    accept: 'application/json',
+    'Content-Type': 'application/json',
+  });
 };
 
 export const signIn = createAsyncThunk('auth/signIn', signInRequest);
 
 export const signUp = createAsyncThunk('auth/signUp', async (data: ISignUpData) => {
   try {
-    await request(
-      'https://final-task-backend-production-e06d.up.railway.app/auth/signup',
-      'POST',
-      JSON.stringify(data),
-      {
-        accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    );
+    await request(`${baseUrl}/auth/signup`, 'POST', JSON.stringify(data), {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    });
     const { login, password } = data;
     return await signInRequest({ login, password });
   } catch (e) {
