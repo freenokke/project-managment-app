@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { LangSwitch, NavList } from '../../components';
 import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
@@ -12,10 +12,6 @@ const Header = () => {
   // const { pathname } = useLocation();
   // const isSignPage = /sign/.test(pathname);
   // const isWelcomePage = pathname === '/';
-
-  const stickHeader = useMemo(() => {
-    return pageYOffset > 0;
-  }, [pageYOffset]);
 
   const closeNav = useCallback(() => {
     setOpenNav(false);
@@ -43,7 +39,7 @@ const Header = () => {
     <Navbar
       shadow={true}
       className={`${
-        stickHeader && 'py-1 px-2 sticky top-0 shadow-teal-200 md:px-4 md:py-2'
+        pageYOffset > 0 && 'py-1 px-2 fixed shadow-teal-200 md:px-4 md:py-2'
       } mx-auto max-w-full font-sans bg-opacity-60 backdrop-blur text-[#7f7e8a] transition-all z-[100]`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
