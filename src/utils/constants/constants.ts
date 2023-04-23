@@ -1,4 +1,4 @@
-export const baseUrl = 'https://final-task-backend-production-e174.up.railway.app';
+export const baseUrl = 'https://pma-backend-f11z.onrender.com';
 
 export const modalText = {
   board: {
